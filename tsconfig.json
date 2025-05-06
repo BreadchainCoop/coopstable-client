@@ -23,5 +23,9 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "src/contracts/tokenA", "src/contracts/tokenB"]
+  "exclude": [
+    "node_modules",
+    "src/app/contracts/tokenA",
+    "src/app/contracts/tokenB"
+  ]
 }

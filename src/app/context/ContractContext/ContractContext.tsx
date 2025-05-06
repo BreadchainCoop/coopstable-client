@@ -2,7 +2,7 @@ import { createContext, ReactNode } from "react";
 import { ContractService } from "../../services/contractService";
 
 export const ContractContext = createContext<ContractService | undefined>(
-  undefined
+  undefined,
 );
 
 export function ContractProvider({

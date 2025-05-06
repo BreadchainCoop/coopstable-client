@@ -7,17 +7,17 @@ export type ContractService = {
   tokenA: {
     fetchBalance: (
       account: string,
-      network: NetworkString
+      network: NetworkString,
     ) => Promise<number | null>;
     fetchAllowance: (
       owner: string,
       spender: string,
-      network: NetworkString
+      network: NetworkString,
     ) => Promise<number | null>;
     mint: (
       account: string,
       amount: bigint,
-      network: NetworkString
+      network: NetworkString,
     ) => Promise<AssembledTransaction<null>>;
   };
   tokenB: {
@@ -35,7 +35,7 @@ export const contractService: ContractService = {
     fetchAllowance: async (
       owner: string,
       spender: string,
-      network: NetworkString
+      network: NetworkString,
     ): Promise<number> => {
       const contract = getTokenAClient(network, owner);
       const res = await contract.allowance({ owner, spender });
@@ -44,7 +44,7 @@ export const contractService: ContractService = {
     mint: async (
       account,
       amount,
-      network
+      network,
     ): Promise<AssembledTransaction<null>> => {
       const contract = getTokenAClient(network, account);
       const res = await contract.mint({ account, amount });

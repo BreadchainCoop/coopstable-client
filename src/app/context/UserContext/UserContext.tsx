@@ -20,7 +20,7 @@ const UserContext = createContext<{
       path?: string;
       submit?: boolean;
       submitUrl?: string;
-    }
+    },
   ) => Promise<{
     signedTxXdr: string;
     signerAddress?: string;
@@ -67,7 +67,7 @@ export function UserProvider({
       path?: string;
       submit?: boolean;
       submitUrl?: string;
-    }
+    },
   ): Promise<{
     signedTxXdr: string;
     signerAddress?: string;

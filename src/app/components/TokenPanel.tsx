@@ -10,7 +10,7 @@ export function TokenPanel() {
   const { user } = useUser();
 
   return (
-    <section className="rounded p-6 bg-neutral-400 flex flex-col gap-4">
+    <section className="flex flex-col gap-4 rounded bg-neutral-400 p-6">
       <div></div>
       <div>{user.status === "connected" && <Connected user={user} />}</div>
     </section>
@@ -18,7 +18,7 @@ export function TokenPanel() {
 }
 
 function Connected({ user }: { user: UserContextStateConnected }) {
-  const { status, data } = useTokenABalance(user);
+  const { status, data } = useTokenABalance(user.account, user.network);
 
   return (
     <div>

@@ -30,7 +30,7 @@ test("displays native token balance", async () => {
           />
         </ContractProvider>
       </BalanceProvider>
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 
   await expect(await screen.findByText("1234")).toBeTruthy();

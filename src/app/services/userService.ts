@@ -9,7 +9,7 @@ import {
 export type NetworkString = "PUBLIC" | "TESTNET";
 export type UserService = {
   connectWallet: (
-    onConnected: (account: string, network: "PUBLIC" | "TESTNET") => void
+    onConnected: (account: string, network: "PUBLIC" | "TESTNET") => void,
   ) => void;
   disconnectWallet: () => Promise<void>;
   signTransaction: (
@@ -20,7 +20,7 @@ export type UserService = {
       path?: string;
       submit?: boolean;
       submitUrl?: string;
-    }
+    },
   ) => Promise<{
     signedTxXdr: string;
     signerAddress?: string;
@@ -34,7 +34,7 @@ const kit: StellarWalletsKit = new StellarWalletsKit({
 });
 
 export async function connectWallet(
-  onConnected: (account: string, network: NetworkString) => void
+  onConnected: (account: string, network: NetworkString) => void,
 ) {
   await kit.openModal({
     onWalletSelected: async (option: ISupportedWallet) => {
@@ -60,7 +60,7 @@ async function signTransaction(
     path?: string;
     submit?: boolean;
     submitUrl?: string;
-  }
+  },
 ): Promise<{
   signedTxXdr: string;
   signerAddress?: string;

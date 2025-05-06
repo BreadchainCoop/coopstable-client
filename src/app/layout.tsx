@@ -1,16 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Darker_Grotesque, Lato, Radio_Canada_Big } from "next/font/google";
 import "./globals.css";
 import { Header } from "./components/Header";
 import { Providers } from "./providers";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const lato = Lato({
+  variable: "--font-lato",
+  subsets: ["latin"],
+  weight: ["400"],
+});
+
+const darkerGrotesque = Darker_Grotesque({
+  variable: "--font-darker-grotesque",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const radioCanadaBig = Radio_Canada_Big({
+  variable: "--font-radio-canada-big",
   subsets: ["latin"],
 });
 
@@ -27,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${lato.variable} ${darkerGrotesque.variable} ${radioCanadaBig.variable} antialiased`}
       >
         <Providers>
           <Header />

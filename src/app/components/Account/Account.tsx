@@ -1,11 +1,13 @@
 import { useUser } from "@/app/context/UserContext/UserContext";
 import { AccountConnected } from "./Connected";
+import { Button } from "../Button";
 
 export function Account() {
   const { user, connectWallet, disconnectWallet } = useUser();
 
   return (
     <div>
+      {user.status === "loading" && <Button disabled>loading...</Button>}
       {user.status === "not_connected" && (
         <AccountNotConnected connect={connectWallet} />
       )}
@@ -18,7 +20,7 @@ export function Account() {
 }
 
 export function AccountNotConnected({ connect }: { connect: () => void }) {
-  return <button onClick={connect}>connect</button>;
+  return <Button onClick={connect}>Sign In</Button>;
 }
 
 export function AccountConnecting() {

@@ -106,6 +106,7 @@ export type StorageKey = {
     tag: "Allowance";
     values: readonly [AllowanceKey];
 };
+/* eslint-disable-next-line */
 export interface Client {
     /**
      * Construct and simulate a total_supply transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
@@ -341,6 +342,8 @@ export interface Client {
         simulate?: boolean;
     }) => Promise<AssembledTransaction<null>>;
 }
+
+/* eslint-disable-next-line */
 export declare class Client extends ContractClient {
     readonly options: ContractClientOptions;
     static deploy<T = Client>(

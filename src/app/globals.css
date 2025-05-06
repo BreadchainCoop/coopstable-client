@@ -1,19 +1,64 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f2f1ee;
+  --foreground: var(--color-theme-grey-5);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-theme-2: var(--font-darker-grotesque);
+  --font-theme-3: var(--font-radio-canada-big);
+
+  --color-theme-black: #11110f;
+
+  --color-theme-grey-1: #f7f6f3;
+  --color-theme-grey-2: #f2f2f2;
+  --color-theme-grey-3: #dedede;
+  --color-theme-grey-4: #b1aeab;
+  --color-theme-grey-5: #7a7a7a;
+  --color-theme-grey-6: #4f4f4f;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Lato", Helvetica, sans-serif;
+}
+
+.page-wrap {
+  max-width: 1000px;
+  margin: auto;
+  padding: 0.5rem 1rem;
+}
+
+.spinner_QPB9 {
+  transform-origin: center;
+  animation: spinner_4N1C 2s linear infinite;
+}
+.spinner_QPB9 circle {
+  stroke-linecap: round;
+  animation: spinner_MX3P 1.5s ease-in-out infinite;
+}
+@keyframes spinner_4N1C {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes spinner_MX3P {
+  0% {
+    stroke-dasharray: 0 150;
+    stroke-dashoffset: 0;
+  }
+  47.5% {
+    stroke-dasharray: 42 150;
+    stroke-dashoffset: -16;
+  }
+  95%,
+  100% {
+    stroke-dasharray: 42 150;
+    stroke-dashoffset: -59;
+  }
 }

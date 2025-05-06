@@ -5,32 +5,32 @@ import { useQuery } from "@tanstack/react-query";
 import { SignTransaction } from "@stellar/stellar-sdk/contract";
 import { chainConfig } from "@/app/config";
 import { UserContextStateConnected } from "../UserContext/types";
+import { NetworkString } from "@/app/services/userService";
 
-export function useTokenABalance(user: UserContextStateConnected) {
+export function useTokenABalance(account: string, network: NetworkString) {
   const context = useContext(ContractContext);
   if (!context)
     throw new Error("useTokenABalance must be used within a ContractProvider");
 
   return useQuery({
-    queryKey: [`tokenABalance_${user.account}`],
-    queryFn: async () =>
-      context.tokenA.fetchBalance(user.account, user.network),
+    queryKey: [`tokenABalance_${account}`],
+    queryFn: async () => context.tokenA.fetchBalance(account, network),
     refetchInterval: 1000,
   });
 }
 
-export function useAllowance(user: UserContextStateConnected) {
+export function useAllowance(account: string, network: NetworkString) {
   const context = useContext(ContractContext);
   if (!context)
     throw new Error("useAllowance must be used within a ContractProvider");
 
   return useQuery({
-    queryKey: [`allowance_${user.account}`],
+    queryKey: [`allowance_${account}`],
     queryFn: async () =>
       context.tokenA.fetchAllowance(
-        user.account,
-        chainConfig[user.network].addressTokenB,
-        user.network
+        account,
+        chainConfig[network].addressTokenB,
+        network,
       ),
     refetchInterval: 1000,
   });

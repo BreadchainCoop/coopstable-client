@@ -5,7 +5,7 @@ import * as TokenBClient from "./tokenB";
 
 export function getTokenAClient(
   network: NetworkString,
-  publicKey?: string
+  publicKey?: string,
 ): TokenAClient.Client {
   return new TokenAClient.Client({
     ...TokenAClient.networks.testnet,
