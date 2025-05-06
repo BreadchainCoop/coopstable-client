@@ -20,7 +20,7 @@ export const SwapContext = createContext<
 export function SwapProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<SwapState>({
     mode: "mint",
-    inputValue: "0",
+    inputValue: "",
   });
 
   function inputValueChange(value: string) {
