@@ -8,10 +8,10 @@ export function Header() {
     <header>
       <div className={cn(pageWrapClasses, "flex h-24 items-center")}>
         <div className="font-theme-2 flex items-center gap-2">
-          <div className="size-8 sm:size-10">
+          <div className="size-8">
             <Logo />
           </div>
-          <span className="hidden text-3xl font-extrabold tracking-wider text-black sm:block">
+          <span className="hidden -translate-y-0.5 transform text-3xl leading-none font-extrabold tracking-wider text-black sm:block">
             CoopStable
           </span>
         </div>
