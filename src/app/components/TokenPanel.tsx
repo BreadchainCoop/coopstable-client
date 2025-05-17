@@ -1,7 +1,7 @@
 "use client";
 import {
   useTokenABalance,
-  useTokenAMint,
+  useTokenMint,
 } from "@/app/context/ContractContext/hooks";
 import { useUser } from "../context/UserContext/UserContext";
 import { UserContextStateConnected } from "../context/UserContext/types";
@@ -30,7 +30,7 @@ function Connected({ user }: { user: UserContextStateConnected }) {
 
 function Mint({ user }: { user: UserContextStateConnected }) {
   const { signTransaction } = useUser();
-  const { signAndSend } = useTokenAMint(signTransaction);
+  const { signAndSend } = useTokenMint(signTransaction);
   return (
     <div>
       <button

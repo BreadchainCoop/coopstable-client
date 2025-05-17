@@ -5,8 +5,8 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { UserContextState } from "./types";
-import { UserService } from "@/app/services/userService";
+import type { UserContextState } from "./types";
+import type { UserService } from "@/app/services/UserService/types";
 
 const UserContext = createContext<{
   user: UserContextState;

@@ -5,27 +5,7 @@ import {
   StellarWalletsKit,
   WalletNetwork,
 } from "@creit.tech/stellar-wallets-kit";
-
-export type NetworkString = "PUBLIC" | "TESTNET";
-export type UserService = {
-  connectWallet: (
-    onConnected: (account: string, network: "PUBLIC" | "TESTNET") => void,
-  ) => void;
-  disconnectWallet: () => Promise<void>;
-  signTransaction: (
-    xdr: string,
-    opts?: {
-      networkPassphrase?: string;
-      address?: string;
-      path?: string;
-      submit?: boolean;
-      submitUrl?: string;
-    },
-  ) => Promise<{
-    signedTxXdr: string;
-    signerAddress?: string;
-  }>;
-};
+import { NetworkString } from "./types";
 
 const kit: StellarWalletsKit = new StellarWalletsKit({
   network: WalletNetwork.PUBLIC,
@@ -41,7 +21,6 @@ export async function connectWallet(
       kit.setWallet(option.id);
       const account = (await kit.getAddress()).address;
       const network = (await kit.getNetwork()).network;
-      console.log({ account, network });
       if (network !== "TESTNET" && network !== "PUBLIC")
         throw new Error("invalid network string");
       onConnected(account, network);

@@ -5,16 +5,16 @@ import { useQuery } from "@tanstack/react-query";
 import { SignTransaction } from "@stellar/stellar-sdk/contract";
 import { chainConfig } from "@/app/config";
 import { UserContextStateConnected } from "../UserContext/types";
-import { NetworkString } from "@/app/services/userService";
+import { NetworkString } from "@/app/services/UserService/types";
 
-export function useTokenABalance(account: string, network: NetworkString) {
+export function useCUSDBalance(account: string, network: NetworkString) {
   const context = useContext(ContractContext);
   if (!context)
-    throw new Error("useTokenABalance must be used within a ContractProvider");
+    throw new Error("useCUSDBalance must be used within a ContractProvider");
 
   return useQuery({
-    queryKey: [`tokenABalance_${account}`],
-    queryFn: async () => context.tokenA.fetchBalance(account, network),
+    queryKey: [`cusdBalance${account}`],
+    queryFn: async () => context.cusd.fetchBalance(account, network),
     refetchInterval: 1000,
   });
 }
@@ -24,36 +24,65 @@ export function useAllowance(account: string, network: NetworkString) {
   if (!context)
     throw new Error("useAllowance must be used within a ContractProvider");
 
+  console.log("useAllowance()");
   return useQuery({
     queryKey: [`allowance_${account}`],
-    queryFn: async () =>
-      context.tokenA.fetchAllowance(
+    queryFn: async () => {
+      // TODO fetch allowance transaction
+      return context.usdc.fetchAllowance(
         account,
-        chainConfig[network].addressTokenB,
+        chainConfig[network].yieldController.contractId,
         network,
-      ),
-    refetchInterval: 1000,
+      );
+    },
+    refetchInterval: 5000,
   });
 }
 
-export function useTokenAMint(signTransaction: SignTransaction) {
+export function useTokenMint(signTransaction: SignTransaction) {
   const context = useContext(ContractContext);
   if (!context)
     throw new Error("useTokenABalance must be used within a ContractProvider");
 
   const [state, setState] = useState<
-    { status: "init" } | { status: "success" }
+    { status: "init" } | { status: "success" } | { status: "error" }
   >({ status: "init" });
 
   async function signAndSend(user: UserContextStateConnected, amount: bigint) {
-    const tx = await context?.tokenA.mint(user.account, amount, user.network);
-    tx
-      ?.signAndSend({
-        signTransaction: signTransaction,
-      })
-      .then((res) => {
+    // TODO mint transaction
+    context?.yieldController
+      .mint(user.account, amount, user.network, signTransaction)
+      .then(() => {
         setState({ status: "success" });
-        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+        setState({ status: "error" });
+      });
+  }
+
+  return { state, signAndSend };
+}
+
+export function useTokenBurn(signTransaction: SignTransaction) {
+  const context = useContext(ContractContext);
+  if (!context)
+    throw new Error("useTokenABalance must be used within a ContractProvider");
+
+  const [state, setState] = useState<
+    { status: "init" } | { status: "success" } | { status: "error" }
+  >({ status: "init" });
+
+  async function signAndSend(user: UserContextStateConnected, amount: bigint) {
+    // TODO burn transaction
+    context?.yieldController
+      .burn(user.account, amount, user.network, signTransaction)
+      .then(() => {
+        setState({ status: "success" });
+      })
+      .catch((err) => {
+        console.log(err);
+        setState({ status: "error" });
       });
   }
 

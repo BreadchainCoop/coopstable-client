@@ -1,92 +1,103 @@
-import { Button } from "../Button";
-import { Spinner } from "../Spinner";
-import { SwapMode } from "../Swap/SwapContext";
-import {
-  Dialog as RadixDialog,
-  DialogContent as RadixDialogContent,
-  DialogHeader as RadixDialogHeader,
-  DialogTitle as RadixDialogTitle,
-  DialogTrigger as RadixDialogTrigger,
-} from "./ui";
-import { ReactNode } from "react";
+import { cn } from "@/app/utils";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { motion } from "framer-motion";
+import { ForwardedRef, forwardRef } from "react";
 
-export function Dialog({ mode, txValue }: { mode: SwapMode; txValue: string }) {
+const DialogOverlay = forwardRef((props, ref: ForwardedRef<HTMLDivElement>) => {
   return (
-    <RadixDialog>
-      <RadixDialogTrigger asChild>
-        <Button fullWidth size="large">
-          {mode === "burn" ? "Burn" : "Mint"}
-        </Button>
-      </RadixDialogTrigger>
-      <RadixDialogContent className="sm:max-w-[425px]">
-        <RadixDialogHeader>
-          <RadixDialogTitle>
-            {mode === "burn" ? "Burn" : "Mint"} status
-          </RadixDialogTitle>
-        </RadixDialogHeader>
-        <div className="grid gap-4 py-4">
-          <TransactionStatus />
-          <TransactionSummary mode={mode} txValue={txValue} />
-        </div>
-      </RadixDialogContent>
-    </RadixDialog>
+    <DialogPrimitive.Overlay ref={ref} className="overlay" asChild {...props}>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.9 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
+        className="fixed top-0 z-40 h-screen w-screen bg-[#F0F0F0] opacity-90 transition-opacity dark:opacity-70"
+      />
+    </DialogPrimitive.Overlay>
+  );
+});
+
+DialogOverlay.displayName = "DialogOverlay";
+
+const DialogContent = forwardRef(
+  (
+    { children }: React.ComponentProps<"div">,
+    ref: ForwardedRef<HTMLDivElement>,
+  ) => {
+    return (
+      <DialogPrimitive.Content forceMount className="content" ref={ref} asChild>
+        <motion.div
+          variants={{
+            closed: { opacity: 0 },
+            open: { opacity: 1 },
+          }}
+          initial="closed"
+          animate="open"
+          exit="closed"
+          className={cn(
+            "bg-theme-grey-1 border-theme-grey-4 xs:max-w-[330px] fixed top-[50%] left-[50%] z-50 grid w-[330px] max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 border p-6 shadow-lg sm:w-full sm:max-w-[600px]",
+          )}
+        >
+          <DialogClose>x</DialogClose>
+          {children}
+        </motion.div>
+      </DialogPrimitive.Content>
+    );
+  },
+);
+
+DialogContent.displayName = "DialogContent";
+
+function DialogClose({
+  ...props
+}: React.ComponentProps<typeof DialogPrimitive.Close>) {
+  return (
+    <DialogPrimitive.Close
+      data-slot="dialog-close"
+      className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+      {...props}
+    >
+      <svg
+        width="24"
+        height="25"
+        viewBox="0 0 24 25"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M18.75 5.75L5.25 19.25"
+          stroke="#7A7A7A"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M18.75 19.25L5.25 5.75"
+          stroke="#7A7A7A"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+      <span className="sr-only">Close</span>
+    </DialogPrimitive.Close>
   );
 }
 
-function TransactionStatus() {
+function DialogTitle({
+  className,
+  ...props
+}: React.ComponentProps<typeof DialogPrimitive.Title>) {
   return (
-    <div className="flex flex-col items-center gap-4">
-      <div className="size-8">
-        <Spinner />
-      </div>
-      <span>in Progress</span>
-    </div>
+    <DialogPrimitive.Title
+      data-slot="dialog-title"
+      className={cn(
+        "font-theme-2 text-3xl leading-none font-bold text-[#333]",
+        className,
+      )}
+      {...props}
+    />
   );
 }
 
-function TransactionSummary({
-  mode,
-  txValue,
-}: {
-  mode: SwapMode;
-  txValue: string;
-}) {
-  return (
-    <div className="flex">
-      <div className="flex grow justify-center">
-        {mode === "mint" ? (
-          <USDCLabel>{txValue}</USDCLabel>
-        ) : (
-          <CUSDLabel>{txValue}</CUSDLabel>
-        )}
-      </div>
-      <div>{"->"}</div>
-      <div className="flex grow justify-center">
-        {txValue}
-        {mode === "burn" ? (
-          <USDCLabel>{txValue}</USDCLabel>
-        ) : (
-          <CUSDLabel>{txValue}</CUSDLabel>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function CUSDLabel({ children }: { children: ReactNode }) {
-  return (
-    <div className="flex gap-1">
-      <span>{children}</span>
-      cUSD
-    </div>
-  );
-}
-
-function USDCLabel({ children }: { children: ReactNode }) {
-  return (
-    <div className="flex gap-1">
-      <span>{children}</span>
-      USDC
-    </div>
-  );
-}
+export { DialogOverlay, DialogContent, DialogClose, DialogTitle };

@@ -20,6 +20,7 @@
   --color-theme-grey-4: #b1aeab;
   --color-theme-grey-5: #7a7a7a;
   --color-theme-grey-6: #4f4f4f;
+  --color-theme-stone: #a49e86;
 }
 
 body {
@@ -31,7 +32,13 @@ body {
 .page-wrap {
   max-width: 1000px;
   margin: auto;
-  padding: 0.5rem 1rem;
+  padding: 0.25rem 1rem;
+}
+
+@media (min-width: 420px) {
+  .page-wrap {
+    padding: 0.5rem 1rem;
+  }
 }
 
 .spinner_QPB9 {

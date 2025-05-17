@@ -1,9 +1,17 @@
 export type NetworkConfig = {
   sorobanUrl: string;
   horizonUrl: string;
-  addressTokenA: string;
-  addressTokenB: string;
+  yieldController: {
+    contractId: string;
+  };
+  cusd: {
+    contractId: string;
+  };
+  usdc: {
+    contractId: string;
+  };
 };
+
 export type ChainConfig = {
   TESTNET: NetworkConfig;
   PUBLIC: NetworkConfig;
@@ -13,13 +21,27 @@ export const chainConfig: ChainConfig = {
   TESTNET: {
     sorobanUrl: "https://soroban-testnet.stellar.org",
     horizonUrl: "https://horizon-testnet.stellar.org",
-    addressTokenA: "CAWYKWTX2G4YUVH47YTV3ON7V522J5K7WNPAH22THSZA3DSDIR5ZJMTD",
-    addressTokenB: "CAOZBJUM3T7E337D77V5H6AW4B4S5P6CSLVKSHG2MOFAVTW6W4Y3CKSA",
+    yieldController: {
+      contractId: "CBQSGJM2A4EWTBEW2BDIP2OBNZB2SAZSV5K7MPELISICR7BFDLNH3B6H",
+    },
+    cusd: {
+      contractId: "CDHHR356G725HNLAAQ74WBGVT6Y6ZFZLM2TIHLDCOZTJ2SVZ7P3EANYT",
+    },
+    usdc: {
+      contractId: "CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA",
+    },
   },
   PUBLIC: {
     sorobanUrl: "https://rpc.ankr.com/stellar_soroban",
     horizonUrl: "https://rpc.ankr.com/http/stellar_horizon",
-    addressTokenA: "string",
-    addressTokenB: "string",
+    yieldController: {
+      contractId: "",
+    },
+    cusd: {
+      contractId: "CDHHR356G725HNLAAQ74WBGVT6Y6ZFZLM2TIHLDCOZTJ2SVZ7P3EANYT",
+    },
+    usdc: {
+      contractId: "",
+    },
   },
 };

@@ -5,7 +5,7 @@ import { Account } from "./Account/Account";
 
 export function Header() {
   return (
-    <header>
+    <header data-testid="header">
       <div className={cn(pageWrapClasses, "flex h-24 items-center")}>
         <div className="font-theme-2 flex items-center gap-2">
           <div className="size-8">

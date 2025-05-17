@@ -13,7 +13,7 @@ export function Account() {
       )}
       {user.status === "connecting" && <AccountConnecting />}
       {user.status === "connected" && (
-        <AccountConnected user={user} disconnect={disconnectWallet} />
+        <AccountConnected user={user} disconnectWallet={disconnectWallet} />
       )}
     </div>
   );

@@ -27,6 +27,6 @@ export function useNativeBalance(user: UserContextStateConnected) {
   return useQuery({
     queryKey: [`nativeBalance_${user.account}`],
     queryFn: async () => context.fetchNativeBalance(user.account, user.network),
-    enabled: false,
+    // enabled: false,
   });
 }

@@ -6,7 +6,8 @@ import { BalanceProvider } from "./context/BalanceContext";
 import { balanceService } from "./services/balanceService";
 import { ContractProvider } from "./context/ContractContext/ContractContext";
 import { contractService } from "./services/contractService";
-import { userService } from "./services/userService";
+import { userService } from "./services/UserService/UserService";
+import { TransactionProvider } from "./context/TransactionContext/TransactionContext";
 
 const queryClient = new QueryClient();
 
@@ -16,7 +17,7 @@ export function Providers({ children }: { children: ReactNode }) {
       <UserProvider userService={userService}>
         <BalanceProvider balanceService={balanceService}>
           <ContractProvider contractService={contractService}>
-            {children}
+            <TransactionProvider>{children}</TransactionProvider>
           </ContractProvider>
         </BalanceProvider>
       </UserProvider>
