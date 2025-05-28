@@ -1,8 +1,6 @@
 "use client";
 import { useUser } from "@/app/context/UserContext/UserContext";
 import { SwapProvider, useSwap } from "./SwapContext";
-// import { UserContextStateConnected } from "@/app/context/UserContext/types";
-// import { useTokenABalance } from "@/app/context/ContractContext/hooks";
 import { Button } from "../Button";
 import { cn } from "@/app/utils";
 import { ReactNode } from "react";
@@ -34,7 +32,7 @@ export function Swap() {
             Sign In
           </Button>
         )}
-        {user.status === "connected" && <InitTransaction />}
+        {user.status === "connected" && <InitTransaction user={user} />}
       </form>
     </SwapProvider>
   );
@@ -42,6 +40,7 @@ export function Swap() {
 
 function SwapFormHeader() {
   const { state, modeChange } = useSwap();
+
   return (
     <div className="flex justify-center pb-2">
       <button
@@ -113,13 +112,6 @@ function SwapFrom() {
 function BalanceDisplay({ children }: { children: ReactNode }) {
   return <span className="text-theme-grey-5 pt-1 text-xs">{children}</span>;
 }
-
-// function NativeBalanceDisplay({ user }: { user: UserContextStateConnected }) {
-//   const { status, data } = useNativeBalance(user);
-
-//   if (status === "success") return data;
-//   return "";
-// }
 
 function SwapTo() {
   const { state } = useSwap();

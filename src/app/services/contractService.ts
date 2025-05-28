@@ -1,19 +1,17 @@
 import * as StellarSdk from "@stellar/stellar-sdk";
 
 import { SignTransaction } from "@stellar/stellar-sdk/contract";
-import {
-  getTokenAClient,
-  getYieldControllerClient,
-} from "../contracts/contracts";
+import { getYieldControllerClient } from "../contracts/contracts";
 import { NetworkString } from "./UserService/types";
 import { chainConfig } from "../config";
 import { parseRawSimulation } from "@stellar/stellar-sdk/rpc";
-import { parseAppSegmentConfig } from "next/dist/build/segment-config/app/app-segment-config";
+import { nativeToScVal, TransactionBuilder } from "@stellar/stellar-sdk";
 
 export type ContractService = {
   yieldController: {
     mint: (
       account: string,
+      sequenceNumber: string,
       amount: bigint,
       network: NetworkString,
       signTransaction: SignTransaction,
@@ -25,17 +23,7 @@ export type ContractService = {
       signTransaction: SignTransaction,
     ) => Promise<bigint>;
   };
-  cusd: {
-    fetchBalance: (
-      account: string,
-      network: NetworkString,
-    ) => Promise<number | null>;
-  };
   usdc: {
-    fetchBalance: (
-      account: string,
-      network: NetworkString,
-    ) => Promise<number | null>;
     fetchAllowance: (
       owner: string,
       spender: string,
@@ -46,25 +34,171 @@ export type ContractService = {
 
 export const contractService: ContractService = {
   yieldController: {
-    mint: async (account, amount, network, signTransaction) => {
-      const contract = getYieldControllerClient(network, account);
-      const tx = await contract.deposit_collateral({
-        protocol: "protocol",
-        user: account,
-        asset: chainConfig[network].usdc.contractId,
-        amount,
+    mint: async (account, sequenceNumber, amount, network, signTransaction) => {
+      const yieldControllerContractId =
+        chainConfig[network].yieldController.contractId;
+      const usdcContractId = chainConfig[network].usdc.contractId;
+
+      const sourceAccount = new StellarSdk.Account(account, sequenceNumber);
+
+      const yieldControllerContract = new StellarSdk.Contract(
+        yieldControllerContractId,
+      );
+      const usdcContract = new StellarSdk.Contract(usdcContractId);
+
+      const authEntry = new StellarSdk.xdr.SorobanAuthorizationEntry({
+        credentials:
+          StellarSdk.xdr.SorobanCredentials.sorobanCredentialsAddress(
+            new StellarSdk.xdr.SorobanAddressCredentials({
+              address: userAddress.toScAddress(),
+            }),
+          ),
+        rootInvocation: xdr.AuthorizedInvocation({
+          contractId: tokenContractAddress.toScAddress(),
+          functionName: "approve",
+          args: [
+            userAddress.toScVal(), // from
+            mainContractAddress.toScVal(), // spender
+            nativeToScVal(1000000, { type: "i128" }), // amount
+          ].map(xdr.ScVal.fromXDR),
+          subInvocations: [],
+        }),
       });
-      const res = await tx?.signAndSend({
-        signTransaction: signTransaction,
+
+      // Build approve operation (token contract)
+      const approveArgs = [
+        nativeToScVal(account, { type: "address" }), // owner
+        nativeToScVal(yieldControllerContractId, {
+          type: "address",
+        }),
+        nativeToScVal(amount, { type: "i128" }),
+      ];
+
+      // Build main contract operation
+      const executeArgs = [
+        nativeToScVal("BC_LA", { type: "string" }),
+        nativeToScVal(account, { type: "address" }),
+        nativeToScVal(usdcContractId, {
+          type: "address",
+        }),
+        nativeToScVal(amount, { type: "i128" }),
+      ];
+
+      const operations = [
+        {
+          contract: usdcContractId,
+          method: "approve",
+          args: approveArgs,
+        },
+        {
+          contract: chainConfig[network].yieldController.contractId,
+          method: "deposit_collateral",
+          args: executeArgs,
+        },
+      ];
+
+      const mainOperation = StellarSdk.Operation.invokeHostFunction({
+        func: StellarSdk.xdr.HostFunction.hostFunctionTypeInvokeContract(
+          new StellarSdk.xdr.InvokeContractArgs({
+            contractAddress: StellarSdk.Address.fromString(
+              yieldControllerContractId,
+            ).toScAddress(),
+            functionName: "deposit_collateral",
+            args: [...executeArgs],
+          }),
+        ),
+        auth: [
+          // Add authorization entry for the token approval
+          StellarSdk.xdr.SorobanAuthorizationEntry.fromJSON({
+            credentials: {
+              type: "address",
+              address: {
+                accountId: userPublicKey,
+              },
+            },
+            rootInvocation: {
+              function: {
+                type: "contract",
+                contractId: tokenContractId,
+                functionName: "approve",
+                args: [
+                  Address.fromString(userPublicKey).toScVal(),
+                  Address.fromString(mainContractId).toScVal(),
+                  nativeToScVal(1000000, { type: "i128" }),
+                ],
+              },
+              subInvocations: [],
+            },
+          }),
+        ],
       });
-      return res.result;
+
+      // Create transaction with both operations
+      let tx = new TransactionBuilder(sourceAccount, {
+        fee: "1000", // Initial fee (will be adjusted)
+        networkPassphrase: chainConfig[network].networkPassphrase,
+      })
+        .addOperation(
+          StellarSdk.Operation.invokeHostFunction({
+            func: StellarSdk.xdr.HostFunction.hostFunctionTypeInvokeContract(
+              new StellarSdk.xdr.InvokeContractArgs({
+                contractAddress: Buffer.from(contractId, "hex"),
+                functionName: "batch",
+                args: operations.map((op) =>
+                  StellarSdk.xdr.ScVal.scvObject(
+                    StellarSdk.xdr.ScObject.scoVec([
+                      StellarSdk.xdr.ScVal.scvSymbol(op.contract),
+                      StellarSdk.xdr.ScVal.scvSymbol(op.method),
+                      ...op.args,
+                    ]),
+                  ),
+                ),
+              }),
+            ),
+            auth: [],
+          }),
+        )
+        .setTimeout(30)
+        .build();
+
+      const server = new StellarSdk.rpc.Server(chainConfig[network].sorobanUrl);
+
+      // Simulate transaction to get proper fee
+      const simulated = await server.simulateTransaction(tx);
+      if (StellarSdk.rpc.Api.isSimulationError(simulated)) {
+        throw simulated.error;
+      }
+
+      tx = new TransactionBuilder(sourceAccount, {
+        fee: simulated.minResourceFee,
+        networkPassphrase: chainConfig[network].networkPassphrase,
+      })
+        .addOperation(usdcContract.call("approve", ...approveArgs))
+        .addOperation(
+          yieldControllerContract.call("deposit_collateral", ...executeArgs),
+        )
+        .setTimeout(30)
+        .build();
+
+      const { signedTxXdr } = await signTransaction(tx.toXDR());
+
+      const res = server.sendTransaction(
+        StellarSdk.TransactionBuilder.fromXDR(
+          signedTxXdr,
+          chainConfig[network].networkPassphrase,
+        ),
+      );
+
+      console.log("mint response: ", res);
+
+      return BigInt(42);
     },
     burn: async (account, amount, network, signTransaction) => {
       const contract = getYieldControllerClient(network, account);
       const tx = await contract.deposit_collateral({
         protocol: "protocol",
         user: account,
-        asset: chainConfig[network].usdc.contractId,
+        asset: usdcContractId,
         amount,
       });
       const res = await tx?.signAndSend({
@@ -73,37 +207,13 @@ export const contractService: ContractService = {
       return res.result;
     },
   },
-  cusd: {
-    fetchBalance: async (account, network): Promise<number> => {
-      const contract = getTokenAClient(network, account);
-      const res = await contract.balance({ account });
-      return Number(res.result) / 10e18;
-    },
-  },
   usdc: {
-    fetchBalance: async () =>
-      // account,
-      //  network
-      {
-        return 7;
-      },
-    // fetchAllowance: async (
-    //   owner: string,
-    //   spender: string,
-    //   network: NetworkString,
-    // ): Promise<number> => {
-    //   const contract = getTokenAClient(network, owner);
-    //   const res = await contract.allowance({ owner, spender });
-    //   return Number(res.result) / 10e18;
-    // },
     fetchAllowance: async (owner, spender, network) => {
       try {
         const server = new StellarSdk.rpc.Server(
           "https://soroban-testnet.stellar.org",
         );
-        const contract = new StellarSdk.Contract(
-          chainConfig[network].usdc.contractId,
-        );
+        const contract = new StellarSdk.Contract(usdcContractId);
         const sourceAccount = await server.getAccount(owner);
         const transaction = new StellarSdk.TransactionBuilder(sourceAccount, {
           fee: StellarSdk.BASE_FEE,
@@ -135,7 +245,7 @@ export const contractService: ContractService = {
         const parsed = parseRawSimulation(simRes);
         console.log({ parsed });
         /* eslint-disable */
-        console.log("current count: ", (simRes as any).result.retval._value);
+        console.log("allowance value: ", (simRes as any).result.retval._value);
         // type Woo = Prettify<typeof simRes>;
         // simRes as Woo;
         // console.log(simRes.result !== undefined);

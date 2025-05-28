@@ -1,4 +1,5 @@
 export type NetworkConfig = {
+  networkPassphrase: string;
   sorobanUrl: string;
   horizonUrl: string;
   yieldController: {
@@ -19,6 +20,7 @@ export type ChainConfig = {
 
 export const chainConfig: ChainConfig = {
   TESTNET: {
+    networkPassphrase: "Test SDF Network ; September 2015",
     sorobanUrl: "https://soroban-testnet.stellar.org",
     horizonUrl: "https://horizon-testnet.stellar.org",
     yieldController: {
@@ -32,6 +34,7 @@ export const chainConfig: ChainConfig = {
     },
   },
   PUBLIC: {
+    networkPassphrase: "Public Global Stellar Network ; September 2015",
     sorobanUrl: "https://rpc.ankr.com/stellar_soroban",
     horizonUrl: "https://rpc.ankr.com/http/stellar_horizon",
     yieldController: {

@@ -1,4 +1,5 @@
-import { TransactionEvent, TransactionState } from "./TransactionContext";
+import { TransactionEvent } from "./TransactionContext";
+import { TransactionState } from "./types";
 
 export function transactionReducer(
   state: TransactionState,

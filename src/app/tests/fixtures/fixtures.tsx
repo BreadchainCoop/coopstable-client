@@ -2,7 +2,7 @@ import { cleanup, render } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { ContractProvider } from "@/app/context/ContractContext/ContractContext";
-import { BalanceProvider } from "@/app/context/BalanceContext";
+import { BalanceProvider } from "@/app/context/AccountContext";
 import { UserProvider } from "@/app/context/UserContext/UserContext";
 import { NetworkString } from "@/app/services/UserService/types";
 import { TransactionProvider } from "@/app/context/TransactionContext/TransactionContext";

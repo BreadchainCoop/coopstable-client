@@ -1,0 +1,58 @@
+import { Horizon } from "@stellar/stellar-sdk";
+
+import { chainConfig } from "@/app/config";
+import { NetworkString } from "./UserService/types";
+
+export type AccountValues = {
+  sequenceNumber: string;
+  balances: BalanceValues;
+};
+
+export type BalanceValues = {
+  native: string;
+  USDC: string | null;
+  CUSD: string | null;
+};
+
+export type AccountService = {
+  fetchAccount: (
+    account: string,
+    network: NetworkString,
+  ) => Promise<AccountValues>;
+};
+
+async function fetchAccount(account: string, network: NetworkString) {
+  const server = new Horizon.Server(chainConfig[network].horizonUrl);
+
+  const res = await server.loadAccount(account);
+
+  const sequenceNumber = res.sequence;
+
+  const balances = res.balances.reduce<BalanceValues>(
+    (acc, balance) => {
+      if (balance.asset_type === "native") {
+        acc.native = balance.balance;
+      }
+      if (balance.asset_type === "credit_alphanum4") {
+        if (balance.asset_code === "USDC") {
+          acc.USDC = balance.balance;
+        }
+        if (balance.asset_code === "CUSD") {
+          acc.CUSD = balance.balance;
+        }
+      }
+      return acc;
+    },
+    {
+      native: "",
+      USDC: null,
+      CUSD: null,
+    },
+  );
+
+  return { balances, sequenceNumber };
+}
+
+export const accountService: AccountService = {
+  fetchAccount,
+};

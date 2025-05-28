@@ -7,24 +7,11 @@ import { chainConfig } from "@/app/config";
 import { UserContextStateConnected } from "../UserContext/types";
 import { NetworkString } from "@/app/services/UserService/types";
 
-export function useCUSDBalance(account: string, network: NetworkString) {
-  const context = useContext(ContractContext);
-  if (!context)
-    throw new Error("useCUSDBalance must be used within a ContractProvider");
-
-  return useQuery({
-    queryKey: [`cusdBalance${account}`],
-    queryFn: async () => context.cusd.fetchBalance(account, network),
-    refetchInterval: 1000,
-  });
-}
-
 export function useAllowance(account: string, network: NetworkString) {
   const context = useContext(ContractContext);
   if (!context)
     throw new Error("useAllowance must be used within a ContractProvider");
 
-  console.log("useAllowance()");
   return useQuery({
     queryKey: [`allowance_${account}`],
     queryFn: async () => {
@@ -48,10 +35,13 @@ export function useTokenMint(signTransaction: SignTransaction) {
     { status: "init" } | { status: "success" } | { status: "error" }
   >({ status: "init" });
 
-  async function signAndSend(user: UserContextStateConnected, amount: bigint) {
-    // TODO mint transaction
+  async function signAndSend(
+    user: UserContextStateConnected,
+    sequenceNumber: string,
+    amount: bigint,
+  ) {
     context?.yieldController
-      .mint(user.account, amount, user.network, signTransaction)
+      .mint(user.account, sequenceNumber, amount, user.network, signTransaction)
       .then(() => {
         setState({ status: "success" });
       })

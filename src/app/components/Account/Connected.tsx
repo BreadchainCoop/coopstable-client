@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { UserContextStateConnected } from "@/app/context/UserContext/types";
 import { truncateAddress } from "@/app/utils";
-import { useNativeBalance } from "@/app/context/BalanceContext";
+import { useNativeBalance } from "@/app/context/AccountContext";
 
 export function AccountConnected({
   user,
