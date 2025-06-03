@@ -29,7 +29,7 @@ export function useAllowance(account: string, network: NetworkString) {
 export function useTokenMint(signTransaction: SignTransaction) {
   const context = useContext(ContractContext);
   if (!context)
-    throw new Error("useTokenABalance must be used within a ContractProvider");
+    throw new Error("useTokenMint must be used within a ContractProvider");
 
   const [state, setState] = useState<
     { status: "init" } | { status: "success" } | { status: "error" }

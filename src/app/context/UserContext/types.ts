@@ -1,4 +1,4 @@
-import { NetworkString } from "@/app/services/UserService/UserService";
+import { NetworkString } from "@/app/services/UserService/types";
 
 export type UserContextStateLoading = {
   status: "loading";

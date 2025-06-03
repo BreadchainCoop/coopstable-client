@@ -1,6 +1,6 @@
 import { Swap } from "./components/Swap/Swap";
 import { cn, pageWrapClasses } from "./utils";
-// import { TokenPanel } from "./components/TokenPanel";
+import { TokenPanel } from "./components/TokenPanel";
 
 export default function Home() {
   return (
@@ -19,7 +19,7 @@ export default function Home() {
           <div className="flex justify-end">
             <Swap />
           </div>
-          {/* <TokenPanel /> */}
+          <TokenPanel />
         </div>
       </div>
     </div>
