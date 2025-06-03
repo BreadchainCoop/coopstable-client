@@ -1,9 +1,14 @@
 export type NetworkString = "PUBLIC" | "TESTNET";
 
+export interface WalletConnectionData {
+  walletId: string;
+  timestamp: number;
+}
+
 export type UserService = {
   connectWallet: (
     onConnected: (account: string, network: "PUBLIC" | "TESTNET") => void,
-  ) => void;
+  ) => Promise<void>;
   disconnectWallet: () => Promise<void>;
   signTransaction: (
     xdr: string,
@@ -18,4 +23,10 @@ export type UserService = {
     signedTxXdr: string;
     signerAddress?: string;
   }>;
+  restoreConnection: (
+    onConnected: (account: string, network: "PUBLIC" | "TESTNET") => void,
+    onError?: (error: Error) => void,
+  ) => Promise<boolean>;
 };
+
+

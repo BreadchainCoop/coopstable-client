@@ -1,3 +1,4 @@
+// src/app/context/UserContext/UserContext.tsx
 import {
   createContext,
   useContext,
@@ -39,24 +40,57 @@ export function UserProvider({
   });
 
   useEffect(() => {
-    setState({
-      status: "not_connected",
-    });
-  }, []);
+    const restore = async () => {
+      try {
+        const restored = await userService.restoreConnection?.(
+          (account, network) => {
+            setState({
+              status: "connected",
+              account,
+              network,
+            });
+          },
+          (error) => {
+            console.error("Failed to restore connection:", error);
+            setState({ status: "not_connected" });
+          }
+        );
+
+        if (!restored) {
+          setState({ status: "not_connected" });
+        }
+      } catch (error) {
+        console.error("Error during connection restore:", error);
+        setState({ status: "not_connected" });
+      }
+    };
+
+    restore();
+  }, [userService]);
 
   async function connectWallet() {
-    userService.connectWallet((account, network) => {
-      setState({
-        status: "connected",
-        account,
-        network,
+    setState({ status: "connecting" });
+    try {
+      await userService.connectWallet((account, network) => {
+        setState({
+          status: "connected",
+          account,
+          network,
+        });
       });
-    });
+    } catch (error) {
+      console.error("Failed to connect wallet:", error);
+      setState({ status: "error" });
+    }
   }
 
   async function disconnectWallet() {
-    await userService.disconnectWallet();
-    setState({ ...state, status: "not_connected" });
+    try {
+      await userService.disconnectWallet();
+      setState({ status: "not_connected" });
+    } catch (error) {
+      console.error("Failed to disconnect wallet:", error);
+    }
   }
 
   async function signTransaction(
