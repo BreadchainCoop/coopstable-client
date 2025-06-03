@@ -9,7 +9,7 @@ export type AccountValues = {
 };
 
 export type BalanceValues = {
-  native: string;
+  NATIVE: string;
   USDC: string | null;
   CUSD: string | null;
 };
@@ -31,7 +31,7 @@ async function fetchAccount(account: string, network: NetworkString) {
   const balances = res.balances.reduce<BalanceValues>(
     (acc, balance) => {
       if (balance.asset_type === "native") {
-        acc.native = balance.balance;
+        acc.NATIVE = balance.balance;
       }
       if (balance.asset_type === "credit_alphanum4") {
         if (balance.asset_code === "USDC") {
@@ -44,7 +44,7 @@ async function fetchAccount(account: string, network: NetworkString) {
       return acc;
     },
     {
-      native: "",
+      NATIVE: "",
       USDC: null,
       CUSD: null,
     },

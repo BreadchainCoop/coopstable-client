@@ -1,11 +1,14 @@
 "use client";
+import { TokenCode, TOKEN_CODES } from "@/app/constants";
 import { useUser } from "@/app/context/UserContext/UserContext";
+import { UserContextStateConnected } from "@/app/context/UserContext/types";
+import { useUserBalance } from "@/app/context/AccountContext";
 import { SwapProvider, useSwap } from "./SwapContext";
 import { Button } from "../Button";
-import { cn } from "@/app/utils";
-import { ReactNode } from "react";
+import { cn, formatBalance } from "@/app/utils";
 import { InitTransaction } from "./InitTransaction";
 import { CUSDIcon, USDCIcon } from "../Icons";
+import { format } from "path";
 
 export function Swap() {
   const { user, connectWallet } = useUser();
@@ -69,7 +72,7 @@ function SwapFormHeader() {
 
 function SwapFrom() {
   const { state, inputValueChange } = useSwap();
-  const token = state.mode === "mint" ? "USDC" : "cUSD";
+  const token = state.mode === "mint" ? TOKEN_CODES.USDC : TOKEN_CODES.CUSD;
 
   return (
     <div className="border-theme-grey-4 flex flex-col gap-1 border-1 p-2">
@@ -103,19 +106,15 @@ function SwapFrom() {
         </div>
       </div>
       <div className="flex justify-end">
-        <BalanceDisplay>Balance: 0.00 {token}</BalanceDisplay>
+        <UserBalanceDisplay token={token} />
       </div>
     </div>
   );
 }
 
-function BalanceDisplay({ children }: { children: ReactNode }) {
-  return <span className="text-theme-grey-5 pt-1 text-xs">{children}</span>;
-}
-
 function SwapTo() {
   const { state } = useSwap();
-  const token = state.mode === "burn" ? "USDC" : "cUSD";
+  const token = state.mode === "burn" ? TOKEN_CODES.USDC : TOKEN_CODES.CUSD;
   return (
     <div className="border-theme-grey-4 flex flex-col gap-1 border-1 p-2">
       <span className="text-theme-grey-5 p-1 text-xs">You receive</span>
@@ -131,7 +130,7 @@ function SwapTo() {
         </div>
       </div>
       <div className="flex justify-end">
-        <BalanceDisplay>Balance: 0.00 {token}</BalanceDisplay>
+        <UserBalanceDisplay token={token} />
       </div>
     </div>
   );
@@ -172,4 +171,27 @@ function ModeReverse() {
       </button>
     </div>
   );
+}
+
+function UserBalanceDisplay({ token }: { token: TokenCode }) {
+  const { user } = useUser();
+  if (user.status === "connected") {
+    return <BalanceDisplay token={token} user={user} />;
+  }
+  return <BalanceDisplay user={null} token={token} />;
+}
+
+function BalanceDisplay({ token, user }: {  token: TokenCode, user: UserContextStateConnected | null }) {
+  if (!user) return <span className="text-theme-grey-5 pt-1 text-xs">Balance: 0.00 {token}</span>;
+  const balance = useUserBalance(user.account, user.network, token);
+  switch (balance.status) {
+    case "pending":
+      return <span className="text-theme-grey-5 pt-1 text-xs">loading...</span>;
+    case "error":
+      return <span className="text-theme-grey-5 pt-1 text-xs">Balance: 0.00 {token}</span>;
+    case "success":
+      return <span className="text-theme-grey-5 pt-1 text-xs">Balance: {formatBalance(balance.data as string, token).withSymbol}</span>;
+    default:
+      return <span className="text-theme-grey-5 pt-1 text-xs">Balance: 0.00 {token}</span>;;
+  }
 }

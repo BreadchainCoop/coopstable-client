@@ -3,12 +3,9 @@ import { createContext, useContext, type ReactNode } from "react";
 
 import { AccountService } from "../services/accountService";
 import { NetworkString } from "../services/UserService/types";
+import { TokenCode } from "../constants";
 
 const BalanceContext = createContext<AccountService | undefined>(undefined);
-
-// type Prettify<T> = {
-//   [K in keyof T]: T[K];
-// } & {};
 
 type BalanceResult<T> =
   | BalanceResultSuccess<T>
@@ -80,7 +77,7 @@ export function useNativeBalance(
       return {
         status: balances.status,
         error: balances.error,
-        data: balances.data.balances.native,
+        data: balances.data.balances.NATIVE,
       };
     case "error":
       return {
@@ -183,6 +180,40 @@ export function useSequenceNumber(
         status: balances.status,
         error: balances.error,
         data: balances.data.sequenceNumber,
+      };
+    case "error":
+      return {
+        status: balances.status,
+        error: balances.error,
+        data: null,
+      };
+    default:
+      throw new Error("unhandled case in switch");
+  }
+}
+
+export function useUserBalance(
+  account: string,
+  network: NetworkString,
+  token: string,
+) {
+  const context = useContext(BalanceContext);
+  if (!context)
+    throw new Error("useUserBalance must be used within a BalanceContext");
+
+  const balances = useAccount(account, network);
+  switch (balances.status) {
+    case "pending":
+      return {
+        status: balances.status,
+        error: balances.error,
+        data: null,
+      };
+    case "success":
+      return {
+        status: balances.status,
+        error: balances.error,
+        data: balances.data.balances[token.toUpperCase() as keyof typeof balances.data.balances],
       };
     case "error":
       return {
