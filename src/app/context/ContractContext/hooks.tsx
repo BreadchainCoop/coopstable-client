@@ -46,7 +46,7 @@ export function useTokenMint(signTransaction: SignTransaction) {
       .then(() => {
         setState({ status: "success" });
       })
-      .catch((err) => {
+      .catch((err: any) => {
         console.log(err);
         setState({ status: "error" });
       });
@@ -71,7 +71,7 @@ export function useTokenBurn(signTransaction: SignTransaction) {
       .then(() => {
         setState({ status: "success" });
       })
-      .catch((err) => {
+      .catch((err: any) => {
         console.log(err);
         setState({ status: "error" });
       });

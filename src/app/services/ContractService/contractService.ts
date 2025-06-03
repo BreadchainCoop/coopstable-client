@@ -1,48 +1,13 @@
 import * as StellarSdk from "@stellar/stellar-sdk";
 import { SignTransaction } from "@stellar/stellar-sdk/contract";
 import { Network } from "@/app/config";
-import { getYieldControllerClient } from "../../contracts/contracts";
 import { chainConfig } from "../../config";
 import { parseRawSimulation } from "@stellar/stellar-sdk/rpc";
 import { nativeToScVal, TransactionBuilder } from "@stellar/stellar-sdk";
-import { fetchAllowance } from "./fetchAllowance";
+import { fetchAllowance, approve } from "./token";
 import { TOKEN_CODES } from "@/app/constants";
+import { type ContractService } from "./types";
 
-export type ContractService = {
-  contracts: { 
-    yieldController: {
-      mint: (
-        account: string,
-        sequenceNumber: string,
-        amount: bigint,
-        network: Network,
-        signTransaction: SignTransaction,
-      ) => Promise<bigint>;
-      burn: (
-        account: string,
-        amount: bigint,
-        network: Network,
-        signTransaction: SignTransaction,
-      ) => Promise<bigint>;
-    };
-  };
-  sacs: {
-    usdc: {
-      fetchAllowance: (
-        owner: string,
-        spender: string,
-        network: Network,
-      ) => Promise<number | null>;
-    }
-    cusd: {
-      fetchAllowance: (
-        owner: string,
-        spender: string,
-        network: Network,
-      ) => Promise<number | null>;      
-    }
-  }
-};
 
 export const contractService: ContractService = {
   contracts: {
@@ -66,7 +31,7 @@ export const contractService: ContractService = {
                 address: userAddress.toScAddress(),
               }),
             ),
-          rootInvocation: xdr.AuthorizedInvocation({
+          rootInvocation: StellarSdk.xdr.AuthorizedInvocation({
             contractId: tokenContractAddress.toScAddress(),
             functionName: "approve",
             args: [
@@ -206,19 +171,7 @@ export const contractService: ContractService = {
   
         return BigInt(42);
       },
-      burn: async (account, amount, network, signTransaction) => {
-        const contract = getYieldControllerClient(network, account);
-        const tx = await contract.deposit_collateral({
-          protocol: "protocol",
-          user: account,
-          asset: usdcContractId,
-          amount,
-        });
-        const res = await tx?.signAndSend({
-          signTransaction: signTransaction,
-        });
-        return res.result;
-      },
+      burn: async (account, amount, network, signTransaction) => Promise.resolve(0),
     },
   },
   sacs: {

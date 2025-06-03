@@ -20,7 +20,13 @@ export type ChainConfig = {
   TESTNET: NetworkConfig;
   PUBLIC: NetworkConfig;
 };
+
 export type Network = keyof typeof chainConfig;
+
+export const SUPPORTED_NETWORKS = {
+  TESTNET: "TESTNET",
+  PUBLIC: "PUBLIC",
+} as const;
 
 export const chainConfig: ChainConfig = {
   TESTNET: {
