@@ -6,8 +6,9 @@ import { SignTransaction } from "@stellar/stellar-sdk/contract";
 import { chainConfig } from "@/app/config";
 import { UserContextStateConnected } from "../UserContext/types";
 import { NetworkString } from "@/app/services/UserService/types";
+import { TokenCode } from "@/app/constants";
 
-export function useAllowance(account: string, network: NetworkString) {
+export function useAllowance(account: string, network: NetworkString, token: TokenCode) {
   const context = useContext(ContractContext);
   if (!context)
     throw new Error("useAllowance must be used within a ContractProvider");
@@ -16,7 +17,7 @@ export function useAllowance(account: string, network: NetworkString) {
     queryKey: [`allowance_${account}`],
     queryFn: async () => {
       // TODO fetch allowance transaction
-      return context.usdc.fetchAllowance(
+      return context.sacs[token.toLowerCase() as keyof typeof context.sacs].fetchAllowance(
         account,
         chainConfig[network].yieldController.contractId,
         network,
@@ -40,7 +41,7 @@ export function useTokenMint(signTransaction: SignTransaction) {
     sequenceNumber: string,
     amount: bigint,
   ) {
-    context?.yieldController
+    context?.contracts.yieldController
       .mint(user.account, sequenceNumber, amount, user.network, signTransaction)
       .then(() => {
         setState({ status: "success" });
@@ -65,7 +66,7 @@ export function useTokenBurn(signTransaction: SignTransaction) {
 
   async function signAndSend(user: UserContextStateConnected, amount: bigint) {
     // TODO burn transaction
-    context?.yieldController
+    context?.contracts.yieldController
       .burn(user.account, amount, user.network, signTransaction)
       .then(() => {
         setState({ status: "success" });

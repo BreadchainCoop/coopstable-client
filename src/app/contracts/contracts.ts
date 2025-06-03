@@ -15,6 +15,21 @@ export function getUSDCClient(network: NetworkString, publicKey: string) {
   return tokenClient;
 }
 
+export function getTokenClient(
+  network: NetworkString,
+  publicKey: string,
+  asset: string,
+) {
+  const tokenClient = TokenClient.from({
+    contractId: asset,
+    networkPassphrase: YieldControllerClient.Networks[network],
+    rpcUrl: chainConfig[network].sorobanUrl,
+    allowHttp: true,
+    publicKey,
+  });
+  return tokenClient;
+}
+
 export function getYieldControllerClient(
   network: NetworkString,
   publicKey?: string,

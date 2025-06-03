@@ -5,7 +5,7 @@ import { UserProvider } from "./context/UserContext/UserContext";
 import { AccountProvider } from "./context/AccountContext";
 import { accountService } from "./services/accountService";
 import { ContractProvider } from "./context/ContractContext/ContractContext";
-import { contractService } from "./services/contractService";
+import { contractService } from "./services/ContractService/contractService";
 import { userService } from "./services/UserService/UserService";
 import { TransactionProvider } from "./context/TransactionContext/TransactionContext";
 
