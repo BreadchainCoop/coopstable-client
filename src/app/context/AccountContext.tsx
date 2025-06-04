@@ -202,6 +202,7 @@ export function useUserBalance(
     throw new Error("useUserBalance must be used within a BalanceContext");
 
   const balances = useAccount(account, network);
+  console.log("balances: ", balances.data?.balances);
   switch (balances.status) {
     case "pending":
       return {

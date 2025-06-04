@@ -1,6 +1,5 @@
 import { Horizon } from "@stellar/stellar-sdk";
-
-import { chainConfig } from "@/app/config";
+import { getNetworkConfig } from "@/app/config";
 import { NetworkString } from "./UserService/types";
 
 export type AccountValues = {
@@ -22,19 +21,21 @@ export type AccountService = {
 };
 
 async function fetchAccount(account: string, network: NetworkString) {
-  const server = new Horizon.Server(chainConfig[network].horizonUrl);
-
+  const config = getNetworkConfig(network);
+  const server = new Horizon.Server(config.horizonUrl);
   const res = await server.loadAccount(account);
 
   const sequenceNumber = res.sequence;
-
   const balances = res.balances.reduce<BalanceValues>(
     (acc, balance) => {
       if (balance.asset_type === "native") {
         acc.NATIVE = balance.balance;
       }
       if (balance.asset_type === "credit_alphanum4") {
-        if (balance.asset_code === "USDC") {
+        if (
+          balance.asset_code === "USDC" && 
+          balance.asset_issuer === config.usdc.issuer
+        ) {
           acc.USDC = balance.balance;
         }
         if (balance.asset_code === "CUSD") {

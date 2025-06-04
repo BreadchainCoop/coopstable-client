@@ -11,6 +11,7 @@ export type NetworkConfig = {
   };
   usdc: {
     contractId: string;
+    issuer: string;
   };
   blend: {
     contractId: string;
@@ -41,6 +42,7 @@ export const chainConfig: ChainConfig = {
     },
     usdc: {
       contractId: "CAQCFVLOBK5GIULPNZRGATJJMIZL5BSP7X5YJVMGCPTUEPFM4AVSRCJU",
+      issuer: "GATALTGTWIOT6BUDBCZM3Q4OQ4BO2COLOAZ7IYSKPLC2PMSOPPGF5V56",
     },
     blend: {
       contractId: "CB22KRA3YZVCNCQI64JQ5WE7UY2VAV7WFLK6A2JN3HEX56T2EDAFO7QF",
@@ -58,6 +60,7 @@ export const chainConfig: ChainConfig = {
     },
     usdc: {
       contractId: "",
+      issuer: "",
     },
     blend: {
       contractId: "",
