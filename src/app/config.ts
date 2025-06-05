@@ -37,7 +37,7 @@ export const chainConfig: ChainConfig = {
     sorobanUrl: "https://soroban-testnet.stellar.org",
     horizonUrl: "https://horizon-testnet.stellar.org",
     yieldController: {
-      contractId: "CDO2YIXMZXEFAV77Q5TOI4G5L56A2XVDN6J2ERP5H7JDVDEB2UC5AV63",
+      contractId: "CCPWUJBVYG3R45UU4IRDNDOSANN2L4KJQMDPEGLDTQIKPJTBSDOUY7M4",
     },
     cusd: {
       contractId: "CDHHR356G725HNLAAQ74WBGVT6Y6ZFZLM2TIHLDCOZTJ2SVZ7P3EANYT",
