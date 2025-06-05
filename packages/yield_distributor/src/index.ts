@@ -59,6 +59,21 @@ export interface Distribution {
 
 export type DataKey = {tag: "Member", values: readonly [string]} | {tag: "Members", values: void} | {tag: "Distribution", values: readonly [u64]} | {tag: "Distributions", values: void};
 
+/**
+ * Error codes for the cusd_manager contract. Common errors are codes that match up with the built-in
+ * YieldDistributorError error reporting. YieldDistributor specific errors start at 400
+ */
+export const YieldDistributorError = {
+  1: {message:"InternalError"},
+  3: {message:"AlreadyInitializedError"},
+  4: {message:"UnauthorizedError"},
+  8: {message:"NegativeAmountError"},
+  10: {message:"BalanceError"},
+  12: {message:"OverflowError"},
+  1200: {message:"MemberAlreadyExists"},
+  1201: {message:"MemberDoesNotExist"}
+}
+
 
 export interface RoleData {
   admin_role: string;
@@ -73,8 +88,15 @@ export interface RolesMap {
   roles: Map<string, RoleData>;
 }
 
-export const Errors = {
-
+export const AccessControlError = {
+  1: {message:"InternalError"},
+  3: {message:"AlreadyInitializedError"},
+  4: {message:"UnauthorizedError"},
+  8: {message:"NegativeAmountError"},
+  10: {message:"BalanceError"},
+  12: {message:"OverflowError"},
+  1300: {message:"OnlyRoleAdmin"},
+  1301: {message:"UnAuhtorizedRole"}
 }
 
 export interface Client {
@@ -358,12 +380,32 @@ export interface Client {
     simulate?: boolean;
   }) => Promise<AssembledTransaction<null>>
 
+  /**
+   * Construct and simulate a get_yield_controller transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
+   */
+  get_yield_controller: (options?: {
+    /**
+     * The fee to pay for the transaction. Default: BASE_FEE
+     */
+    fee?: number;
+
+    /**
+     * The maximum amount of time to wait for the transaction to complete. Default: DEFAULT_TIMEOUT
+     */
+    timeoutInSeconds?: number;
+
+    /**
+     * Whether to automatically simulate the transaction when constructing the AssembledTransaction. Default: true
+     */
+    simulate?: boolean;
+  }) => Promise<AssembledTransaction<string>>
+
 }
 export class Client extends ContractClient {
   static async deploy<T = Client>(
         /** Constructor/Initialization Args for the contract's `__constructor` method */
         {treasury, treasury_share_bps, yield_controller, distribution_period, owner, admin}: {treasury: string, treasury_share_bps: u32, yield_controller: string, distribution_period: u64, owner: string, admin: string},
-    /** Options for initalizing a Client as well as for calling a method, with extras specific to deploying. */
+    /** Options for initializing a Client as well as for calling a method, with extras specific to deploying. */
     options: MethodOptions &
       Omit<ContractClientOptions, "contractId"> & {
         /** The hash of the Wasm blob, which must already be installed on-chain. */
@@ -393,12 +435,15 @@ export class Client extends ContractClient {
         "AAAAAAAAAAAAAAAZaXNfZGlzdHJpYnV0aW9uX2F2YWlsYWJsZQAAAAAAAAAAAAABAAAAAQ==",
         "AAAAAAAAAAAAAAAQZGlzdHJpYnV0ZV95aWVsZAAAAAMAAAAAAAAABmNhbGxlcgAAAAAAEwAAAAAAAAAFdG9rZW4AAAAAAAATAAAAAAAAAAZhbW91bnQAAAAAAAsAAAABAAAAAQ==",
         "AAAAAAAAAAAAAAAJc2V0X2FkbWluAAAAAAAAAgAAAAAAAAAGY2FsbGVyAAAAAAATAAAAAAAAAAluZXdfYWRtaW4AAAAAAAATAAAAAA==",
+        "AAAAAAAAAAAAAAAUZ2V0X3lpZWxkX2NvbnRyb2xsZXIAAAAAAAAAAQAAABM=",
         "AAAAAQAAAAAAAAAAAAAAEkRpc3RyaWJ1dGlvbkNvbmZpZwAAAAAABAAAAAAAAAATZGlzdHJpYnV0aW9uX3BlcmlvZAAAAAAGAAAAAAAAABFsYXN0X2Rpc3RyaWJ1dGlvbgAAAAAAAAYAAAAAAAAACHRyZWFzdXJ5AAAAEwAAAAAAAAASdHJlYXN1cnlfc2hhcmVfYnBzAAAAAAAE",
         "AAAAAQAAAAAAAAAAAAAABk1lbWJlcgAAAAAAAwAAAAAAAAAGYWN0aXZlAAAAAAABAAAAAAAAAAdhZGRyZXNzAAAAABMAAAAAAAAACWpvaW5lZF9hdAAAAAAAAAY=",
         "AAAAAQAAAAAAAAAAAAAADERpc3RyaWJ1dGlvbgAAAAUAAAAAAAAADW1lbWJlcl9hbW91bnQAAAAAAAALAAAAAAAAAAxtZW1iZXJfY291bnQAAAAEAAAAAAAAAAl0aW1lc3RhbXAAAAAAAAAGAAAAAAAAAAx0b3RhbF9hbW91bnQAAAALAAAAAAAAAA90cmVhc3VyeV9hbW91bnQAAAAACw==",
         "AAAAAgAAAAAAAAAAAAAAB0RhdGFLZXkAAAAABAAAAAEAAAAAAAAABk1lbWJlcgAAAAAAAQAAABMAAAAAAAAAAAAAAAdNZW1iZXJzAAAAAAEAAAAAAAAADERpc3RyaWJ1dGlvbgAAAAEAAAAGAAAAAAAAAAAAAAANRGlzdHJpYnV0aW9ucwAAAA==",
+        "AAAABAAAALdFcnJvciBjb2RlcyBmb3IgdGhlIGN1c2RfbWFuYWdlciBjb250cmFjdC4gQ29tbW9uIGVycm9ycyBhcmUgY29kZXMgdGhhdCBtYXRjaCB1cCB3aXRoIHRoZSBidWlsdC1pbgpZaWVsZERpc3RyaWJ1dG9yRXJyb3IgZXJyb3IgcmVwb3J0aW5nLiBZaWVsZERpc3RyaWJ1dG9yIHNwZWNpZmljIGVycm9ycyBzdGFydCBhdCA0MDAAAAAAAAAAABVZaWVsZERpc3RyaWJ1dG9yRXJyb3IAAAAAAAAIAAAAAAAAAA1JbnRlcm5hbEVycm9yAAAAAAAAAQAAAAAAAAAXQWxyZWFkeUluaXRpYWxpemVkRXJyb3IAAAAAAwAAAAAAAAARVW5hdXRob3JpemVkRXJyb3IAAAAAAAAEAAAAAAAAABNOZWdhdGl2ZUFtb3VudEVycm9yAAAAAAgAAAAAAAAADEJhbGFuY2VFcnJvcgAAAAoAAAAAAAAADU92ZXJmbG93RXJyb3IAAAAAAAAMAAAAAAAAABNNZW1iZXJBbHJlYWR5RXhpc3RzAAAABLAAAAAAAAAAEk1lbWJlckRvZXNOb3RFeGlzdAAAAAAEsQ==",
         "AAAAAQAAAAAAAAAAAAAACFJvbGVEYXRhAAAAAgAAAAAAAAAKYWRtaW5fcm9sZQAAAAAAEQAAAAAAAAAHbWVtYmVycwAAAAPsAAAAEwAAAAE=",
-        "AAAAAQAAADFBIHN0b3JhZ2Ugc3RydWN0dXJlIGZvciBhbGwgcm9sZXMgaW4gdGhlIGNvbnRyYWN0AAAAAAAAAAAAAAhSb2xlc01hcAAAAAEAAAAAAAAABXJvbGVzAAAAAAAD7AAAABEAAAfQAAAACFJvbGVEYXRh" ]),
+        "AAAAAQAAADFBIHN0b3JhZ2Ugc3RydWN0dXJlIGZvciBhbGwgcm9sZXMgaW4gdGhlIGNvbnRyYWN0AAAAAAAAAAAAAAhSb2xlc01hcAAAAAEAAAAAAAAABXJvbGVzAAAAAAAD7AAAABEAAAfQAAAACFJvbGVEYXRh",
+        "AAAABAAAAAAAAAAAAAAAEkFjY2Vzc0NvbnRyb2xFcnJvcgAAAAAACAAAAAAAAAANSW50ZXJuYWxFcnJvcgAAAAAAAAEAAAAAAAAAF0FscmVhZHlJbml0aWFsaXplZEVycm9yAAAAAAMAAAAAAAAAEVVuYXV0aG9yaXplZEVycm9yAAAAAAAABAAAAAAAAAATTmVnYXRpdmVBbW91bnRFcnJvcgAAAAAIAAAAAAAAAAxCYWxhbmNlRXJyb3IAAAAKAAAAAAAAAA1PdmVyZmxvd0Vycm9yAAAAAAAADAAAAAAAAAANT25seVJvbGVBZG1pbgAAAAAABRQAAAAAAAAAEFVuQXVodG9yaXplZFJvbGUAAAUV" ]),
       options
     )
   }
@@ -416,6 +461,7 @@ export class Client extends ContractClient {
         get_next_distribution_time: this.txFromJSON<u64>,
         is_distribution_available: this.txFromJSON<boolean>,
         distribute_yield: this.txFromJSON<boolean>,
-        set_admin: this.txFromJSON<null>
+        set_admin: this.txFromJSON<null>,
+        get_yield_controller: this.txFromJSON<string>
   }
 }

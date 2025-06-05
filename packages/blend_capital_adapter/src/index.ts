@@ -57,115 +57,7 @@ export type SupportedAdapter = {tag: "BlendCapital", values: void} | {tag: "Cust
 
 export type SupportedYieldType = {tag: "Lending", values: void} | {tag: "Liquidity", values: void} | {tag: "Custom", values: readonly [string]};
 
-export const Errors = {
-  1: {message:"InsufficientBalance"},
-
-  2: {message:"LendingOperationFailed"},
-
-  3: {message:"Unauthorized"}
-}
-
 export interface Client {
-  /**
-   * Construct and simulate a create_request transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
-   */
-  create_request: ({request_type, asset, amount}: {request_type: RequestType, asset: string, amount: i128}, options?: {
-    /**
-     * The fee to pay for the transaction. Default: BASE_FEE
-     */
-    fee?: number;
-
-    /**
-     * The maximum amount of time to wait for the transaction to complete. Default: DEFAULT_TIMEOUT
-     */
-    timeoutInSeconds?: number;
-
-    /**
-     * Whether to automatically simulate the transaction when constructing the AssembledTransaction. Default: true
-     */
-    simulate?: boolean;
-  }) => Promise<AssembledTransaction<Request>>
-
-  /**
-   * Construct and simulate a supply_collateral transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
-   */
-  supply_collateral: ({user, asset, amount}: {user: string, asset: string, amount: i128}, options?: {
-    /**
-     * The fee to pay for the transaction. Default: BASE_FEE
-     */
-    fee?: number;
-
-    /**
-     * The maximum amount of time to wait for the transaction to complete. Default: DEFAULT_TIMEOUT
-     */
-    timeoutInSeconds?: number;
-
-    /**
-     * Whether to automatically simulate the transaction when constructing the AssembledTransaction. Default: true
-     */
-    simulate?: boolean;
-  }) => Promise<AssembledTransaction<i128>>
-
-  /**
-   * Construct and simulate a withdraw_collateral transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
-   */
-  withdraw_collateral: ({user, asset, amount}: {user: string, asset: string, amount: i128}, options?: {
-    /**
-     * The fee to pay for the transaction. Default: BASE_FEE
-     */
-    fee?: number;
-
-    /**
-     * The maximum amount of time to wait for the transaction to complete. Default: DEFAULT_TIMEOUT
-     */
-    timeoutInSeconds?: number;
-
-    /**
-     * Whether to automatically simulate the transaction when constructing the AssembledTransaction. Default: true
-     */
-    simulate?: boolean;
-  }) => Promise<AssembledTransaction<i128>>
-
-  /**
-   * Construct and simulate a get_balance transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
-   */
-  get_balance: ({user, asset}: {user: string, asset: string}, options?: {
-    /**
-     * The fee to pay for the transaction. Default: BASE_FEE
-     */
-    fee?: number;
-
-    /**
-     * The maximum amount of time to wait for the transaction to complete. Default: DEFAULT_TIMEOUT
-     */
-    timeoutInSeconds?: number;
-
-    /**
-     * Whether to automatically simulate the transaction when constructing the AssembledTransaction. Default: true
-     */
-    simulate?: boolean;
-  }) => Promise<AssembledTransaction<i128>>
-
-  /**
-   * Construct and simulate a get_reserve_token_id transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
-   */
-  get_reserve_token_id: ({asset}: {asset: string}, options?: {
-    /**
-     * The fee to pay for the transaction. Default: BASE_FEE
-     */
-    fee?: number;
-
-    /**
-     * The maximum amount of time to wait for the transaction to complete. Default: DEFAULT_TIMEOUT
-     */
-    timeoutInSeconds?: number;
-
-    /**
-     * Whether to automatically simulate the transaction when constructing the AssembledTransaction. Default: true
-     */
-    simulate?: boolean;
-  }) => Promise<AssembledTransaction<Option<u32>>>
-
   /**
    * Construct and simulate a deposit transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
    */
@@ -209,7 +101,7 @@ export interface Client {
   /**
    * Construct and simulate a get_yield transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
    */
-  get_yield: ({user, asset}: {user: string, asset: string}, options?: {
+  get_yield: ({asset}: {asset: string}, options?: {
     /**
      * The fee to pay for the transaction. Default: BASE_FEE
      */
@@ -229,7 +121,7 @@ export interface Client {
   /**
    * Construct and simulate a claim_yield transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
    */
-  claim_yield: ({user, asset}: {user: string, asset: string}, options?: {
+  claim_yield: ({asset, recipient}: {asset: string, recipient: string}, options?: {
     /**
      * The fee to pay for the transaction. Default: BASE_FEE
      */
@@ -245,6 +137,66 @@ export interface Client {
      */
     simulate?: boolean;
   }) => Promise<AssembledTransaction<i128>>
+
+  /**
+   * Construct and simulate a claim_emissions transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
+   */
+  claim_emissions: ({to, asset}: {to: string, asset: string}, options?: {
+    /**
+     * The fee to pay for the transaction. Default: BASE_FEE
+     */
+    fee?: number;
+
+    /**
+     * The maximum amount of time to wait for the transaction to complete. Default: DEFAULT_TIMEOUT
+     */
+    timeoutInSeconds?: number;
+
+    /**
+     * Whether to automatically simulate the transaction when constructing the AssembledTransaction. Default: true
+     */
+    simulate?: boolean;
+  }) => Promise<AssembledTransaction<i128>>
+
+  /**
+   * Construct and simulate a get_emissions transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
+   */
+  get_emissions: ({from, asset}: {from: string, asset: string}, options?: {
+    /**
+     * The fee to pay for the transaction. Default: BASE_FEE
+     */
+    fee?: number;
+
+    /**
+     * The maximum amount of time to wait for the transaction to complete. Default: DEFAULT_TIMEOUT
+     */
+    timeoutInSeconds?: number;
+
+    /**
+     * Whether to automatically simulate the transaction when constructing the AssembledTransaction. Default: true
+     */
+    simulate?: boolean;
+  }) => Promise<AssembledTransaction<i128>>
+
+  /**
+   * Construct and simulate a protocol_token transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
+   */
+  protocol_token: (options?: {
+    /**
+     * The fee to pay for the transaction. Default: BASE_FEE
+     */
+    fee?: number;
+
+    /**
+     * The maximum amount of time to wait for the transaction to complete. Default: DEFAULT_TIMEOUT
+     */
+    timeoutInSeconds?: number;
+
+    /**
+     * Whether to automatically simulate the transaction when constructing the AssembledTransaction. Default: true
+     */
+    simulate?: boolean;
+  }) => Promise<AssembledTransaction<string>>
 
   /**
    * Construct and simulate a init transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
@@ -265,6 +217,26 @@ export interface Client {
      */
     simulate?: boolean;
   }) => Promise<AssembledTransaction<void>>
+
+  /**
+   * Construct and simulate a submit transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
+   */
+  submit: ({user, _spender, _to, requests}: {user: string, _spender: string, _to: string, requests: Array<Request>}, options?: {
+    /**
+     * The fee to pay for the transaction. Default: BASE_FEE
+     */
+    fee?: number;
+
+    /**
+     * The maximum amount of time to wait for the transaction to complete. Default: DEFAULT_TIMEOUT
+     */
+    timeoutInSeconds?: number;
+
+    /**
+     * Whether to automatically simulate the transaction when constructing the AssembledTransaction. Default: true
+     */
+    simulate?: boolean;
+  }) => Promise<AssembledTransaction<Positions>>
 
   /**
    * Construct and simulate a submit_with_allowance transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
@@ -289,7 +261,7 @@ export interface Client {
   /**
    * Construct and simulate a get_positions transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
    */
-  get_positions: ({_user}: {_user: string}, options?: {
+  get_positions: ({user}: {user: string}, options?: {
     /**
      * The fee to pay for the transaction. Default: BASE_FEE
      */
@@ -369,7 +341,7 @@ export interface Client {
   /**
    * Construct and simulate a update_b_rate transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
    */
-  update_b_rate: ({_asset, _new_rate}: {_asset: string, _new_rate: i128}, options?: {
+  update_b_rate: ({asset, new_rate}: {asset: string, new_rate: i128}, options?: {
     /**
      * The fee to pay for the transaction. Default: BASE_FEE
      */
@@ -386,12 +358,32 @@ export interface Client {
     simulate?: boolean;
   }) => Promise<AssembledTransaction<null>>
 
+  /**
+   * Construct and simulate a get_user_emissions transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
+   */
+  get_user_emissions: ({_user, _reserve_token_id}: {_user: string, _reserve_token_id: u32}, options?: {
+    /**
+     * The fee to pay for the transaction. Default: BASE_FEE
+     */
+    fee?: number;
+
+    /**
+     * The maximum amount of time to wait for the transaction to complete. Default: DEFAULT_TIMEOUT
+     */
+    timeoutInSeconds?: number;
+
+    /**
+     * Whether to automatically simulate the transaction when constructing the AssembledTransaction. Default: true
+     */
+    simulate?: boolean;
+  }) => Promise<AssembledTransaction<Option<UserEmissionData>>>
+
 }
 export class Client extends ContractClient {
   static async deploy<T = Client>(
         /** Constructor/Initialization Args for the contract's `__constructor` method */
-        {lending_adapter_controller_id, lending_pool_id}: {lending_adapter_controller_id: string, lending_pool_id: string},
-    /** Options for initalizing a Client as well as for calling a method, with extras specific to deploying. */
+        {yield_controller, blend_pool_id, blend_token_id}: {yield_controller: string, blend_pool_id: string, blend_token_id: string},
+    /** Options for initializing a Client as well as for calling a method, with extras specific to deploying. */
     options: MethodOptions &
       Omit<ContractClientOptions, "contractId"> & {
         /** The hash of the Wasm blob, which must already be installed on-chain. */
@@ -402,51 +394,50 @@ export class Client extends ContractClient {
         format?: "hex" | "base64";
       }
   ): Promise<AssembledTransaction<T>> {
-    return ContractClient.deploy({lending_adapter_controller_id, lending_pool_id}, options)
+    return ContractClient.deploy({yield_controller, blend_pool_id, blend_token_id}, options)
   }
   constructor(public readonly options: ContractClientOptions) {
     super(
-      new ContractSpec([ "AAAAAAAAAAAAAAAOY3JlYXRlX3JlcXVlc3QAAAAAAAMAAAAAAAAADHJlcXVlc3RfdHlwZQAAB9AAAAALUmVxdWVzdFR5cGUAAAAAAAAAAAVhc3NldAAAAAAAABMAAAAAAAAABmFtb3VudAAAAAAACwAAAAEAAAfQAAAAB1JlcXVlc3QA",
-        "AAAAAAAAAAAAAAARc3VwcGx5X2NvbGxhdGVyYWwAAAAAAAADAAAAAAAAAAR1c2VyAAAAEwAAAAAAAAAFYXNzZXQAAAAAAAATAAAAAAAAAAZhbW91bnQAAAAAAAsAAAABAAAACw==",
-        "AAAAAAAAAAAAAAATd2l0aGRyYXdfY29sbGF0ZXJhbAAAAAADAAAAAAAAAAR1c2VyAAAAEwAAAAAAAAAFYXNzZXQAAAAAAAATAAAAAAAAAAZhbW91bnQAAAAAAAsAAAABAAAACw==",
-        "AAAAAAAAAAAAAAALZ2V0X2JhbGFuY2UAAAAAAgAAAAAAAAAEdXNlcgAAABMAAAAAAAAABWFzc2V0AAAAAAAAEwAAAAEAAAAL",
-        "AAAAAAAAAAAAAAAUZ2V0X3Jlc2VydmVfdG9rZW5faWQAAAABAAAAAAAAAAVhc3NldAAAAAAAABMAAAABAAAD6AAAAAQ=",
-        "AAAAAAAAAAAAAAANX19jb25zdHJ1Y3RvcgAAAAAAAAIAAAAAAAAAHWxlbmRpbmdfYWRhcHRlcl9jb250cm9sbGVyX2lkAAAAAAAAEwAAAAAAAAAPbGVuZGluZ19wb29sX2lkAAAAABMAAAAA",
+      new ContractSpec([ "AAAAAAAAAAAAAAANX19jb25zdHJ1Y3RvcgAAAAAAAAMAAAAAAAAAEHlpZWxkX2NvbnRyb2xsZXIAAAATAAAAAAAAAA1ibGVuZF9wb29sX2lkAAAAAAAAEwAAAAAAAAAOYmxlbmRfdG9rZW5faWQAAAAAABMAAAAA",
         "AAAAAAAAAAAAAAAHZGVwb3NpdAAAAAADAAAAAAAAAAR1c2VyAAAAEwAAAAAAAAAFYXNzZXQAAAAAAAATAAAAAAAAAAZhbW91bnQAAAAAAAsAAAABAAAACw==",
         "AAAAAAAAAAAAAAAId2l0aGRyYXcAAAADAAAAAAAAAAR1c2VyAAAAEwAAAAAAAAAFYXNzZXQAAAAAAAATAAAAAAAAAAZhbW91bnQAAAAAAAsAAAABAAAACw==",
-        "AAAAAAAAAAAAAAAJZ2V0X3lpZWxkAAAAAAAAAgAAAAAAAAAEdXNlcgAAABMAAAAAAAAABWFzc2V0AAAAAAAAEwAAAAEAAAAL",
-        "AAAAAAAAAAAAAAALY2xhaW1feWllbGQAAAAAAgAAAAAAAAAEdXNlcgAAABMAAAAAAAAABWFzc2V0AAAAAAAAEwAAAAEAAAAL",
+        "AAAAAAAAAAAAAAAJZ2V0X3lpZWxkAAAAAAAAAQAAAAAAAAAFYXNzZXQAAAAAAAATAAAAAQAAAAs=",
+        "AAAAAAAAAAAAAAALY2xhaW1feWllbGQAAAAAAgAAAAAAAAAFYXNzZXQAAAAAAAATAAAAAAAAAAlyZWNpcGllbnQAAAAAAAATAAAAAQAAAAs=",
+        "AAAAAAAAAAAAAAAPY2xhaW1fZW1pc3Npb25zAAAAAAIAAAAAAAAAAnRvAAAAAAATAAAAAAAAAAVhc3NldAAAAAAAABMAAAABAAAACw==",
+        "AAAAAAAAAAAAAAANZ2V0X2VtaXNzaW9ucwAAAAAAAAIAAAAAAAAABGZyb20AAAATAAAAAAAAAAVhc3NldAAAAAAAABMAAAABAAAACw==",
+        "AAAAAAAAAAAAAAAOcHJvdG9jb2xfdG9rZW4AAAAAAAAAAAABAAAAEw==",
         "AAAAAwAAAAAAAAAAAAAAC1JlcXVlc3RUeXBlAAAAAAoAAAAAAAAABlN1cHBseQAAAAAAAAAAAAAAAAAIV2l0aGRyYXcAAAABAAAAAAAAABBTdXBwbHlDb2xsYXRlcmFsAAAAAgAAAAAAAAASV2l0aGRyYXdDb2xsYXRlcmFsAAAAAAADAAAAAAAAAAZCb3Jyb3cAAAAAAAQAAAAAAAAABVJlcGF5AAAAAAAABQAAAAAAAAAaRmlsbFVzZXJMaXF1aWRhdGlvbkF1Y3Rpb24AAAAAAAYAAAAAAAAAEkZpbGxCYWREZWJ0QXVjdGlvbgAAAAAABwAAAAAAAAATRmlsbEludGVyZXN0QXVjdGlvbgAAAAAIAAAAAAAAABhEZWxldGVMaXF1aWRhdGlvbkF1Y3Rpb24AAAAJ",
         "AAAAAQAAAAAAAAAAAAAAB1JlcXVlc3QAAAAAAwAAAAAAAAAHYWRkcmVzcwAAAAATAAAAAAAAAAZhbW91bnQAAAAAAAsAAAAAAAAADHJlcXVlc3RfdHlwZQAAAAQ=",
         "AAAAAAAAAAAAAAAEaW5pdAAAAAEAAAAAAAAADWluaXRpYWxfYXNzZXQAAAAAAAATAAAAAQAAA+0AAAAA",
+        "AAAAAAAAAAAAAAAGc3VibWl0AAAAAAAEAAAAAAAAAAR1c2VyAAAAEwAAAAAAAAAIX3NwZW5kZXIAAAATAAAAAAAAAANfdG8AAAAAEwAAAAAAAAAIcmVxdWVzdHMAAAPqAAAH0AAAAAdSZXF1ZXN0AAAAAAEAAAfQAAAACVBvc2l0aW9ucwAAAA==",
         "AAAAAAAAAAAAAAAVc3VibWl0X3dpdGhfYWxsb3dhbmNlAAAAAAAABAAAAAAAAAAEdXNlcgAAABMAAAAAAAAACF9zcGVuZGVyAAAAEwAAAAAAAAAHX3NlbmRlcgAAAAATAAAAAAAAAAlfcmVxdWVzdHMAAAAAAAPqAAAH0AAAAAdSZXF1ZXN0AAAAAAEAAAfQAAAACVBvc2l0aW9ucwAAAA==",
-        "AAAAAAAAAAAAAAANZ2V0X3Bvc2l0aW9ucwAAAAAAAAEAAAAAAAAABV91c2VyAAAAAAAAEwAAAAEAAAfQAAAACVBvc2l0aW9ucwAAAA==",
+        "AAAAAAAAAAAAAAANZ2V0X3Bvc2l0aW9ucwAAAAAAAAEAAAAAAAAABHVzZXIAAAATAAAAAQAAB9AAAAAJUG9zaXRpb25zAAAA",
         "AAAAAAAAAAAAAAALZ2V0X3Jlc2VydmUAAAAAAQAAAAAAAAAFYXNzZXQAAAAAAAATAAAAAQAAB9AAAAAHUmVzZXJ2ZQA=",
         "AAAAAAAAAAAAAAAQZ2V0X3Jlc2VydmVfbGlzdAAAAAAAAAABAAAD6gAAABM=",
         "AAAAAAAAAAAAAAAFY2xhaW0AAAAAAAADAAAAAAAAAAVfdXNlcgAAAAAAABMAAAAAAAAACl90b2tlbl9pZHMAAAAAA+oAAAAEAAAAAAAAAANfdG8AAAAAEwAAAAEAAAAL",
-        "AAAAAAAAAAAAAAANdXBkYXRlX2JfcmF0ZQAAAAAAAAIAAAAAAAAABl9hc3NldAAAAAAAEwAAAAAAAAAJX25ld19yYXRlAAAAAAAACwAAAAA=",
+        "AAAAAAAAAAAAAAANdXBkYXRlX2JfcmF0ZQAAAAAAAAIAAAAAAAAABWFzc2V0AAAAAAAAEwAAAAAAAAAIbmV3X3JhdGUAAAALAAAAAA==",
+        "AAAAAAAAAAAAAAASZ2V0X3VzZXJfZW1pc3Npb25zAAAAAAACAAAAAAAAAAVfdXNlcgAAAAAAABMAAAAAAAAAEV9yZXNlcnZlX3Rva2VuX2lkAAAAAAAABAAAAAEAAAPoAAAH0AAAABBVc2VyRW1pc3Npb25EYXRh",
         "AAAAAgAAAAAAAAAAAAAAEFN1cHBvcnRlZEFkYXB0ZXIAAAACAAAAAAAAAAAAAAAMQmxlbmRDYXBpdGFsAAAAAQAAAAAAAAAGQ3VzdG9tAAAAAAABAAAAEQ==",
-        "AAAAAgAAAAAAAAAAAAAAElN1cHBvcnRlZFlpZWxkVHlwZQAAAAAAAwAAAAAAAAAAAAAAB0xlbmRpbmcAAAAAAAAAAAAAAAAJTGlxdWlkaXR5AAAAAAAAAQAAAAAAAAAGQ3VzdG9tAAAAAAABAAAAEQ==",
-        "AAAABAAAAAAAAAAAAAAADEFkYXB0ZXJFcnJvcgAAAAMAAAAAAAAAE0luc3VmZmljaWVudEJhbGFuY2UAAAAAAQAAAAAAAAAWTGVuZGluZ09wZXJhdGlvbkZhaWxlZAAAAAAAAgAAAAAAAAAMVW5hdXRob3JpemVkAAAAAw==" ]),
+        "AAAAAgAAAAAAAAAAAAAAElN1cHBvcnRlZFlpZWxkVHlwZQAAAAAAAwAAAAAAAAAAAAAAB0xlbmRpbmcAAAAAAAAAAAAAAAAJTGlxdWlkaXR5AAAAAAAAAQAAAAAAAAAGQ3VzdG9tAAAAAAABAAAAEQ==" ]),
       options
     )
   }
   public readonly fromJSON = {
-    create_request: this.txFromJSON<Request>,
-        supply_collateral: this.txFromJSON<i128>,
-        withdraw_collateral: this.txFromJSON<i128>,
-        get_balance: this.txFromJSON<i128>,
-        get_reserve_token_id: this.txFromJSON<Option<u32>>,
-        deposit: this.txFromJSON<i128>,
+    deposit: this.txFromJSON<i128>,
         withdraw: this.txFromJSON<i128>,
         get_yield: this.txFromJSON<i128>,
         claim_yield: this.txFromJSON<i128>,
+        claim_emissions: this.txFromJSON<i128>,
+        get_emissions: this.txFromJSON<i128>,
+        protocol_token: this.txFromJSON<string>,
         init: this.txFromJSON<void>,
+        submit: this.txFromJSON<Positions>,
         submit_with_allowance: this.txFromJSON<Positions>,
         get_positions: this.txFromJSON<Positions>,
         get_reserve: this.txFromJSON<Reserve>,
         get_reserve_list: this.txFromJSON<Array<string>>,
         claim: this.txFromJSON<i128>,
-        update_b_rate: this.txFromJSON<null>
+        update_b_rate: this.txFromJSON<null>,
+        get_user_emissions: this.txFromJSON<Option<UserEmissionData>>
   }
 }

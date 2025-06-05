@@ -40,6 +40,20 @@ export interface YieldAdapterRegistryMap {
   yield_type: string;
 }
 
+/**
+ * Error codes for the cusd_manager contract. Common errors are codes that match up with the built-in
+ * YieldAdapterRegistry error reporting. YieldAdapterRegistry specific errors start at 400
+ */
+export const YieldAdapterRegistryError = {
+  1: {message:"InternalError"},
+  3: {message:"AlreadyInitializedError"},
+  4: {message:"UnauthorizedError"},
+  8: {message:"NegativeAmountError"},
+  10: {message:"BalanceError"},
+  12: {message:"OverflowError"},
+  1100: {message:"InvalidYieldAdapter"}
+}
+
 
 export interface RoleData {
   admin_role: string;
@@ -54,8 +68,15 @@ export interface RolesMap {
   roles: Map<string, RoleData>;
 }
 
-export const Errors = {
-
+export const AccessControlError = {
+  1: {message:"InternalError"},
+  3: {message:"AlreadyInitializedError"},
+  4: {message:"UnauthorizedError"},
+  8: {message:"NegativeAmountError"},
+  10: {message:"BalanceError"},
+  12: {message:"OverflowError"},
+  1300: {message:"OnlyRoleAdmin"},
+  1301: {message:"UnAuhtorizedRole"}
 }
 
 export interface Client {
@@ -244,7 +265,7 @@ export class Client extends ContractClient {
   static async deploy<T = Client>(
         /** Constructor/Initialization Args for the contract's `__constructor` method */
         {admin}: {admin: string},
-    /** Options for initalizing a Client as well as for calling a method, with extras specific to deploying. */
+    /** Options for initializing a Client as well as for calling a method, with extras specific to deploying. */
     options: MethodOptions &
       Omit<ContractClientOptions, "contractId"> & {
         /** The hash of the Wasm blob, which must already be installed on-chain. */
@@ -270,8 +291,10 @@ export class Client extends ContractClient {
         "AAAAAAAAAAAAAAAMZ2V0X2FkYXB0ZXJzAAAAAQAAAAAAAAAKeWllbGRfdHlwZQAAAAAAEQAAAAEAAAPqAAAAEw==",
         "AAAAAAAAAAAAAAAYZ2V0X2FkYXB0ZXJzX3dpdGhfYXNzZXRzAAAAAQAAAAAAAAAKeWllbGRfdHlwZQAAAAAAEQAAAAEAAAPqAAAD7QAAAAIAAAATAAAD6gAAABM=",
         "AAAAAQAAAAAAAAAAAAAAF1lpZWxkQWRhcHRlclJlZ2lzdHJ5TWFwAAAAAAMAAAAAAAAADHJlZ2lzdHJ5X21hcAAAA+wAAAARAAAAEwAAAAAAAAAQc3VwcG9ydGVkX2Fzc2V0cwAAA+wAAAARAAAD7AAAABMAAAABAAAAAAAAAAp5aWVsZF90eXBlAAAAAAAR",
+        "AAAABAAAALpFcnJvciBjb2RlcyBmb3IgdGhlIGN1c2RfbWFuYWdlciBjb250cmFjdC4gQ29tbW9uIGVycm9ycyBhcmUgY29kZXMgdGhhdCBtYXRjaCB1cCB3aXRoIHRoZSBidWlsdC1pbgpZaWVsZEFkYXB0ZXJSZWdpc3RyeSBlcnJvciByZXBvcnRpbmcuIFlpZWxkQWRhcHRlclJlZ2lzdHJ5IHNwZWNpZmljIGVycm9ycyBzdGFydCBhdCA0MDAAAAAAAAAAAAAZWWllbGRBZGFwdGVyUmVnaXN0cnlFcnJvcgAAAAAAAAcAAAAAAAAADUludGVybmFsRXJyb3IAAAAAAAABAAAAAAAAABdBbHJlYWR5SW5pdGlhbGl6ZWRFcnJvcgAAAAADAAAAAAAAABFVbmF1dGhvcml6ZWRFcnJvcgAAAAAAAAQAAAAAAAAAE05lZ2F0aXZlQW1vdW50RXJyb3IAAAAACAAAAAAAAAAMQmFsYW5jZUVycm9yAAAACgAAAAAAAAANT3ZlcmZsb3dFcnJvcgAAAAAAAAwAAAAAAAAAE0ludmFsaWRZaWVsZEFkYXB0ZXIAAAAETA==",
         "AAAAAQAAAAAAAAAAAAAACFJvbGVEYXRhAAAAAgAAAAAAAAAKYWRtaW5fcm9sZQAAAAAAEQAAAAAAAAAHbWVtYmVycwAAAAPsAAAAEwAAAAE=",
-        "AAAAAQAAADFBIHN0b3JhZ2Ugc3RydWN0dXJlIGZvciBhbGwgcm9sZXMgaW4gdGhlIGNvbnRyYWN0AAAAAAAAAAAAAAhSb2xlc01hcAAAAAEAAAAAAAAABXJvbGVzAAAAAAAD7AAAABEAAAfQAAAACFJvbGVEYXRh" ]),
+        "AAAAAQAAADFBIHN0b3JhZ2Ugc3RydWN0dXJlIGZvciBhbGwgcm9sZXMgaW4gdGhlIGNvbnRyYWN0AAAAAAAAAAAAAAhSb2xlc01hcAAAAAEAAAAAAAAABXJvbGVzAAAAAAAD7AAAABEAAAfQAAAACFJvbGVEYXRh",
+        "AAAABAAAAAAAAAAAAAAAEkFjY2Vzc0NvbnRyb2xFcnJvcgAAAAAACAAAAAAAAAANSW50ZXJuYWxFcnJvcgAAAAAAAAEAAAAAAAAAF0FscmVhZHlJbml0aWFsaXplZEVycm9yAAAAAAMAAAAAAAAAEVVuYXV0aG9yaXplZEVycm9yAAAAAAAABAAAAAAAAAATTmVnYXRpdmVBbW91bnRFcnJvcgAAAAAIAAAAAAAAAAxCYWxhbmNlRXJyb3IAAAAKAAAAAAAAAA1PdmVyZmxvd0Vycm9yAAAAAAAADAAAAAAAAAANT25seVJvbGVBZG1pbgAAAAAABRQAAAAAAAAAEFVuQXVodG9yaXplZFJvbGUAAAUV" ]),
       options
     )
   }

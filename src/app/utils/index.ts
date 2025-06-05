@@ -11,3 +11,4 @@ export {
     parseStellarAmount,
     formatBalance,
 } from "./tokenFormatting";
+export { parseContractError } from "./contractError";

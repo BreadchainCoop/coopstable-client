@@ -362,16 +362,16 @@ export class Client extends ContractClient {
   }
   public readonly fromJSON = {
     deposit_collateral: this.txFromJSON<i128>,
-        withdraw_collateral: this.txFromJSON<i128>,
-        get_yield: this.txFromJSON<i128>,
-        claim_yield: this.txFromJSON<i128>,
-        claim_emissions: this.txFromJSON<i128>,
-        set_yield_distributor: this.txFromJSON<null>,
-        set_adapter_registry: this.txFromJSON<null>,
-        set_cusd_manager: this.txFromJSON<null>,
-        get_yield_distributor: this.txFromJSON<string>,
-        get_adapter_registry: this.txFromJSON<string>,
-        get_cusd_manager: this.txFromJSON<string>,
-        set_admin: this.txFromJSON<null>
+    withdraw_collateral: this.txFromJSON<i128>,
+    get_yield: this.txFromJSON<i128>,
+    claim_yield: this.txFromJSON<i128>,
+    claim_emissions: this.txFromJSON<i128>,
+    set_yield_distributor: this.txFromJSON<null>,
+    set_adapter_registry: this.txFromJSON<null>,
+    set_cusd_manager: this.txFromJSON<null>,
+    get_yield_distributor: this.txFromJSON<string>,
+    get_adapter_registry: this.txFromJSON<string>,
+    get_cusd_manager: this.txFromJSON<string>,
+    set_admin: this.txFromJSON<null>
   }
 }
