@@ -1,5 +1,5 @@
 "use client";
-import { TokenCode, TOKEN_CODES } from "@/app/constants";
+import { TokenCode, TOKEN_CODES, SWAP_MODES } from "@/app/constants";
 import { useUser } from "@/app/context/UserContext/UserContext";
 import { UserContextStateConnected } from "@/app/context/UserContext/types";
 import { useUserBalance } from "@/app/context/AccountContext";
@@ -8,7 +8,6 @@ import { Button } from "../Button";
 import { cn, formatBalance } from "@/app/utils";
 import { InitTransaction } from "./InitTransaction";
 import { CUSDIcon, USDCIcon } from "../Icons";
-import { format } from "path";
 
 export function Swap() {
   const { user, connectWallet } = useUser();
@@ -49,9 +48,9 @@ function SwapFormHeader() {
       <button
         className={cn(
           "font-theme-2 text-theme-black px-2 pb-1 text-xl leading-none font-black opacity-50 hover:cursor-pointer",
-          state.mode === "mint" && "opacity-100",
+          state.mode === SWAP_MODES.MINT && "opacity-100",
         )}
-        onClick={() => modeChange("mint")}
+        onClick={() => modeChange(SWAP_MODES.MINT)}
         aria-label="mint mode"
       >
         Mint
@@ -59,10 +58,10 @@ function SwapFormHeader() {
       <button
         className={cn(
           "font-theme-2 text-theme-black px-2 pb-1 text-xl leading-none font-black opacity-50 hover:cursor-pointer",
-          state.mode === "burn" && "opacity-100",
+          state.mode === SWAP_MODES.BURN && "opacity-100",
         )}
         aria-label="burn mode"
-        onClick={() => modeChange("burn")}
+        onClick={() => modeChange(SWAP_MODES.BURN)}
       >
         Burn
       </button>
@@ -72,7 +71,7 @@ function SwapFormHeader() {
 
 function SwapFrom() {
   const { state, inputValueChange } = useSwap();
-  const token = state.mode === "mint" ? TOKEN_CODES.USDC : TOKEN_CODES.CUSD;
+  const token = state.mode === SWAP_MODES.MINT ? TOKEN_CODES.USDC : TOKEN_CODES.CUSD;
 
   return (
     <div className="border-theme-grey-4 flex flex-col gap-1 border-1 p-2">
@@ -100,7 +99,7 @@ function SwapFrom() {
         </div>
         <div className="flex items-center gap-2 bg-white px-2 py-1">
           <div className="size-6">
-            {state.mode === "mint" ? <USDCIcon /> : <CUSDIcon />}
+            {state.mode === SWAP_MODES.MINT ? <USDCIcon /> : <CUSDIcon />  }
           </div>
           <span className="text-theme-grey-6 text-xl">{token}</span>
         </div>
@@ -114,7 +113,7 @@ function SwapFrom() {
 
 function SwapTo() {
   const { state } = useSwap();
-  const token = state.mode === "burn" ? TOKEN_CODES.USDC : TOKEN_CODES.CUSD;
+  const token = state.mode === SWAP_MODES.BURN ?  TOKEN_CODES.USDC : TOKEN_CODES.CUSD;
   return (
     <div className="border-theme-grey-4 flex flex-col gap-1 border-1 p-2">
       <span className="text-theme-grey-5 p-1 text-xs">You receive</span>
@@ -124,7 +123,7 @@ function SwapTo() {
         </div>
         <div className="flex items-center gap-2 bg-white px-2 py-1">
           <div className="size-6">
-            {state.mode === "burn" ? <USDCIcon /> : <CUSDIcon />}
+            {state.mode === SWAP_MODES.BURN ? <USDCIcon /> : <CUSDIcon /> }
           </div>
           <span className="text-theme-grey-6 text-xl"> {token}</span>
         </div>
@@ -143,7 +142,7 @@ function ModeReverse() {
       <button
         className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 transform border-[1.5px] border-[#B1AEAB] bg-white p-1 hover:cursor-pointer"
         onClick={() => {
-          modeChange(state.mode === "burn" ? "mint" : "burn");
+          modeChange(state.mode === SWAP_MODES.MINT ? SWAP_MODES.BURN : SWAP_MODES.MINT);
         }}
       >
         <svg

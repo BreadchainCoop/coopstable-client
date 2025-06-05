@@ -7,37 +7,37 @@ export function transactionReducer(
 ): TransactionState {
   switch (state.status) {
     case null:
-      if (event.type === "new") {
+      if (event.type === "idle") {
         return {
-          status: "init",
+          status: "idle",
           type: event.payload.type,
           value: event.payload.value,
         };
       }
       return state;
-    case "init":
-      if (event.type === "new") {
+    case "idle":
+      if (event.type === "idle") {
         return {
           status: "success",
           type: event.payload.type,
           value: event.payload.value,
         };
       }
-      if (event.type === "submitted") {
+      if (event.type === "pending") {
         return {
           ...state,
-          status: "submitted",
+          status: "pending",
         };
       }
       return state;
-    case "submitted":
-      if (event.type === "success_result") {
+    case "pending":
+      if (event.type === "success") {
         return {
           ...state,
           status: "success",
         };
       }
-      if (event.type === "error_result") {
+      if (event.type === "error") {
         return {
           ...state,
           status: "error",
@@ -45,18 +45,18 @@ export function transactionReducer(
       }
       return state;
     case "success":
-      if (event.type === "new") {
+      if (event.type === "idle") {
         return {
-          status: "init",
+          status: "idle",
           type: event.payload.type,
           value: event.payload.value,
         };
       }
       return state;
     case "error":
-      if (event.type === "new") {
+      if (event.type === "idle") {
         return {
-          status: "init",
+          status: "idle",
           type: event.payload.type,
           value: event.payload.value,
         };

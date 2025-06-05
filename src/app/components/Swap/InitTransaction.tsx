@@ -1,20 +1,30 @@
+import { useEffect } from "react";
 import { useSwap } from "./SwapContext";
+import { useMintCUSD, useBurnCUSD } from "@/app/context/ContractContext/hooks";
+import { useUserBalance } from "@/app/context/AccountContext";
 import { Button } from "../Button";
-import { useTransaction } from "@/app/context/TransactionContext/TransactionContext";
-import { useNativeBalance } from "@/app/context/AccountContext";
+import { TransactionEvent, useTransaction } from "@/app/context/TransactionContext/TransactionContext"; 
 import { UserContextStateConnected } from "@/app/context/UserContext/types";
-
-/*
-
-Clicking button launches wallet to sign tx and opens dialog 
-
-*/
+import { SWAP_MODES, TOKEN_CODES } from "@/app/constants";
 
 export function InitTransaction({ user }: { user: UserContextStateConnected }) {
   const { state: swapState } = useSwap();
-  const { newTransaction } = useTransaction();
+  const { newTransaction, dispatch } = useTransaction();
+  const token = swapState.mode === SWAP_MODES.MINT ? TOKEN_CODES.USDC : TOKEN_CODES.CUSD;
+  const userBalance = useUserBalance(user.account, user.network, swapState.mode === SWAP_MODES.MINT ? TOKEN_CODES.USDC : TOKEN_CODES.CUSD); 
+  const { mutateAsync: mintCUSD, data: mintData, status: mintStatus } = useMintCUSD();
+  const { mutateAsync: burnCUSD, data: burnData, status: burnStatus } = useBurnCUSD();
 
-  const nativeBalance = useNativeBalance(user);
+
+  const handleMint = async () => {
+    if (userBalance.status !== "success") return;  
+    await mintCUSD(parseFloat(swapState.inputValue));
+  };
+
+  const handleBurn = async () => {
+    if (userBalance.status !== "success") return;
+    await burnCUSD(parseFloat(swapState.inputValue));
+  };
 
   if (swapState.inputValue === "") {
     return (
@@ -23,15 +33,36 @@ export function InitTransaction({ user }: { user: UserContextStateConnected }) {
       </Button>
     );
   }
+  
+  useEffect(() => {
+    let status = mintStatus;
+    if (swapState.mode === SWAP_MODES.BURN) status = burnStatus;
+    if (status === "idle") return;
+    if (status === "pending") {
+      dispatch({ type: "pending" });
+    };
+    return () => {};
+  },[mintStatus, burnStatus])
+  
   return (
     <Button
       fullWidth
       size="large"
-      onClick={() => {
-        newTransaction(swapState.mode, swapState.inputValue);
-      }}
+      onClick={async (e) => {
+        e.preventDefault();
+          newTransaction(
+            swapState.mode,
+            swapState.inputValue
+          )
+          if (swapState.mode === SWAP_MODES.MINT) { 
+            await handleMint();
+          } else {
+            await handleBurn();
+          }
+        }
+      }
     >
-      {swapState.mode === "mint" ? "Mint" : "Burn"}
+      {swapState.mode === SWAP_MODES.MINT ? "Mint" : "Burn"}
     </Button>
   );
 }

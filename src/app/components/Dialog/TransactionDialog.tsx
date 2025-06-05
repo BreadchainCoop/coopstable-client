@@ -5,14 +5,16 @@ import {
 } from "@radix-ui/react-dialog";
 
 import { Spinner } from "../Spinner";
+import { SWAP_MODES } from "@/app/constants";
 import { SwapMode } from "../Swap/SwapContext";
 import {
   TransactionState,
   TransactionStateError,
   TransactionStateInit,
-  TransactionStateSubmitted,
+  TransactionStateLoading,
   TransactionStateSuccess,
-} from "@/app/context/TransactionContext/TransactionContext";
+} from "@/app/context/TransactionContext/types";
+
 import { CUSDIcon, SuccessIcon, USDCIcon, ErrorIcon } from "../Icons";
 import { DialogTitle } from "./Dialog";
 import { Button } from "../Button";
@@ -23,14 +25,14 @@ export function TransactionDialog({
 }: {
   state:
     | TransactionStateInit
-    | TransactionStateSubmitted
+    | TransactionStateLoading
     | TransactionStateSuccess
     | TransactionStateError;
 }) {
   return (
     <div className="grid gap-8 py-4">
       <DialogTitle>
-        {state.type === "mint" ? "Mint status" : "Burn status"}
+        {state.type === SWAP_MODES.MINT ? "Mint status" : "Burn status"}
       </DialogTitle>
 
       <TransactionStatus state={state} />
@@ -60,7 +62,7 @@ export function TransactionStatus({ state }: { state: TransactionState }) {
           <DialogDescription>in Progress</DialogDescription>
         </div>
       );
-    case "submitted":
+    case "loading":
       return (
         <div className="flex flex-col items-center gap-4">
           <div className="size-8">
@@ -76,7 +78,7 @@ export function TransactionStatus({ state }: { state: TransactionState }) {
             <SuccessIcon />
           </div>
           <DialogDescription>
-            {state.type === "mint" ? "Mint" : "Burn"} success!
+            {state.type === SWAP_MODES.MINT ? "Mint" : "Burn"} success!
           </DialogDescription>
         </div>
       );
@@ -106,7 +108,7 @@ export function TransactionSummary({
   return (
     <div className="border-theme-stone flex flex-col items-center gap-6 border p-6 sm:flex-row">
       <div className="flex grow justify-center">
-        {mode === "mint" ? (
+        {mode === SWAP_MODES.MINT ? (
           <USDCLabel>{txValue}</USDCLabel>
         ) : (
           <CUSDLabel>{txValue}</CUSDLabel>
@@ -116,10 +118,10 @@ export function TransactionSummary({
         <DirectionArrow />
       </div>
       <div className="flex grow justify-center">
-        {mode === "burn" ? (
-          <USDCLabel>{txValue}</USDCLabel>
-        ) : (
+        {mode === SWAP_MODES.MINT ? (
           <CUSDLabel>{txValue}</CUSDLabel>
+        ) : (
+          <USDCLabel>{txValue}</USDCLabel>
         )}
       </div>
     </div>

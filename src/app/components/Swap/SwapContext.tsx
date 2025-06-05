@@ -1,7 +1,8 @@
 import { sanitizeInputValue } from "@/app/utils";
 import { createContext, ReactNode, useContext, useState } from "react";
+import { SWAP_MODES } from "@/app/constants";
 
-export type SwapMode = "mint" | "burn";
+export type SwapMode = typeof SWAP_MODES[keyof typeof SWAP_MODES];
 
 export type SwapState = {
   mode: SwapMode;
@@ -19,7 +20,7 @@ export const SwapContext = createContext<
 
 export function SwapProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<SwapState>({
-    mode: "mint",
+    mode: SWAP_MODES.MINT,
     inputValue: "",
   });
 

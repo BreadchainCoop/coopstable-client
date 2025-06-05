@@ -1,14 +1,16 @@
-export type TransactionType = "mint" | "burn";
-export type TransactionStatus = "init" | "submitted" | "success" | "error";
+import { SwapMode } from "@/app/components/Swap/SwapContext";
+
+export type TransactionType = SwapMode;
+export type TransactionStatus = "idle" | "pending" | "success" | "error";    
 
 export type TransactionStateNull = { status: null };
 export type TransactionStateInit = {
-  status: Extract<"init", TransactionStatus>;
+  status: Extract<"idle", TransactionStatus>;
   type: TransactionType;
   value: string;
 };
-export type TransactionStateSubmitted = {
-  status: Extract<"submitted", TransactionStatus>;
+export type TransactionStateLoading = {
+  status: Extract<"pending", TransactionStatus>;
   type: TransactionType;
   value: string;
 };
@@ -26,6 +28,6 @@ export type TransactionStateError = {
 export type TransactionState =
   | TransactionStateNull
   | TransactionStateInit
-  | TransactionStateSubmitted
+  | TransactionStateLoading
   | TransactionStateSuccess
   | TransactionStateError;

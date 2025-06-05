@@ -11,3 +11,8 @@ export const STROOPS_PER_UNIT = 10_000_000;
 export const QUERY_KEYS = {
   BALANCES: ['user_balances'],
 }
+
+export const SWAP_MODES = {
+  MINT: "MINT",
+  BURN: "BURN",
+} as const;
