@@ -3,7 +3,7 @@ import { createContext, useContext, type ReactNode } from "react";
 
 import { AccountService } from "../services/accountService";
 import { NetworkString } from "../services/UserService/types";
-import { TokenCode } from "../constants";
+import { QUERY_KEYS } from "../constants";
 
 const BalanceContext = createContext<AccountService | undefined>(undefined);
 
@@ -50,11 +50,12 @@ function useAccount(account: string, network: NetworkString) {
     throw new Error("useNativeBalance must be used within a BalanceContext");
 
   return useQuery({
-    queryKey: [`nativeBalance_${account}`],
+    queryKey: QUERY_KEYS.BALANCES,
     queryFn: async () => context.fetchAccount(account, network),
     refetchInterval: 3000,
   });
 }
+
 
 export function useNativeBalance(
   account: string,

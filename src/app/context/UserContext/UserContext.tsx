@@ -1,4 +1,3 @@
-// src/app/context/UserContext/UserContext.tsx
 import {
   createContext,
   useContext,

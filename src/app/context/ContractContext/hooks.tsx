@@ -1,81 +1,39 @@
-// import { useUser } from "@/app/context/UserContext/UserContext";
-import { ContractContext } from "@/app/context/ContractContext/ContractContext";
-import { useContext, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { SignTransaction } from "@stellar/stellar-sdk/contract";
-import { chainConfig } from "@/app/config";
-import { UserContextStateConnected } from "../UserContext/types";
-import { NetworkString } from "@/app/services/UserService/types";
-import { TokenCode } from "@/app/constants";
+import { useContext } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useUser } from "@/app/context/UserContext/UserContext"; 
+import { ContractContext } from "./ContractContext";
+import { QUERY_KEYS } from "@/app/constants";
 
-export function useAllowance(account: string, network: NetworkString, token: TokenCode) {
+export function useMintCUSD() {
   const context = useContext(ContractContext);
+  const queryClient = useQueryClient();
   if (!context)
-    throw new Error("useAllowance must be used within a ContractProvider");
+    throw new Error("useMintCUSD must be used within a ContractContext");
+  
+  const { signTransaction, user } = useUser();
+  if (user.status !== "connected") throw new Error("User not connected");
 
-  return useQuery({
-    queryKey: [`allowance_${account}`],
-    queryFn: async () => {
-      // TODO fetch allowance transaction
-      return context.sacs[token.toLowerCase() as keyof typeof context.sacs].fetchAllowance(
-        account,
-        chainConfig[network].yieldController.contractId,
-        network,
-      );
-    },
-    refetchInterval: 5000,
+  let yieldControllerContract = context.yieldController(user.network, user.account, signTransaction);
+  return useMutation<void, Error, number>({
+    mutationFn: yieldControllerContract.mintCUSD,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: QUERY_KEYS.BALANCES }),
   });
 }
 
-export function useTokenMint(signTransaction: SignTransaction) {
+export function useBurnCUSD() {
   const context = useContext(ContractContext);
+  const queryClient = useQueryClient();
   if (!context)
-    throw new Error("useTokenMint must be used within a ContractProvider");
+    throw new Error("useBurnCUSD must be used within a ContractContext");
+  
+  const { signTransaction, user } = useUser();
+  if (user.status !== "connected") throw new Error("User not connected");
 
-  const [state, setState] = useState<
-    { status: "init" } | { status: "success" } | { status: "error" }
-  >({ status: "init" });
-
-  async function signAndSend(
-    user: UserContextStateConnected,
-    sequenceNumber: string,
-    amount: bigint,
-  ) {
-    context?.contracts.yieldController
-      .mint(user.account, sequenceNumber, amount, user.network, signTransaction)
-      .then(() => {
-        setState({ status: "success" });
-      })
-      .catch((err: any) => {
-        console.log(err);
-        setState({ status: "error" });
-      });
-  }
-
-  return { state, signAndSend };
+  let yieldControllerContract = context.yieldController(user.network, user.account, signTransaction);
+  return useMutation<void, Error, number>({
+    mutationFn: yieldControllerContract.burnCUSD,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: QUERY_KEYS.BALANCES }),
+  });
 }
 
-export function useTokenBurn(signTransaction: SignTransaction) {
-  const context = useContext(ContractContext);
-  if (!context)
-    throw new Error("useTokenABalance must be used within a ContractProvider");
-
-  const [state, setState] = useState<
-    { status: "init" } | { status: "success" } | { status: "error" }
-  >({ status: "init" });
-
-  async function signAndSend(user: UserContextStateConnected, amount: bigint) {
-    // TODO burn transaction
-    context?.contracts.yieldController
-      .burn(user.account, amount, user.network, signTransaction)
-      .then(() => {
-        setState({ status: "success" });
-      })
-      .catch((err: any) => {
-        console.log(err);
-        setState({ status: "error" });
-      });
-  }
-
-  return { state, signAndSend };
-}
+// fetch yield

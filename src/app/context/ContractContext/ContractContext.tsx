@@ -1,10 +1,9 @@
 import { createContext, ReactNode } from "react";
-import { ContractService } from "../../services/ContractService/types";
+import { type ContractService } from "../../services/ContractService/types";
 
 export const ContractContext = createContext<ContractService | undefined>(
   undefined,
 );
-
 export function ContractProvider({
   contractService,
   children,

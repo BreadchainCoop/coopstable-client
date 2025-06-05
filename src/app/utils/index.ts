@@ -12,3 +12,4 @@ export {
     formatBalance,
 } from "./tokenFormatting";
 export { parseContractError } from "./contractError";
+export { requiresTrustline } from "./horizon";

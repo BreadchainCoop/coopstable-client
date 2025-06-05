@@ -1,4 +1,4 @@
-import { NetworkString } from "@/app/services/UserService/types";
+import { Network } from "@/app/config"; 
 
 export type UserContextStateLoading = {
   status: "loading";
@@ -13,7 +13,7 @@ export type UserContextStateConnecting = {
 export type UserContextStateConnected = {
   status: "connected";
   account: string;
-  network: NetworkString;
+  network: Network;
 };
 export type UserContextStateError = {
   status: "error";

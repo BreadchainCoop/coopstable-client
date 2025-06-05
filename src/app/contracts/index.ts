@@ -1,8 +1,6 @@
 import { Client as TokenClient } from "@stellar/stellar-sdk/contract";
 import { chainConfig, Network } from "../config";
-
 import * as YieldControllerClient from "./yieldController";
-
 
 export function getUSDCClient(network: Network, publicKey: string) {
   const tokenClient = TokenClient.from({

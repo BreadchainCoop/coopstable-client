@@ -1,5 +1,6 @@
 import * as StellarSdk from "@stellar/stellar-sdk";
 export type NetworkConfig = {
+  network: Network;
   networkPassphrase: string;
   sorobanUrl: string;
   horizonUrl: string;
@@ -31,6 +32,7 @@ export const SUPPORTED_NETWORKS = {
 
 export const chainConfig: ChainConfig = {
   TESTNET: {
+    network: SUPPORTED_NETWORKS.TESTNET,
     networkPassphrase: StellarSdk.Networks.TESTNET,
     sorobanUrl: "https://soroban-testnet.stellar.org",
     horizonUrl: "https://horizon-testnet.stellar.org",
@@ -49,6 +51,7 @@ export const chainConfig: ChainConfig = {
     },
   },
   PUBLIC: {
+    network: SUPPORTED_NETWORKS.PUBLIC,
     networkPassphrase: StellarSdk.Networks.PUBLIC,
     sorobanUrl: "https://rpc.ankr.com/stellar_soroban",
     horizonUrl: "https://rpc.ankr.com/http/stellar_horizon",

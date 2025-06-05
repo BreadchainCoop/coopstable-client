@@ -1,4 +1,5 @@
 import { STROOPS_PER_UNIT } from "@/app/constants";
+import { nativeToScVal, xdr } from "@stellar/stellar-sdk";
 /**
  * Convert stroops (smallest unit) to decimal string
  * @param stroops - Amount in stroops (as string or number)
@@ -122,4 +123,14 @@ export function formatBalance(
     formatted: withSeparators,
     withSymbol: `${withSeparators} ${assetCode}`
   };
+}
+
+export function toBigInt(value: string|number|bigint): bigint {
+  return typeof value === "bigint"
+  ? value
+  : BigInt(Math.round(Number(value) * STROOPS_PER_UNIT));  
+}
+
+export function parseLumen(value: string|number|bigint, type:string="i128"): xdr.ScVal {
+  return nativeToScVal(toBigInt(value), { type });
 }
