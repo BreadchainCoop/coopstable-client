@@ -53,7 +53,7 @@ export function TransactionDialog({
 
 export function TransactionStatus({ state }: { state: TransactionState }) {
   switch (state.status) {
-    case "init":
+    case "idle":
       return (
         <div className="flex flex-col items-center gap-4">
           <div className="size-8">
@@ -62,7 +62,7 @@ export function TransactionStatus({ state }: { state: TransactionState }) {
           <DialogDescription>in Progress</DialogDescription>
         </div>
       );
-    case "loading":
+    case "pending":
       return (
         <div className="flex flex-col items-center gap-4">
           <div className="size-8">

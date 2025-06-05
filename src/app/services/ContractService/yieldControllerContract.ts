@@ -18,21 +18,24 @@ export class YieldControllerContract implements IYieldControllerContract {
     ) {
       this.walletAddress = walletAddress;
       this.config = getNetworkConfig(network);
+      
       this.txService = new TransactionService(
         this.walletAddress,
         this.config.networkPassphrase,
         stellarRpc,
         signTransaction
       );
+      this.mintCUSD = this.mintCUSD.bind(this);
+      this.burnCUSD = this.burnCUSD.bind(this);
     }
-  
+    
     async mintCUSD(amount: number): Promise<void> {
-      const config = getNetworkConfig(this.config.network);
+      console.log("MINTING mintCUSD")
       const yieldController = getYieldControllerClient(this.config.network, this.walletAddress);
       const operation = await yieldController.deposit_collateral({
         protocol: "BC_LA",
         user: this.walletAddress,
-        asset: config.usdc.contractId,
+        asset: this.config.usdc.contractId,
         amount: toBigInt(amount),
       });
       await this.txService.mutateXdr(operation);

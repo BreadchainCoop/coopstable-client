@@ -15,7 +15,6 @@ import { transactionReducer } from "./TransactionReducer";
 import { useUser } from "../UserContext/UserContext";
 import { UserContextStateConnected } from "../UserContext/types";
 import { TransactionState, TransactionType } from "./types";
-import { SwapMode } from "@/app/components/Swap/SwapContext";
 
 export const TransactionContext = createContext<
   | undefined

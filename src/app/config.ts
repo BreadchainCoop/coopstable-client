@@ -23,12 +23,12 @@ export type ChainConfig = {
   PUBLIC: NetworkConfig;
 };
 
-export type Network = keyof typeof chainConfig;
 
 export const SUPPORTED_NETWORKS = {
   TESTNET: "TESTNET",
   PUBLIC: "PUBLIC",
 } as const;
+export type Network = typeof SUPPORTED_NETWORKS[keyof typeof SUPPORTED_NETWORKS];
 
 export const chainConfig: ChainConfig = {
   TESTNET: {
