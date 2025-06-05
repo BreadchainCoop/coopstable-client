@@ -23,7 +23,6 @@ export type ChainConfig = {
   PUBLIC: NetworkConfig;
 };
 
-
 export const SUPPORTED_NETWORKS = {
   TESTNET: "TESTNET",
   PUBLIC: "PUBLIC",

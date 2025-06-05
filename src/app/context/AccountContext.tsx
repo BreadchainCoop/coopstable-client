@@ -52,7 +52,6 @@ function useAccount(account: string, network: NetworkString) {
   return useQuery({
     queryKey: QUERY_KEYS.BALANCES,
     queryFn: async () => context.fetchAccount(account, network),
-    refetchInterval: 3000,
   });
 }
 

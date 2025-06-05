@@ -56,10 +56,9 @@ export function InitTransaction({ user }: { user: UserContextStateConnected }) {
         );
         if (swapState.mode === SWAP_MODES.MINT) { 
           await handleMint();
-        } 
-        // else {
-        //   await handleBurn();
-        // }
+        } else {
+          await handleBurn();
+        }
       }}
     >
       {swapState.mode === SWAP_MODES.MINT ? "Mint" : "Burn"}
