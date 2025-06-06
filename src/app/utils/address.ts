@@ -9,7 +9,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const pageWrapClasses = "max-w-6xl m-auto px-4 sm:px-8";
+export const pageWrapClasses = "m-auto px-4 lg:px-16 xl:px-16 xl:max-w-7xl";
 
 export const sanitizeInputValue = (inputValue: string) => {
   let hasPeriod = false;

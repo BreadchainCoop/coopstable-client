@@ -1,15 +1,19 @@
 import { useUser } from "@/app/context/UserContext/UserContext";
 import { AccountConnected } from "./Connected";
+import { HeaderBurgerMenu } from "../HeaderBurgerMenu";
 import { Button } from "../Button";
 
 export function Account() {
   const { user, connectWallet, disconnectWallet } = useUser();
-
+  
   return (
     <div>
       {user.status === "loading" && <Button disabled>loading...</Button>}
       {user.status === "not_connected" && (
-        <AccountNotConnected connect={connectWallet} />
+        <div className="flex items-center gap-2">
+          <AccountNotConnected connect={connectWallet} />
+          <HeaderBurgerMenu connect={connectWallet} />
+        </div>
       )}
       {user.status === "connecting" && <AccountConnecting />}
       {user.status === "connected" && (

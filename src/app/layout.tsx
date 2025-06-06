@@ -33,11 +33,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${lato.variable} ${darkerGrotesque.variable} ${radioCanadaBig.variable} antialiased`}
+        className={`${lato.variable} ${darkerGrotesque.variable} ${radioCanadaBig.variable} antialiased bg-theme-grey-3`}
       >
         <Providers>
           <Header />
-          {children}
+            {children}
         </Providers>
       </body>
     </html>

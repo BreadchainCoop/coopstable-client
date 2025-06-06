@@ -1,5 +1,4 @@
 "use client";
-
 import { cn, pageWrapClasses } from "../utils";
 import { Account } from "./Account/Account";
 
