@@ -1,8 +1,8 @@
 export type ContractService = {
-    yieldController: IYieldControllerContract;
+    yieldController: IYieldControllerService;
 }
 
-export interface IYieldControllerContract {
-    mintCUSD: (amount: number) => Promise<void>;  
-    burnCUSD: (amount: number) => Promise<void>; 
+export interface IYieldControllerService {
+    mintCUSD: (amount: number) => Promise<string | undefined>;  
+    burnCUSD: (amount: number) => Promise<string | undefined>; 
 }

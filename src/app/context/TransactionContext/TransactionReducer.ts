@@ -5,6 +5,12 @@ export function transactionReducer(
   state: TransactionState,
   event: TransactionEvent,
 ): TransactionState {
+  if (event.type === "reset") {
+    return {
+      status: null,
+    };
+  }
+
   switch (state.status) {
     case null:
       if (event.type === "idle") {

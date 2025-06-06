@@ -4,6 +4,7 @@ export type NetworkConfig = {
   networkPassphrase: string;
   sorobanUrl: string;
   horizonUrl: string;
+  explorerUrl: string;
   yieldController: {
     contractId: string;
   };
@@ -33,6 +34,7 @@ export const chainConfig: ChainConfig = {
   TESTNET: {
     network: SUPPORTED_NETWORKS.TESTNET,
     networkPassphrase: StellarSdk.Networks.TESTNET,
+    explorerUrl: "https://stellar.expert/explorer/testnet",
     sorobanUrl: "https://soroban-testnet.stellar.org",
     horizonUrl: "https://horizon-testnet.stellar.org",
     yieldController: {
@@ -51,6 +53,7 @@ export const chainConfig: ChainConfig = {
   },
   PUBLIC: {
     network: SUPPORTED_NETWORKS.PUBLIC,
+    explorerUrl: "https://stellar.expert/explorer/public",
     networkPassphrase: StellarSdk.Networks.PUBLIC,
     sorobanUrl: "https://rpc.ankr.com/stellar_soroban",
     horizonUrl: "https://rpc.ankr.com/http/stellar_horizon",

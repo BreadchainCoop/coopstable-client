@@ -22,7 +22,9 @@ import Link from "next/link";
 
 export function TransactionDialog({
   state,
+  explorerLink,
 }: {
+  explorerLink: string | undefined;
   state:
     | TransactionStateInit
     | TransactionStateLoading
@@ -39,7 +41,7 @@ export function TransactionDialog({
       {state.status !== "error" && (
         <>
           <TransactionSummary mode={state.type} txValue={state.value} />
-          <ExplorerLink />
+          { explorerLink && <ExplorerLink link={explorerLink} />}
         </>
       )}
       <DialogPrimitiveClose asChild>
@@ -179,11 +181,12 @@ function DirectionArrow() {
   );
 }
 
-function ExplorerLink() {
+function ExplorerLink({ link }: { link: string }) {
   return (
     <Link
-      href={"#"}
+      href={link}
       className="text-theme-black item-center flex justify-center gap-1"
+      target="_blank"
     >
       <span className="font-bold">View on explorer</span>
       <div className="size-6">

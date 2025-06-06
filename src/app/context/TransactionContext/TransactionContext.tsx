@@ -14,25 +14,28 @@ import { TransactionDialog } from "@/app/components/Dialog/TransactionDialog";
 import { transactionReducer } from "./TransactionReducer";
 import { useUser } from "../UserContext/UserContext";
 import { UserContextStateConnected } from "../UserContext/types";
-import { TransactionState, TransactionType } from "./types";
+import { TransactionState, TransactionStatus, TransactionType } from "./types";
+import { getNetworkConfig } from "@/app/config";
 
 export const TransactionContext = createContext<
   | undefined
   | {
       state: TransactionState;
       newTransaction: (type: TransactionType, value: string) => void;
+      setTxLink: (txHash: string | undefined) => void;
+      existingTransaction: (status: TransactionStatus, type: TransactionType, value: string) => void;
+      clearTransactionState: () => void;
       dispatch: (action: TransactionEvent) => void;
+      dialog: boolean;
+      setDialog: (value: boolean) => void;
     }
 >(undefined);
 
-export function TransactionProvider({ children }: { children: ReactNode }) {
-  const { user } = useUser();
+export function TransactionProvider({children}: { children: ReactNode }) {
+  const {user} = useUser();
   if (user.status !== "connected") return children;
-  return (
-    <TransactionProviderWithUser user={user}>
-      {children}
-    </TransactionProviderWithUser>
-  );
+  
+  return <TransactionProviderWithUser user={user}>{children}</TransactionProviderWithUser>;
 }
 
 function TransactionProviderWithUser({
@@ -42,17 +45,34 @@ function TransactionProviderWithUser({
   children: ReactNode;
   user: UserContextStateConnected;
 }) {
+  const config = getNetworkConfig(user.network);
   const [state, dispatch] = useReducer(transactionReducer, { status: null });
   const [dialog, setDialog] = useState(false);
+  const [explorerLink, setExplorerLink] = useState<string | undefined>(undefined); 
 
   function newTransaction(type: TransactionType, value: string) {
     dispatch({ type: "idle", payload: { type, value } });
     setDialog(true);
   }
 
+  function existingTransaction(status: TransactionStatus, type: TransactionType, value: string) {
+    dispatch({ type: status, payload: { type, value } });
+    setDialog(true);
+  }
+
+  function clearTransactionState() {
+    dispatch({ type: "reset" });
+    setDialog(false);
+  }
+
+  function setTxLink(txHash: string | undefined) {
+    if (txHash === undefined) return;
+    return setExplorerLink(`${config.explorerUrl}/tx/${txHash}`);
+  }
+
   return (
     <TransactionContext.Provider
-      value={{ state, newTransaction, dispatch }}
+      value={{ setTxLink, state, newTransaction, dispatch, existingTransaction, dialog, setDialog, clearTransactionState }}
     >
       {state.status !== null && (
         <DialogPrimitive.Root
@@ -65,7 +85,7 @@ function TransactionProviderWithUser({
                 <>
                   <DialogOverlay />
                   <DialogContent title={state.type}>
-                    <TransactionDialog state={state} />
+                    <TransactionDialog state={state} explorerLink={explorerLink} />
                   </DialogContent>
                 </>
               )}
@@ -103,4 +123,7 @@ export type TransactionEvent =
     }
   | {
       type: "error";
+    }
+  | {
+      type: "reset";
     };

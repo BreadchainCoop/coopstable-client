@@ -3,26 +3,46 @@ import { useSwap } from "./SwapContext";
 import { useMintCUSD, useBurnCUSD } from "@/app/context/ContractContext/hooks";
 import { useUserBalance } from "@/app/context/AccountContext";
 import { Button } from "../Button";
-import { TransactionEvent, useTransaction } from "@/app/context/TransactionContext/TransactionContext"; 
+import { useTransaction } from "@/app/context/TransactionContext/TransactionContext"; 
 import { UserContextStateConnected } from "@/app/context/UserContext/types";
 import { SWAP_MODES, TOKEN_CODES } from "@/app/constants";
 
 export function InitTransaction({ user }: { user: UserContextStateConnected }) {
   const { state: swapState } = useSwap();
-  const { newTransaction, dispatch } = useTransaction();
+  const { 
+    newTransaction, 
+    dispatch, 
+    state: transactionState, 
+    existingTransaction, 
+    dialog, 
+    setDialog,
+    clearTransactionState, 
+    setTxLink,
+  } = useTransaction();
   const token = swapState.mode === SWAP_MODES.MINT ? TOKEN_CODES.USDC : TOKEN_CODES.CUSD;
-  const userBalance = useUserBalance(user.account, user.network, swapState.mode === SWAP_MODES.MINT ? TOKEN_CODES.USDC : TOKEN_CODES.CUSD); 
-  const { mutateAsync: mintCUSD, data: mintData, status: mintStatus } = useMintCUSD();
-  const { mutateAsync: burnCUSD, data: burnData, status: burnStatus } = useBurnCUSD();
+  const userBalance = useUserBalance(user.account, user.network, token); 
+  const { mutateAsync: mintCUSD, status: mintStatus, reset: resetMint } = useMintCUSD(setTxLink);
+  const { mutateAsync: burnCUSD, status: burnStatus, reset: resetBurn } = useBurnCUSD(setTxLink);
+  
+  let reset = resetMint;
+  let status = mintStatus;
+  if (swapState.mode === SWAP_MODES.BURN) {
+    reset = resetBurn;
+    status = burnStatus;
+  }
 
-  // Move useEffect to top, before any conditional returns
   useEffect(() => {
     
-    let status = mintStatus;
-    if (swapState.mode === SWAP_MODES.BURN) status = burnStatus;
     if (status === "idle") return;
+    if (status === "success" && !dialog) setDialog(true);
     dispatch({ type: status });
-    return () => {};
+    
+    return () => {
+      if (status !== "pending") {
+        clearTransactionState() 
+        reset();
+      } 
+    };
   }, [mintStatus, burnStatus, swapState.mode, dispatch]);
 
   const handleMint = async () => {
@@ -35,7 +55,6 @@ export function InitTransaction({ user }: { user: UserContextStateConnected }) {
     await burnCUSD(parseFloat(swapState.inputValue));
   };
 
-  // Conditional rendering after all hooks
   if (swapState.inputValue === "") {
     return (
       <Button size="large" fullWidth disabled>
@@ -43,13 +62,17 @@ export function InitTransaction({ user }: { user: UserContextStateConnected }) {
       </Button>
     );
   }
-  
+
   return (
     <Button
       fullWidth
       size="large"
       onClick={async (e) => {
         e.preventDefault();
+        if (transactionState.status !== null) { 
+          existingTransaction(status, swapState.mode, swapState.inputValue);
+          return;
+        }
         newTransaction(
           swapState.mode,
           swapState.inputValue
