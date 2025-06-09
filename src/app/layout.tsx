@@ -3,6 +3,7 @@ import { Darker_Grotesque, Lato, Radio_Canada_Big } from "next/font/google";
 import "./globals.css";
 import { Header } from "./components/Header";
 import { Providers } from "./providers";
+import { Footer } from "./components/Footer";
 
 const lato = Lato({
   variable: "--font-lato",
@@ -38,6 +39,7 @@ export default function RootLayout({
         <Providers>
           <Header />
             {children}
+          <Footer />
         </Providers>
       </body>
     </html>
