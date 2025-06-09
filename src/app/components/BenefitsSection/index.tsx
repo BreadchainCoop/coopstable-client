@@ -1,37 +1,33 @@
+import { cn, pageWrapClasses } from "@/app/utils";
 import { ReactNode } from "react";
 
 export function BenefitsSection() {
   return (
-    <section className="py-16">
-      <div className="text-center mb-12">
-        <h2 className="font-theme-2 text-4xl font-bold text-black mb-4">
+    <section className={cn(pageWrapClasses)} >
+      <div className="pb-[1.5rem] text-center">
+        <h1 className="font-theme-2 text-5xl font-bold text-black mb-4">
           Benefits of cUSD
-        </h2>
-        <p className="text-lg text-[#7A7A7A] max-w-2xl mx-auto">
-          Discover how CoopStable creates sustainable funding for the Stellar ecosystem
-        </p>
+        </h1>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <BenefitCard
           title="Support Stellar ecosystem"
           description="Mint cUSD (CoopStable coin), hold it, send it and spend it."
-          icon={<EcosystemIcon />}
-          gradient="from-blue-50 to-indigo-50"
+          background="bg-top"
+
         />
         
         <BenefitCard
           title="At no cost"
           description="Your mint = Yield generated for Stellar ecosystem projects. At no cost."
-          icon={<NoCostIcon />}
-          gradient="from-green-50 to-emerald-50"
+          background="bg-middle"
         />
         
         <BenefitCard
           title="Powered by soroban contracts"
           description="Mint cUSD (CoopStable coin), hold it, send it and spend it."
-          icon={<SorobanIcon />}
-          gradient="from-purple-50 to-violet-50"
+          background="bg-bottom"
         />
       </div>
     </section>
@@ -41,36 +37,22 @@ export function BenefitsSection() {
 function BenefitCard({
   title,
   description,
-  icon,
-  gradient
+  background,
 }: {
   title: string;
   description: string;
-  icon: ReactNode;
-  gradient: string;
+  background: string;
 }) {
   return (
-    <div className={`bg-gradient-to-br ${gradient} border border-[#B1AEAB] p-8 rounded-lg relative overflow-hidden`}>
-      {/* Decorative curve */}
-      <div className="absolute top-0 right-0 w-32 h-32 opacity-10">
-        <svg viewBox="0 0 100 100" className="w-full h-full">
-          <path
-            d="M0,0 C50,0 100,50 100,100 L0,100 Z"
-            fill="currentColor"
-          />
-        </svg>
-      </div>
+    <div className={`benefits-card mx-auto max-w-[21rem] border border-theme-grey-4 p-8 relative overflow-hidden ${background}`}> 
       
       <div className="relative z-10">
-        <div className="mb-6">
-          {icon}
-        </div>
         
-        <h3 className="font-theme-2 text-xl font-bold text-black mb-4">
+        <h2 className="font-theme-2 text-4xl font-bold text-black mb-4">
           {title}
-        </h3>
+        </h2>
         
-        <p className="text-[#7A7A7A] leading-relaxed">
+        <p className="text-[1.25rem] text-grey-6 leading-relaxed">
           {description}
         </p>
       </div>

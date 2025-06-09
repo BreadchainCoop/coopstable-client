@@ -11,7 +11,8 @@
   --color-foreground: var(--foreground);
   --font-theme-2: var(--font-darker-grotesque);
   --font-theme-3: var(--font-radio-canada-big);
-
+  
+  
   --color-theme-black: #11110f;
 
   --color-theme-grey-1: #f7f6f3;
@@ -21,6 +22,7 @@
   --color-theme-grey-5: #7a7a7a;
   --color-theme-grey-6: #4f4f4f;
   --color-theme-stone: #a49e86;
+  
 }
 
 body {
@@ -75,5 +77,24 @@ body {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  /* background-attachment: fixed; Creates parallax effect */
+}
+
+/* benefits section */
+.benefits-card.bg-top {
+  background-image: url('/top-bg.png'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.benefits-card.bg-middle {
+  background-image: url('/middle-bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.benefits-card.bg-bottom {
+  background-image: url('/bottom-bg.png'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }

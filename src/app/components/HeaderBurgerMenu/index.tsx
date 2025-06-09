@@ -34,7 +34,6 @@ export function HeaderBurgerMenu({
 
       <DropdownMenu.Portal>
         <DropdownMenu.Content
-          
           className="w-[100vw] bg-[#F7F6F3] shadow-lg z-40 p-6"
           side="bottom"
           align="end"

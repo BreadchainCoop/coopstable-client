@@ -1,4 +1,4 @@
-export function USDCIcon() {
+export function USDCIcon({ width: w, height: h }: { width?: number, height?: number }) {
   return (
     <svg
       aria-label="usdc icon"
@@ -26,8 +26,8 @@ export function USDCIcon() {
       <defs>
         <clipPath id="clip0_318_172">
           <rect
-            width="24"
-            height="24"
+            width={w || 24 }
+            height={h || 24 }
             fill="white"
             transform="translate(0 0.5)"
           />
@@ -37,7 +37,7 @@ export function USDCIcon() {
   );
 }
 
-export function CUSDIcon() {
+export function CUSDIcon({ width: w, height: h }: { width?: number, height?: number }) {
   return (
     <svg
       aria-label="cusd icon"
@@ -61,8 +61,8 @@ export function CUSDIcon() {
       <defs>
         <clipPath id="clip0_318_195">
           <rect
-            width="24"
-            height="24"
+            width={w || 24}
+            height={h || 24}
             fill="white"
             transform="translate(0 0.5)"
           />
