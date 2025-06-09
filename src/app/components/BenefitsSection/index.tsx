@@ -1,5 +1,4 @@
 import { cn, pageWrapClasses } from "@/app/utils";
-import { ReactNode } from "react";
 
 export function BenefitsSection() {
   return (

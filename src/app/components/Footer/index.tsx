@@ -3,49 +3,72 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className={cn(pageWrapClasses, "py-16")}> 
-    <div className="flex flex-col items-center gap-1 mb-2">
-        <div className="size-10">
-            <Logo />
-        </div>
-        <span className="font-theme-2 text-2xl font-extrabold tracking-wider text-black">
-            CoopStable
-        </span>
-        <p className="text-[#7A7A7A] mb-8 leading-relaxed max-w-md">
-            Solidarity funding for Stellar .
-        </p>
-    </div>
-    
-    {/* Social Links */}
-    <div className="flex justify-center items-top gap-4">
-        <SocialLink href="https://github.com" icon={<GithubIcon />} label="GitHub" />
-        <SocialLink href="https://twitter.com" icon={<XIcon />} label="Twitter" />
-    </div>
+    <footer className={cn(pageWrapClasses, "py-16 lg:flex justify-between items-end")}> 
+      {/* Mobile */}
+      <div className="lg:hidden flex flex-col items-center gap-1 mb-2">
+          <div className="size-10">
+              <Logo />
+          </div>
+          <span className="font-theme-2 text-2xl font-extrabold tracking-wider text-black">
+              CoopStable
+          </span>
+          <p className="text-[#7A7A7A] mb-8 leading-relaxed max-w-md">
+              Solidarity funding for Stellar .
+          </p>
+      </div>
+      
+      {/* Social Links */}
+      <div className="lg:hidden flex justify-center items-top gap-4">
+          <SocialLink href="https://github.com" icon={<GithubIcon />} label="GitHub" />
+          <SocialLink href="https://twitter.com" icon={<XIcon />} label="Twitter" />
+      </div>
+      <div className="lg:hidden border-t border-[#B1AEAB] mt-12 pt-8">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+          {/* Left side - Copyright and legal */}
+          <div className="flex flex-col gap-4">
+              <span className="text-[#7A7A7A] text-sm">
+              © 2024 CoopStable. All rights reserved.
+              </span>
+              <div className="flex flex-wrap gap-6 text-sm">
+              <FooterLink href="/privacy" className="text-sm">Privacy Policy</FooterLink>
+              <FooterLink href="/terms" className="text-sm">Terms of Service</FooterLink>
+              <FooterLink href="/cookies" className="text-sm">Cookie Policy</FooterLink>
+              </div>
+          </div>
+          
+          {/* Right side - Built on Stellar */}
+          <div className="flex items-center gap-2 text-sm text-[#7A7A7A]">
+              <span>Powered by</span>
+              <div className="flex items-center gap-2">
+              <span className="font-medium text-black">Stellar</span>
+              </div>
+          </div>
+          </div>
+      </div>
 
-    
-    <div className="border-t border-[#B1AEAB] mt-12 pt-8">
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-        {/* Left side - Copyright and legal */}
-        <div className="flex flex-col gap-4">
-            <span className="text-[#7A7A7A] text-sm">
-            © 2024 CoopStable. All rights reserved.
+      {/* Larger screens */}
+      <div className="hidden lg:flex items-center gap-x-4">
+          <div className="size-12">
+            <Logo />
+          </div>
+          <div className="flex flex-col">
+            <span className="font-theme-2 text-2xl font-extrabold tracking-wider text-black">
+              CoopStable
             </span>
-            <div className="flex flex-wrap gap-6 text-sm">
-            <FooterLink href="/privacy" className="text-sm">Privacy Policy</FooterLink>
-            <FooterLink href="/terms" className="text-sm">Terms of Service</FooterLink>
-            <FooterLink href="/cookies" className="text-sm">Cookie Policy</FooterLink>
-            </div>
-        </div>
-        
-        {/* Right side - Built on Stellar */}
-        <div className="flex items-center gap-2 text-sm text-[#7A7A7A]">
-            <span>Powered by</span>
-            <div className="flex items-center gap-2">
-            <span className="font-medium text-black">Stellar</span>
-            </div>
-        </div>
-        </div>
-    </div>
+            <p className="text-[#7A7A7A] leading-relaxed">
+              Solidarity funding for Stellar.
+            </p>
+          </div>
+      </div>
+
+      <div className="hidden lg:flex gap-4 pb-0.5"> 
+          <SocialLink href="https://github.com" icon={<GithubIcon />} label="GitHub" />
+          <SocialLink href="https://twitter.com" icon={<XIcon />} label="Twitter" />
+      </div>
+
+      <p className="hidden lg:inline text-[#7A7A7A] leading-relaxed max-w-md">
+        A BreadCoop solidarity solution.
+      </p>
     </footer>
   );
 }
