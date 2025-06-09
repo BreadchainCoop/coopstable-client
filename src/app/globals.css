@@ -81,19 +81,37 @@ body {
 
 /* benefits section */
 .benefits-card.bg-top {
-  background-image: url('/top-bg.png'); 
+  background-image: url('/bg-top.png'); 
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
 .benefits-card.bg-middle {
-  background-image: url('/middle-bg.png');
+  background-image: url('/bg-middle.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
 .benefits-card.bg-bottom {
-  background-image: url('/bottom-bg.png'); 
+  background-image: url('/bg-bottom.png'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.benefits-card.lg-bg-tl {
+  background-image: url('/lg-bg-tl.png'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.benefits-card.lg-bg-tr {
+  background-image: url('/lg-bg-tr.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.benefits-card.lg-bg-bottom {
+  background-image: url('/lg-bg-bottom.png'); 
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
