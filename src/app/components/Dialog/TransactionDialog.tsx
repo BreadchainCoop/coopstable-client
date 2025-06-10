@@ -15,7 +15,7 @@ import {
   TransactionStateSuccess,
 } from "@/app/context/TransactionContext/types";
 
-import { CUSDIcon, SuccessIcon, USDCIcon, ErrorIcon } from "../Icons";
+import { CUSDIcon, SuccessIcon, USDCIcon, ErrorIcon, ExternalLinkIcon } from "../Icons";
 import { DialogTitle } from "./Dialog";
 import { Button } from "../Button";
 import Link from "next/link";
@@ -190,34 +190,7 @@ function ExplorerLink({ link }: { link: string }) {
     >
       <span className="font-bold">View on explorer</span>
       <div className="size-6">
-        <svg
-          className="size-full"
-          viewBox="0 0 25 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M20.75 9.75L20.7491 3.75094L14.75 3.75"
-            stroke="#11110F"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M13.25 11.25L20.75 3.75"
-            stroke="#11110F"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M17.75 12.75V19.5C17.75 19.6989 17.671 19.8897 17.5303 20.0303C17.3897 20.171 17.1989 20.25 17 20.25H5C4.80109 20.25 4.61032 20.171 4.46967 20.0303C4.32902 19.8897 4.25 19.6989 4.25 19.5V7.5C4.25 7.30109 4.32902 7.11032 4.46967 6.96967C4.61032 6.82902 4.80109 6.75 5 6.75H11.75"
-            stroke="#11110F"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <ExternalLinkIcon />
       </div>
     </Link>
   );

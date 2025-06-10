@@ -1,19 +1,40 @@
 "use client";
+import Link from "next/link";
 import { cn, pageWrapClasses } from "../utils";
 import { Account } from "./Account/Account";
 
 export function Header() {
   return (
     <header data-testid="header">
-      <div className={cn(pageWrapClasses, "flex h-24 items-center")}>
-        <div className="font-theme-2 flex items-center gap-2">
-          <div className="size-8">
-            <Logo />
+      <div className={cn(pageWrapClasses, "pt-5 lg:pt-10 flex items-center")}>
+        <div className="flex items-center gap-8">
+          {/* Logo and Brand */}
+          <div className="flex items-center gap-2">
+            <div className="size-8">
+              <Logo />
+            </div>
+            <span className="font-theme-2 translate-y-0.5 transform text-3xl leading-none font-extrabold tracking-wider text-black sm:block">
+              CoopStable
+            </span>
           </div>
-          <span className="hidden -translate-y-0.5 transform text-3xl leading-none font-extrabold tracking-wider text-black sm:block">
-            CoopStable
-          </span>
+          
+          {/* Navigation Links */}
+          <div className="hidden lg:block space-x-3">
+            <Link 
+              href="/#mint" 
+              className="px-[12px] py-[10px] text-black font-theme-2 text-[20px] font-bold"
+            >
+              Mint
+            </Link>
+            <Link 
+              href="/yield" 
+              className="px-[12px] py-[10px] text-black font-theme-2 text-[20px] font-bold"
+            >
+              Yield distribution
+            </Link>
+          </div>
         </div>
+        
         <div className="grow"></div>
         <Account />
       </div>

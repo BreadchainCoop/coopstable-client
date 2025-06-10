@@ -8,7 +8,7 @@ interface StatItemProps {
 
 function StatItem({ label, value, icon }: StatItemProps) {
   return (
-    <div className="bg-[#F7F6F3] border-[#B1AEAB] border-1 p-4 flex-row items-center space-y-2 lg:p-4 lg:w-4/12">
+    <div className="bg-theme-grey-1 border-theme-grey-4 border-1 p-4 flex-row items-center space-y-2 lg:p-4 lg:w-4/12">
       {/* mobile */}
       <span className="md:hidden text-[20px] font-medium text-gray-700">{label}</span> 
       <div className={`md:hidden flex items-center ${icon ? "gap-3" : ""}`}>

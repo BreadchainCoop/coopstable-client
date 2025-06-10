@@ -1,3 +1,5 @@
+import { SVGProps } from "react";
+
 export function USDCIcon({ width: w, height: h }: { width?: number, height?: number }) {
   return (
     <svg
@@ -104,4 +106,44 @@ export function ErrorIcon() {
       />
     </svg>
   );
+}
+
+export function ExternalLinkIcon({ stroke, ...props}: SVGProps<SVGSVGElement>)  {
+  return (
+    <svg
+    fill="none"
+    className="size-full"
+    {...props}
+    viewBox="0 0 25 24"
+    xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M20.75 9.75L20.7491 3.75094L14.75 3.75"
+        stroke={stroke || "#11110F"}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M13.25 11.25L20.75 3.75"
+        stroke={stroke || "#11110F"}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M17.75 12.75V19.5C17.75 19.6989 17.671 19.8897 17.5303 20.0303C17.3897 20.171 17.1989 20.25 17 20.25H5C4.80109 20.25 4.61032 20.171 4.46967 20.0303C4.32902 19.8897 4.25 19.6989 4.25 19.5V7.5C4.25 7.30109 4.32902 7.11032 4.46967 6.96967C4.61032 6.82902 4.80109 6.75 5 6.75H11.75"
+        stroke={stroke || "#11110F"}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+export function CopyIcon({ fill, ...props}: SVGProps<SVGSVGElement>)  {
+  return (
+    <svg width="18" height="18" viewBox="0 0 15 15" fill={fill || "#7A7A7A"} xmlns="http://www.w3.org/2000/svg" {...props}><path d="M1 9.50006C1 10.3285 1.67157 11.0001 2.5 11.0001H4L4 10.0001H2.5C2.22386 10.0001 2 9.7762 2 9.50006L2 2.50006C2 2.22392 2.22386 2.00006 2.5 2.00006L9.5 2.00006C9.77614 2.00006 10 2.22392 10 2.50006V4.00002H5.5C4.67158 4.00002 4 4.67159 4 5.50002V12.5C4 13.3284 4.67158 14 5.5 14H12.5C13.3284 14 14 13.3284 14 12.5V5.50002C14 4.67159 13.3284 4.00002 12.5 4.00002H11V2.50006C11 1.67163 10.3284 1.00006 9.5 1.00006H2.5C1.67157 1.00006 1 1.67163 1 2.50006V9.50006ZM5 5.50002C5 5.22388 5.22386 5.00002 5.5 5.00002H12.5C12.7761 5.00002 13 5.22388 13 5.50002V12.5C13 12.7762 12.7761 13 12.5 13H5.5C5.22386 13 5 12.7762 5 12.5V5.50002Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+  )
 }

@@ -32,6 +32,5 @@ function Hero() {
         <StatsPanel />
       </section>
     </>
-
   );
 }

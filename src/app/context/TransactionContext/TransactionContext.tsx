@@ -75,10 +75,7 @@ function TransactionProviderWithUser({
       value={{ setTxLink, state, newTransaction, dispatch, existingTransaction, dialog, setDialog, clearTransactionState }}
     >
       {state.status !== null && (
-        <DialogPrimitive.Root
-          open={dialog}
-          onOpenChange={() => { setDialog(false); }}
-        >
+        <DialogPrimitive.Root open={dialog} onOpenChange={() => { setDialog(false); }} >
           <DialogPrimitive.Portal forceMount>
             <AnimatePresence mode="wait">
               {dialog && (
