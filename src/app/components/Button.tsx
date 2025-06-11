@@ -28,7 +28,7 @@ export function Button({
   return (
     <button
       className={cn(
-        "font-theme-2 px-8 py-4 text-xl font-bold tracking-wide uppercase hover:cursor-pointer disabled:opacity-60",
+        "font-theme-2 px-8 py-4 text-[16px] lg:text-xl font-bold tracking-wide uppercase hover:cursor-pointer disabled:opacity-60",
         fullWidth && "w-full",
         sizeClasses[size],
         variantClasses[variant],

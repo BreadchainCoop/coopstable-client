@@ -41,7 +41,7 @@ function AccountButton({
       disconnectWallet();
     }} className="cursor-pointer flex items-center gap-2 border-1 border-theme-grey-4 bg-white p-2">
     <Image src="/avatar.jpg" alt="user avatar" width={32} height={32} />
-    <span className="font-theme-3 tracking-wide text-black">
+    <span className="text-[16px] lg:text-xl font-theme-3 tracking-wide text-black">
       {truncateAddress(user.account)}
     </span>
   </button>
@@ -56,7 +56,7 @@ function AccountForDropDown({
   }) {
   return <div className={`cursor-pointer flex items-center gap-2 border-1 border-theme-grey-4 bg-white p-2 ${isOpen ? "hidden" : ""}`}>
     <Image src="/avatar.jpg" alt="user avatar" width={32} height={32} />
-    <span className="font-theme-3 tracking-wide text-black">
+    <span className="text-[16px] lg:text-xl font-theme-3 tracking-wide text-black">
       {truncateAddress(user.account)}
     </span>
   </div>

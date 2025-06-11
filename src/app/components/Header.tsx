@@ -13,7 +13,7 @@ export function Header() {
             <div className="size-8">
               <Logo />
             </div>
-            <span className="font-theme-2 translate-y-0.5 transform text-3xl leading-none font-extrabold tracking-wider text-black sm:block">
+            <span className="font-theme-2 translate-y-0.5 transform text-3xl leading-none font-extrabold tracking-wider text-black hidden md:block">
               CoopStable
             </span>
           </div>

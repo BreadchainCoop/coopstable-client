@@ -1,12 +1,10 @@
-import { InfoCircledIcon } from "@radix-ui/react-icons";
-
 import { cn, pageWrapClasses } from "@/app/utils";
 import { CUSDIcon } from "@/app/components/Icons";
 import { DistributionInfoCircleWithPopOver } from "./DistributionInfoCircleWithPopOver";
 
-
-// TODO: Add the dialog pupup
 export default function YieldDistributionInfo() {
+    const coreTeamYield = "2000.56";
+    const cohortYield = "18000.56";
 
     return (
         <section className={cn(pageWrapClasses, 'px-[unset] py-[1.5rem]')}>
@@ -23,7 +21,7 @@ export default function YieldDistributionInfo() {
                     </div>
                     <div className="flex justify-center items-center gap-2 ">
                         <span className="text-[14px] leading-[1.2]">Yield breakdown</span>
-                        <DistributionInfoCircleWithPopOver />
+                        <DistributionInfoCircleWithPopOver coreTeamYield={coreTeamYield} cohortYield={cohortYield} /> 
                     </div>
                 </div>
                 <div className="bg-theme-grey-1 border-1 border-opacity-50 border-theme-grey-7 flex flex-col w-full py-4 px-8 space-y-2.5"> 
