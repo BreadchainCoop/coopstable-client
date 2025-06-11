@@ -1,13 +1,14 @@
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 
 import { cn, pageWrapClasses } from "@/app/utils";
-import { CUSDIcon } from "../components/Icons";
+import { CUSDIcon } from "@/app/components/Icons";
+import { DistributionInfoCircleWithPopOver } from "./DistributionInfoCircleWithPopOver";
 
 
 // TODO: Add the dialog pupup
-export default function YieldDistribution() {
-  return (
-    <main>
+export default function YieldDistributionInfo() {
+
+    return (
         <section className={cn(pageWrapClasses, 'px-[unset] py-[1.5rem]')}>
             <div className="p-4 lg:py-[10rem] grid grid-cols-1 items-center gap-6 lg:gap-12 lg:grid-cols-2 lg:px-20 hero-bg">
                 <div className="text-center bg-theme-grey-1 border-1 border-opacity-50 border-theme-grey-7 p-[1rem] space-y-2">
@@ -20,9 +21,9 @@ export default function YieldDistribution() {
                         </div>
                         <span className="text-[2rem] font-bold text-lg text-black">20,000.56 cUSD</span>
                     </div>
-                    <div className="flex justify-center items-center gap-2">
+                    <div className="flex justify-center items-center gap-2 h-fit">
                         <span className="text-[14px] leading-[1.2]">Yield breakdown</span>
-                        <InfoCircledIcon width={24} height={24} />
+                        <DistributionInfoCircleWithPopOver />
                     </div>
                 </div>
                 <div className="bg-theme-grey-1 border-1 border-opacity-50 border-theme-grey-7 flex flex-col w-full p-[1rem] space-y-4"> 
@@ -33,8 +34,7 @@ export default function YieldDistribution() {
                 </div>
             </div>
         </section>
-    </main>
-  )
+    )
 }
 
 export function LabelValueHorizonal({ label, value }: { label: string, value: string }) {

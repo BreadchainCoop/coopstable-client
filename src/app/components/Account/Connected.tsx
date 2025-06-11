@@ -74,7 +74,7 @@ export function AccountDropDown({
   const xlmBalance = useNativeBalance(user.account, user.network);
   const cusdBalance = useUserBalance(user.account, user.network, TOKEN_CODES.CUSD);
   const usdcBalance = useUserBalance(user.account, user.network, TOKEN_CODES.USDC);
-  console.log(xlmBalance);
+  
   return (
     <DropdownMenu.Root open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenu.Trigger>
@@ -159,7 +159,7 @@ export function AccountDropDown({
             </DropdownMenu.Item>
 
             <DropdownMenu.Item asChild>
-              <Link href="/yield" className="block text-theme-black opacity-50 font-medium text-lg hover:text-black transition-colors">
+              <Link href="/yield-distribution" className="block text-theme-black opacity-50 font-medium text-lg hover:text-black transition-colors">
                 YIELD DISTRIBUTION
               </Link>
             </DropdownMenu.Item>

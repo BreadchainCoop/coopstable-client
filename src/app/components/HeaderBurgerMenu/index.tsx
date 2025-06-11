@@ -54,11 +54,11 @@ export function HeaderBurgerMenu({
 
           <nav className="space-y-6">
             <DropdownMenu.Item asChild>
-              <Link href="#mint" className="block text-theme-black font-medium text-lg hover:text-black transition-colors">MINT</Link>
+              <Link href="/#mint" className="block text-theme-black font-medium text-lg hover:text-black transition-colors">MINT</Link>
             </DropdownMenu.Item>
 
             <DropdownMenu.Item asChild>
-              <Link href="/yield" className="block text-theme-black opacity-50 font-medium text-lg hover:text-black transition-colors">YIELD DISTRIBUTION</Link>
+              <Link href="/yield-distribution" className="block text-theme-black opacity-50 font-medium text-lg hover:text-black transition-colors">YIELD DISTRIBUTION</Link>
             </DropdownMenu.Item>
 
             <DropdownMenu.Item asChild>

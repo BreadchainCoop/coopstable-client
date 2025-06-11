@@ -27,7 +27,7 @@ export function Header() {
               Mint
             </Link>
             <Link 
-              href="/yield" 
+              href="/yield-distribution" 
               className="px-[12px] py-[10px] text-black font-theme-2 text-[20px] font-bold"
             >
               Yield distribution
