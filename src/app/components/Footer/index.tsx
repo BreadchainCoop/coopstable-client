@@ -27,7 +27,7 @@ export function Footer() {
           {/* Left side - Copyright and legal */}
           <div className="flex flex-col gap-4">
               <span className="text-[#7A7A7A] text-sm">
-              © 2024 CoopStable. All rights reserved.
+              © 2025 CoopStable - MIT License
               </span>
               <div className="flex flex-wrap gap-6 text-sm">
               <FooterLink href="/privacy" className="text-sm">Privacy Policy</FooterLink>
@@ -40,7 +40,7 @@ export function Footer() {
           <div className="flex items-center gap-2 text-sm text-[#7A7A7A]">
               <span>Powered by</span>
               <div className="flex items-center gap-2">
-              <span className="font-medium text-black">Stellar</span>
+              <span className="font-medium text-black">Soroban</span>
               </div>
           </div>
           </div>
