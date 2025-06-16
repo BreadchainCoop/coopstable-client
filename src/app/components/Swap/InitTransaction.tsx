@@ -7,7 +7,7 @@ import { useTransaction } from "@/app/context/TransactionContext/TransactionCont
 import { UserContextStateConnected } from "@/app/context/UserContext/types";
 import { SWAP_MODES, TOKEN_CODES } from "@/app/constants";
 
-export function InitTransaction({ user }: { user: UserContextStateConnected }) {
+export function InitTransaction({ user }: { readonly user: UserContextStateConnected }) {
   const { state: swapState } = useSwap();
   const { 
     newTransaction, 

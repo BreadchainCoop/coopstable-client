@@ -8,6 +8,9 @@ export type NetworkConfig = {
   yieldController: {
     contractId: string;
   };
+  yieldDistributor: {
+    contractId: string;
+  };
   cusd: {
     contractId: string;
   };
@@ -40,6 +43,9 @@ export const chainConfig: ChainConfig = {
     yieldController: {
       contractId: "CCPWUJBVYG3R45UU4IRDNDOSANN2L4KJQMDPEGLDTQIKPJTBSDOUY7M4",
     },
+    yieldDistributor: {
+      contractId: "CBHJBD7PSM524MBLIRBKMVNBDK4EFPS7T4XIPA5OCC4E2BRPM4ZXYUVG",
+    },
     cusd: {
       contractId: "CDHHR356G725HNLAAQ74WBGVT6Y6ZFZLM2TIHLDCOZTJ2SVZ7P3EANYT",
     },
@@ -58,6 +64,9 @@ export const chainConfig: ChainConfig = {
     sorobanUrl: "https://rpc.ankr.com/stellar_soroban",
     horizonUrl: "https://rpc.ankr.com/http/stellar_horizon",
     yieldController: {
+      contractId: "",
+    },
+    yieldDistributor: {
       contractId: "",
     },
     cusd: {

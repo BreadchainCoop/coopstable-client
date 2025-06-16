@@ -172,7 +172,7 @@ function ModeReverse() {
   );
 }
 
-function UserBalanceDisplay({ token }: { token: TokenCode }) {
+function UserBalanceDisplay({ token }: { readonly token: TokenCode }) {
   const { user } = useUser();
   if (user.status === "connected") {
     return <BalanceDisplay token={token} user={user} />;
@@ -180,7 +180,7 @@ function UserBalanceDisplay({ token }: { token: TokenCode }) {
   return <BalanceDisplay user={null} token={token} />;
 }
 
-function BalanceDisplay({ token, user }: {  token: TokenCode, user: UserContextStateConnected | null }) {
+function BalanceDisplay({ token, user }: {  readonly token: TokenCode, readonly user: UserContextStateConnected | null }) {
   if (!user) return <span className="text-theme-grey-5 pt-1 text-xs">Balance: 0.00 {token}</span>;
   const balance = useUserBalance(user.account, user.network, token);
   switch (balance.status) {

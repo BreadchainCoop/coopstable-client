@@ -1,9 +1,10 @@
 import { CUSDIcon } from "../Icons";
+import { useGetYield } from "@/app/context/ContractContext/hooks";
 
 interface StatItemProps {
-  label: string;
-  value: string;
-  icon?: React.ReactNode;
+  readonly label: string;
+  readonly value: string;
+  readonly icon?: React.ReactNode;
 }
 
 function StatItem({ label, value, icon }: StatItemProps) {
@@ -36,6 +37,9 @@ function StatItem({ label, value, icon }: StatItemProps) {
 }
 
 export function StatsPanel() {
+  const { data: yieldData } = useGetYield();
+  // console.log(yieldData);
+
   return (
     <div className="w-[95%] max-w-md lg:max-w-[unset] lg:justify-between mx-auto mt-[-3rem] lg:mt-[-1.5rem]">
       <div className="space-y-3 lg:space-y-0 lg:space-x-3 lg:flex lg:justify-between"> 

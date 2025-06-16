@@ -1,9 +1,8 @@
 import {
   createContext,
   ReactNode,
-  useCallback,
   useContext,
-  useEffect,
+  useMemo,
   useReducer,
   useState,
 } from "react";
@@ -31,7 +30,7 @@ export const TransactionContext = createContext<
     }
 >(undefined);
 
-export function TransactionProvider({children}: { children: ReactNode }) {
+export function TransactionProvider({children}: { readonly children: ReactNode }) {
   const {user} = useUser();
   if (user.status !== "connected") return children;
   
@@ -42,8 +41,8 @@ function TransactionProviderWithUser({
   children,
   user,
 }: {
-  children: ReactNode;
-  user: UserContextStateConnected;
+  readonly children: ReactNode;
+  readonly user: UserContextStateConnected;
 }) {
   const config = getNetworkConfig(user.network);
   const [state, dispatch] = useReducer(transactionReducer, { status: null });
@@ -69,10 +68,19 @@ function TransactionProviderWithUser({
     if (txHash === undefined) return;
     return setExplorerLink(`${config.explorerUrl}/tx/${txHash}`);
   }
-
+  const deps = useMemo(() => ({
+    state,
+    newTransaction,
+    dispatch,
+    existingTransaction,
+    dialog,
+    setDialog,
+    clearTransactionState,
+    setTxLink,
+  }), [user.account, user.network]);
   return (
     <TransactionContext.Provider
-      value={{ setTxLink, state, newTransaction, dispatch, existingTransaction, dialog, setDialog, clearTransactionState }}
+      value={deps}
     >
       {state.status !== null && (
         <DialogPrimitive.Root open={dialog} onOpenChange={() => { setDialog(false); }} >
