@@ -1,6 +1,7 @@
-import { useEffect } from "react";
 import { CUSDIcon } from "../Icons";
 import { useGetYield } from "@/app/context/ContractContext/hooks";
+import { TOKEN_CODES } from "@/app/constants";
+import { formatXLMSimple } from "@/app/utils/tokenFormatting";
 
 interface StatItemProps {
   readonly label: string;
@@ -38,7 +39,7 @@ function StatItem({ label, value, icon }: StatItemProps) {
 }
 
 export function StatsPanel() {
-  const { data: yieldData, isLoading } = useGetYield();
+  const { data: yieldData } = useGetYield();
   return (
     <div className="w-[95%] max-w-md lg:max-w-[unset] lg:justify-between mx-auto mt-[-3rem] lg:mt-[-1.5rem]">
       <div className="space-y-3 lg:space-y-0 lg:space-x-3 lg:flex lg:justify-between"> 
@@ -49,7 +50,7 @@ export function StatsPanel() {
         />
         <StatItem
           label="Total yield generated overtime"
-          value="10.78"
+          value={formatXLMSimple(yieldData ?? 0, TOKEN_CODES.CUSD, 7)}
           icon={<CUSDIcon />}
         />
         <StatItem

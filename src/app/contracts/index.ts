@@ -42,20 +42,6 @@ export function getYieldControllerClient(
   network: Network,
   publicKey?: string,
 ): YieldControllerClient.Client {
-  console.group(
-    "GETTING YIELD CONTROLLER CLIENT",
-    network,
-    publicKey,
-    // chainConfig[network].yieldController.contractId,
-    // chainConfig[network].sorobanUrl,
-  )
-  if (!publicKey) return new YieldControllerClient.Client({
-    networkPassphrase: YieldControllerClient.Networks[network],
-    contractId: chainConfig[network].yieldController.contractId,
-    rpcUrl: chainConfig[network].sorobanUrl,
-    allowHttp: true
-  });
-
   return new YieldControllerClient.Client({
     networkPassphrase: YieldControllerClient.Networks[network],
     contractId: chainConfig[network].yieldController.contractId,
