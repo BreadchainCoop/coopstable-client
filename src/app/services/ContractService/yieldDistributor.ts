@@ -1,16 +1,16 @@
-import { Network, NetworkConfig, getNetworkConfig } from '@/app/config';
+import { DEFAULT_NETWORK, Network, NetworkConfig, getNetworkConfig } from '@/app/config';
 import { getYieldDistributorClient } from '@/app/contracts'; 
 import { IYieldDistributorService } from './types';
 
 export class YieldDistributorService implements IYieldDistributorService {
     private readonly config: NetworkConfig;
-    private readonly walletAddress: string;
+    private readonly walletAddress: string | undefined;
     constructor(
-      network: Network,
-      walletAddress: string,
+      network?: Network,
+      walletAddress?: string,
     ) {
       this.walletAddress = walletAddress;
-      this.config = getNetworkConfig(network);
+      this.config = getNetworkConfig(network ?? DEFAULT_NETWORK);
       this.isDistributionAvailable = this.isDistributionAvailable.bind(this);
       this.getDistributionPeriod = this.getDistributionPeriod.bind(this);
       this.getNextDistributionTime = this.getNextDistributionTime.bind(this);

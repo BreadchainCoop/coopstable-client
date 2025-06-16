@@ -2,6 +2,7 @@ import {
   createContext,
   useContext,
   useEffect,
+  useMemo,
   useState,
   type ReactNode,
 } from "react";
@@ -31,8 +32,8 @@ export function UserProvider({
   userService,
   children,
 }: {
-  userService: UserService;
-  children: ReactNode;
+  readonly userService: UserService;
+  readonly children: ReactNode;
 }) {
   const [state, setState] = useState<UserContextState>({
     status: "loading",
@@ -107,10 +108,10 @@ export function UserProvider({
   }> {
     return userService.signTransaction(xdr, opts);
   }
-
+  const deps = useMemo(() => ({ user: state, connectWallet, disconnectWallet, signTransaction }), [state]);
   return (
     <UserContext.Provider
-      value={{ user: state, connectWallet, disconnectWallet, signTransaction }}
+      value={deps}
     >
       {children}
     </UserContext.Provider>

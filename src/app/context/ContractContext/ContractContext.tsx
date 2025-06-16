@@ -2,7 +2,7 @@ import { createContext, ReactNode, useMemo } from "react";
 import { type ContractService } from "../../services/ContractService/types";
 import { yieldController, yieldDistributor } from "../../services/ContractService/index";
 import { useUser } from "../UserContext/UserContext";
-import { UserContextStateConnected } from "../UserContext/types";
+import { UserContextStateConnected, UserContextStateNotConnected } from "../UserContext/types";
 import { SignTransaction } from "@stellar/stellar-sdk/contract";
 
 export const ContractContext = createContext<ContractService | undefined>(undefined);
@@ -13,7 +13,11 @@ export function ContractProvider({
   readonly children: ReactNode;
 }) {
   const { user, signTransaction } = useUser();
-  if (user.status !== "connected") return children;
+  if (user.status !== "not_connected") return (
+    <ContractProviderWithUser user={user as UserContextStateConnected} signTransaction={signTransaction}>
+      {children}
+    </ContractProviderWithUser>
+  )
   return (
     <ContractProviderWithUser user={user} signTransaction={signTransaction}>
       {children}
@@ -22,7 +26,7 @@ export function ContractProvider({
 }
 
 interface ContractProviderWithUserProps {
-  readonly user: UserContextStateConnected;
+  readonly user: UserContextStateConnected | UserContextStateNotConnected;
   readonly signTransaction: SignTransaction;
   readonly children: ReactNode;
 }
@@ -33,11 +37,17 @@ function ContractProviderWithUser({
   signTransaction,
 }: ContractProviderWithUserProps) {
   const contractService = useMemo(() => {
-    return {
-      yieldController: yieldController(user.network, user.account, signTransaction),
-      yieldDistributor: yieldDistributor(user.network, user.account),
+    if (user.status === "not_connected") {
+      return {
+        yieldDistributor: yieldDistributor(),
+        yieldController: yieldController(),
+      };
     }
-  }, [user, signTransaction]);
+    return {
+      yieldDistributor: yieldDistributor(user.network, user.account),
+      yieldController: yieldController(user.network, user.account, signTransaction),
+    }
+  }, [user.status]);
 
   return (
     <ContractContext.Provider value={contractService}>

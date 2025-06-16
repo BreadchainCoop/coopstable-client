@@ -3,7 +3,7 @@ import { chainConfig, Network } from "../config";
 import * as YieldControllerClient from "@/packages/lending_yield_controller/src/index";
 import * as YieldDistributorClient from "@/packages/yield_distributor/src/index"; 
 
-export function getUSDCClient(network: Network, publicKey: string) {
+export function getUSDCClient(network: Network, publicKey?: string) {
   const tokenClient = TokenClient.from({
     contractId: chainConfig[network].usdc.contractId,
     networkPassphrase: YieldControllerClient.Networks[network],
@@ -14,7 +14,7 @@ export function getUSDCClient(network: Network, publicKey: string) {
   return tokenClient;
 }
 
-export function getYieldDistributorClient(network: Network, publicKey: string) {
+export function getYieldDistributorClient(network: Network, publicKey?: string) {
   return new YieldDistributorClient.Client({
     contractId: chainConfig[network].yieldDistributor.contractId,
     networkPassphrase: YieldDistributorClient.Networks[network],
@@ -42,6 +42,20 @@ export function getYieldControllerClient(
   network: Network,
   publicKey?: string,
 ): YieldControllerClient.Client {
+  console.group(
+    "GETTING YIELD CONTROLLER CLIENT",
+    network,
+    publicKey,
+    // chainConfig[network].yieldController.contractId,
+    // chainConfig[network].sorobanUrl,
+  )
+  if (!publicKey) return new YieldControllerClient.Client({
+    networkPassphrase: YieldControllerClient.Networks[network],
+    contractId: chainConfig[network].yieldController.contractId,
+    rpcUrl: chainConfig[network].sorobanUrl,
+    allowHttp: true
+  });
+
   return new YieldControllerClient.Client({
     networkPassphrase: YieldControllerClient.Networks[network],
     contractId: chainConfig[network].yieldController.contractId,

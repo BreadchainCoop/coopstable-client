@@ -1,4 +1,5 @@
 import * as StellarSdk from "@stellar/stellar-sdk";
+import { getRequiredEnvVar } from "./utils/config";
 export type NetworkConfig = {
   network: Network;
   networkPassphrase: string;
@@ -31,7 +32,11 @@ export const SUPPORTED_NETWORKS = {
   TESTNET: "TESTNET",
   PUBLIC: "PUBLIC",
 } as const;
+
 export type Network = typeof SUPPORTED_NETWORKS[keyof typeof SUPPORTED_NETWORKS];
+
+// export const DEFAULT_NETWORK = getRequiredEnvVar("NEXT_PUBLIC_DEFAULT_NETWORK") as Network;
+export const DEFAULT_NETWORK = process.env.NEXT_PUBLIC_DEFAULT_NETWORK as Network;
 
 export const chainConfig: ChainConfig = {
   TESTNET: {
