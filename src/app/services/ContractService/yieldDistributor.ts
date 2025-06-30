@@ -14,6 +14,10 @@ export class YieldDistributorService implements IYieldDistributorService {
       this.isDistributionAvailable = this.isDistributionAvailable.bind(this);
       this.getDistributionPeriod = this.getDistributionPeriod.bind(this);
       this.getNextDistributionTime = this.getNextDistributionTime.bind(this);
+      this.getTotalMembers = this.getTotalMembers.bind(this);
+      this.getTreasuryShare = this.getTreasuryShare.bind(this);
+      this.timeBeforeNextDistribution = this.timeBeforeNextDistribution.bind(this);
+      this.getDistributionRound = this.getDistributionRound.bind(this);
     }
 
     async isDistributionAvailable(): Promise<boolean> {
@@ -32,6 +36,30 @@ export class YieldDistributorService implements IYieldDistributorService {
       const yieldDistributor = getYieldDistributorClient(this.config.network, this.walletAddress);
       const nextDistributionTime = await yieldDistributor.get_next_distribution_time();
       return nextDistributionTime.result.valueOf().toString();
+    }
+
+    async timeBeforeNextDistribution(): Promise<number | undefined> {
+      const yieldDistributor = getYieldDistributorClient(this.config.network, this.walletAddress);
+      const nextDistributionTime = await yieldDistributor.time_before_next_distribution();
+      return Number(nextDistributionTime.result.valueOf().toString());
+    }
+
+    async getDistributionRound(): Promise<number | undefined> {
+      const yieldDistributor = getYieldDistributorClient(this.config.network, this.walletAddress);
+      const distributionInfo = await yieldDistributor.get_distribution_info();
+      return Number(distributionInfo.result.epoch.toString());
+    }
+
+    async getTotalMembers(): Promise<number | undefined> {
+      const yieldDistributor = getYieldDistributorClient(this.config.network, this.walletAddress);
+      const totalMembers = await yieldDistributor.list_members();
+      return totalMembers.result.length;
+    }
+
+    async getTreasuryShare(): Promise<number | undefined> {
+      const yieldDistributor = getYieldDistributorClient(this.config.network, this.walletAddress);
+      const treasuryShare = await yieldDistributor.get_treasury_share();
+      return treasuryShare.result.valueOf();
     }
   }
   

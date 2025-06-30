@@ -10,6 +10,8 @@ export {
     isValidStellarAmount,
     parseStellarAmount,
     formatBalance,
+    formatXLMSimple,
+    formatXLMWithSymbol,
 } from "./tokenFormatting";
 export { parseContractError } from "./contractError";
 export { requiresTrustline } from "./horizon";

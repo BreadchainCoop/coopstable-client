@@ -20,9 +20,13 @@ export interface ICusdManagerService {
 }
 
 export interface IYieldDistributorService {
-    isDistributionAvailable: () => Promise<boolean | undefined>; 
+    isDistributionAvailable: () => Promise<boolean | undefined>;
     getDistributionPeriod: () => Promise<string | undefined>;
     getNextDistributionTime: () => Promise<string | undefined>;
+    getTotalMembers: () => Promise<number | undefined>;
+    getTreasuryShare: () => Promise<number | undefined>;
+    timeBeforeNextDistribution: () => Promise<number | undefined>;
+    getDistributionRound: () => Promise<number | undefined>;
 }
 
 export enum SupportedProtocols {

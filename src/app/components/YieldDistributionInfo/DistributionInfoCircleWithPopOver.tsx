@@ -2,16 +2,16 @@
 import * as React from "react";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 import { HoverCard } from "radix-ui";
-import { formatBalance } from "@/app/utils";
+import { formatXLMWithSymbol } from "@/app/utils";
 
 
 export function DistributionInfoCircleWithPopOver({
   cohortYield,
   coreTeamYield
-}: { 
+}: Readonly<{ 
   cohortYield: string, 
   coreTeamYield: string
-}) {
+}>) {
   return (
     <HoverCard.Root openDelay={100}>
       <HoverCard.Trigger asChild>
@@ -19,7 +19,7 @@ export function DistributionInfoCircleWithPopOver({
           <InfoCircledIcon width="100%" height="100%" />
         </a>
       </HoverCard.Trigger>
-    <HoverCard.Content sideOffset={5} className="flex justify-center w-dvw p-4 lg:max-w-md">
+    <HoverCard.Content sideOffset={5} className="relative flex justify-center w-dvw p-4 lg:max-w-md z-10"> 
         <div className="bg-theme-grey-1 border-theme-grey-7 border-1 border-opacity-50 w-full p-8 space-y-6"> 
           <div className="flex flex-col gap-2 text-left">
             <h2 className="text-black text-[24px]">Yield breakdown</h2>
@@ -31,11 +31,11 @@ export function DistributionInfoCircleWithPopOver({
           <div className="flex flex-col gap-2">
             <div className="flex w-full justify-between">
               <span className="text-black opacity-50 text-[16px]">Core team 10%</span>
-              <span className="font-extrabold text-[16px] text-black">{formatBalance(coreTeamYield, 'cUSD').withSymbol}</span>
+              <span className="font-extrabold text-[16px] text-black">{formatXLMWithSymbol(coreTeamYield, {symbol: 'cUSD', decimals: 7}).withSymbol}</span>
             </div>
             <div className="flex w-full justify-between">
               <span className="text-black opacity-50 text-[16px]">Cohort 90%</span>
-              <span className="font-extrabold text-[16px] text-black">{formatBalance(cohortYield, 'cUSD').withSymbol}</span>
+              <span className="font-extrabold text-[16px] text-black">{formatXLMWithSymbol(cohortYield, {symbol: 'cUSD', decimals: 7}).withSymbol}</span>
             </div>
           </div>
         </div>
