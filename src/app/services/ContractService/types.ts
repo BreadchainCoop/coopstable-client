@@ -2,6 +2,7 @@ export type ContractService = {
     yieldController: IYieldControllerService;
     cusd: ICusdService;
     yieldDistributor: IYieldDistributorService;
+    cusdManager: ICusdManagerService;
 }
 
 export interface IYieldControllerService {
@@ -12,6 +13,10 @@ export interface IYieldControllerService {
 
 export interface ICusdService {
     totalSupply: () => Promise<string | undefined>;  
+}
+
+export interface ICusdManagerService {
+    getTotalSupply: () => Promise<string | undefined>;  
 }
 
 export interface IYieldDistributorService {

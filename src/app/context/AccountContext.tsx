@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext, type ReactNode } from "react";
-
 import { AccountService } from "../services/accountService";
 import { NetworkString } from "../services/UserService/types";
 import { QUERY_KEYS } from "../constants";

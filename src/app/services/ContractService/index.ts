@@ -1,6 +1,7 @@
 import { Network } from '@/app/config';
 import { YieldControllerService } from './yieldController';
 import { YieldDistributorService } from './yieldDistributor';
+import { CUSDManagerService } from './cusdManager';
 import { SignTransaction } from '@stellar/stellar-sdk/contract';
 import CusdService from './cusd';
 
@@ -21,4 +22,10 @@ export function yieldDistributor(
 
 export function cusd(network?: Network): CusdService {
   return new CusdService(network);
+}
+
+export function cusdManager(
+  network?: Network
+): CUSDManagerService {
+  return new CUSDManagerService(network);
 }
