@@ -40,6 +40,8 @@ export interface YieldAdapterRegistryMap {
   yield_type: string;
 }
 
+export type DataKey = {tag: "Owner", values: void} | {tag: "Admin", values: void};
+
 /**
  * Error codes for the cusd_manager contract. Common errors are codes that match up with the built-in
  * YieldAdapterRegistry error reporting. YieldAdapterRegistry specific errors start at 400
@@ -54,36 +56,11 @@ export const YieldAdapterRegistryError = {
   1100: {message:"InvalidYieldAdapter"}
 }
 
-
-export interface RoleData {
-  admin_role: string;
-  members: Map<string, boolean>;
-}
-
-
-/**
- * A storage structure for all roles in the contract
- */
-export interface RolesMap {
-  roles: Map<string, RoleData>;
-}
-
-export const AccessControlError = {
-  1: {message:"InternalError"},
-  3: {message:"AlreadyInitializedError"},
-  4: {message:"UnauthorizedError"},
-  8: {message:"NegativeAmountError"},
-  10: {message:"BalanceError"},
-  12: {message:"OverflowError"},
-  1300: {message:"OnlyRoleAdmin"},
-  1301: {message:"UnAuhtorizedRole"}
-}
-
 export interface Client {
   /**
    * Construct and simulate a set_yield_adapter_admin transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
    */
-  set_yield_adapter_admin: ({caller, new_admin}: {caller: string, new_admin: string}, options?: {
+  set_yield_adapter_admin: ({new_admin}: {new_admin: string}, options?: {
     /**
      * The fee to pay for the transaction. Default: BASE_FEE
      */
@@ -103,7 +80,7 @@ export interface Client {
   /**
    * Construct and simulate a register_adapter transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
    */
-  register_adapter: ({caller, yield_type, protocol, adapter_address}: {caller: string, yield_type: string, protocol: string, adapter_address: string}, options?: {
+  register_adapter: ({yield_type, protocol, adapter_address}: {yield_type: string, protocol: string, adapter_address: string}, options?: {
     /**
      * The fee to pay for the transaction. Default: BASE_FEE
      */
@@ -123,7 +100,7 @@ export interface Client {
   /**
    * Construct and simulate a remove_adapter transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
    */
-  remove_adapter: ({caller, yield_type, protocol}: {caller: string, yield_type: string, protocol: string}, options?: {
+  remove_adapter: ({yield_type, protocol}: {yield_type: string, protocol: string}, options?: {
     /**
      * The fee to pay for the transaction. Default: BASE_FEE
      */
@@ -163,7 +140,7 @@ export interface Client {
   /**
    * Construct and simulate a add_support_for_asset transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
    */
-  add_support_for_asset: ({caller, yield_type, protocol, asset_address}: {caller: string, yield_type: string, protocol: string, asset_address: string}, options?: {
+  add_support_for_asset: ({yield_type, protocol, asset_address}: {yield_type: string, protocol: string, asset_address: string}, options?: {
     /**
      * The fee to pay for the transaction. Default: BASE_FEE
      */
@@ -183,7 +160,7 @@ export interface Client {
   /**
    * Construct and simulate a remove_support_for_asset transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
    */
-  remove_support_for_asset: ({caller, yield_type, protocol, asset_address}: {caller: string, yield_type: string, protocol: string, asset_address: string}, options?: {
+  remove_support_for_asset: ({yield_type, protocol, asset_address}: {yield_type: string, protocol: string, asset_address: string}, options?: {
     /**
      * The fee to pay for the transaction. Default: BASE_FEE
      */
@@ -264,7 +241,7 @@ export interface Client {
 export class Client extends ContractClient {
   static async deploy<T = Client>(
         /** Constructor/Initialization Args for the contract's `__constructor` method */
-        {admin}: {admin: string},
+        {admin, owner}: {admin: string, owner: string},
     /** Options for initializing a Client as well as for calling a method, with extras specific to deploying. */
     options: MethodOptions &
       Omit<ContractClientOptions, "contractId"> & {
@@ -276,25 +253,23 @@ export class Client extends ContractClient {
         format?: "hex" | "base64";
       }
   ): Promise<AssembledTransaction<T>> {
-    return ContractClient.deploy({admin}, options)
+    return ContractClient.deploy({admin, owner}, options)
   }
   constructor(public readonly options: ContractClientOptions) {
     super(
-      new ContractSpec([ "AAAAAAAAAAAAAAANX19jb25zdHJ1Y3RvcgAAAAAAAAEAAAAAAAAABWFkbWluAAAAAAAAEwAAAAA=",
-        "AAAAAAAAAAAAAAAXc2V0X3lpZWxkX2FkYXB0ZXJfYWRtaW4AAAAAAgAAAAAAAAAGY2FsbGVyAAAAAAATAAAAAAAAAAluZXdfYWRtaW4AAAAAAAATAAAAAA==",
-        "AAAAAAAAAAAAAAAQcmVnaXN0ZXJfYWRhcHRlcgAAAAQAAAAAAAAABmNhbGxlcgAAAAAAEwAAAAAAAAAKeWllbGRfdHlwZQAAAAAAEQAAAAAAAAAIcHJvdG9jb2wAAAARAAAAAAAAAA9hZGFwdGVyX2FkZHJlc3MAAAAAEwAAAAA=",
-        "AAAAAAAAAAAAAAAOcmVtb3ZlX2FkYXB0ZXIAAAAAAAMAAAAAAAAABmNhbGxlcgAAAAAAEwAAAAAAAAAKeWllbGRfdHlwZQAAAAAAEQAAAAAAAAAIcHJvdG9jb2wAAAARAAAAAA==",
+      new ContractSpec([ "AAAAAAAAAAAAAAANX19jb25zdHJ1Y3RvcgAAAAAAAAIAAAAAAAAABWFkbWluAAAAAAAAEwAAAAAAAAAFb3duZXIAAAAAAAATAAAAAA==",
+        "AAAAAAAAAAAAAAAXc2V0X3lpZWxkX2FkYXB0ZXJfYWRtaW4AAAAAAQAAAAAAAAAJbmV3X2FkbWluAAAAAAAAEwAAAAA=",
+        "AAAAAAAAAAAAAAAQcmVnaXN0ZXJfYWRhcHRlcgAAAAMAAAAAAAAACnlpZWxkX3R5cGUAAAAAABEAAAAAAAAACHByb3RvY29sAAAAEQAAAAAAAAAPYWRhcHRlcl9hZGRyZXNzAAAAABMAAAAA",
+        "AAAAAAAAAAAAAAAOcmVtb3ZlX2FkYXB0ZXIAAAAAAAIAAAAAAAAACnlpZWxkX3R5cGUAAAAAABEAAAAAAAAACHByb3RvY29sAAAAEQAAAAA=",
         "AAAAAAAAAAAAAAALZ2V0X2FkYXB0ZXIAAAAAAgAAAAAAAAAKeWllbGRfdHlwZQAAAAAAEQAAAAAAAAAIcHJvdG9jb2wAAAARAAAAAQAAABM=",
-        "AAAAAAAAAAAAAAAVYWRkX3N1cHBvcnRfZm9yX2Fzc2V0AAAAAAAABAAAAAAAAAAGY2FsbGVyAAAAAAATAAAAAAAAAAp5aWVsZF90eXBlAAAAAAARAAAAAAAAAAhwcm90b2NvbAAAABEAAAAAAAAADWFzc2V0X2FkZHJlc3MAAAAAAAATAAAAAA==",
-        "AAAAAAAAAAAAAAAYcmVtb3ZlX3N1cHBvcnRfZm9yX2Fzc2V0AAAABAAAAAAAAAAGY2FsbGVyAAAAAAATAAAAAAAAAAp5aWVsZF90eXBlAAAAAAARAAAAAAAAAAhwcm90b2NvbAAAABEAAAAAAAAADWFzc2V0X2FkZHJlc3MAAAAAAAATAAAAAA==",
+        "AAAAAAAAAAAAAAAVYWRkX3N1cHBvcnRfZm9yX2Fzc2V0AAAAAAAAAwAAAAAAAAAKeWllbGRfdHlwZQAAAAAAEQAAAAAAAAAIcHJvdG9jb2wAAAARAAAAAAAAAA1hc3NldF9hZGRyZXNzAAAAAAAAEwAAAAA=",
+        "AAAAAAAAAAAAAAAYcmVtb3ZlX3N1cHBvcnRfZm9yX2Fzc2V0AAAAAwAAAAAAAAAKeWllbGRfdHlwZQAAAAAAEQAAAAAAAAAIcHJvdG9jb2wAAAARAAAAAAAAAA1hc3NldF9hZGRyZXNzAAAAAAAAEwAAAAA=",
         "AAAAAAAAAAAAAAASaXNfc3VwcG9ydGVkX2Fzc2V0AAAAAAADAAAAAAAAAAp5aWVsZF90eXBlAAAAAAARAAAAAAAAAAhwcm90b2NvbAAAABEAAAAAAAAADWFzc2V0X2FkZHJlc3MAAAAAAAATAAAAAQAAAAE=",
         "AAAAAAAAAAAAAAAMZ2V0X2FkYXB0ZXJzAAAAAQAAAAAAAAAKeWllbGRfdHlwZQAAAAAAEQAAAAEAAAPqAAAAEw==",
         "AAAAAAAAAAAAAAAYZ2V0X2FkYXB0ZXJzX3dpdGhfYXNzZXRzAAAAAQAAAAAAAAAKeWllbGRfdHlwZQAAAAAAEQAAAAEAAAPqAAAD7QAAAAIAAAATAAAD6gAAABM=",
         "AAAAAQAAAAAAAAAAAAAAF1lpZWxkQWRhcHRlclJlZ2lzdHJ5TWFwAAAAAAMAAAAAAAAADHJlZ2lzdHJ5X21hcAAAA+wAAAARAAAAEwAAAAAAAAAQc3VwcG9ydGVkX2Fzc2V0cwAAA+wAAAARAAAD7AAAABMAAAABAAAAAAAAAAp5aWVsZF90eXBlAAAAAAAR",
-        "AAAABAAAALpFcnJvciBjb2RlcyBmb3IgdGhlIGN1c2RfbWFuYWdlciBjb250cmFjdC4gQ29tbW9uIGVycm9ycyBhcmUgY29kZXMgdGhhdCBtYXRjaCB1cCB3aXRoIHRoZSBidWlsdC1pbgpZaWVsZEFkYXB0ZXJSZWdpc3RyeSBlcnJvciByZXBvcnRpbmcuIFlpZWxkQWRhcHRlclJlZ2lzdHJ5IHNwZWNpZmljIGVycm9ycyBzdGFydCBhdCA0MDAAAAAAAAAAAAAZWWllbGRBZGFwdGVyUmVnaXN0cnlFcnJvcgAAAAAAAAcAAAAAAAAADUludGVybmFsRXJyb3IAAAAAAAABAAAAAAAAABdBbHJlYWR5SW5pdGlhbGl6ZWRFcnJvcgAAAAADAAAAAAAAABFVbmF1dGhvcml6ZWRFcnJvcgAAAAAAAAQAAAAAAAAAE05lZ2F0aXZlQW1vdW50RXJyb3IAAAAACAAAAAAAAAAMQmFsYW5jZUVycm9yAAAACgAAAAAAAAANT3ZlcmZsb3dFcnJvcgAAAAAAAAwAAAAAAAAAE0ludmFsaWRZaWVsZEFkYXB0ZXIAAAAETA==",
-        "AAAAAQAAAAAAAAAAAAAACFJvbGVEYXRhAAAAAgAAAAAAAAAKYWRtaW5fcm9sZQAAAAAAEQAAAAAAAAAHbWVtYmVycwAAAAPsAAAAEwAAAAE=",
-        "AAAAAQAAADFBIHN0b3JhZ2Ugc3RydWN0dXJlIGZvciBhbGwgcm9sZXMgaW4gdGhlIGNvbnRyYWN0AAAAAAAAAAAAAAhSb2xlc01hcAAAAAEAAAAAAAAABXJvbGVzAAAAAAAD7AAAABEAAAfQAAAACFJvbGVEYXRh",
-        "AAAABAAAAAAAAAAAAAAAEkFjY2Vzc0NvbnRyb2xFcnJvcgAAAAAACAAAAAAAAAANSW50ZXJuYWxFcnJvcgAAAAAAAAEAAAAAAAAAF0FscmVhZHlJbml0aWFsaXplZEVycm9yAAAAAAMAAAAAAAAAEVVuYXV0aG9yaXplZEVycm9yAAAAAAAABAAAAAAAAAATTmVnYXRpdmVBbW91bnRFcnJvcgAAAAAIAAAAAAAAAAxCYWxhbmNlRXJyb3IAAAAKAAAAAAAAAA1PdmVyZmxvd0Vycm9yAAAAAAAADAAAAAAAAAANT25seVJvbGVBZG1pbgAAAAAABRQAAAAAAAAAEFVuQXVodG9yaXplZFJvbGUAAAUV" ]),
+        "AAAAAgAAAAAAAAAAAAAAB0RhdGFLZXkAAAAAAgAAAAAAAAAAAAAABU93bmVyAAAAAAAAAAAAAAAAAAAFQWRtaW4AAAA=",
+        "AAAABAAAALpFcnJvciBjb2RlcyBmb3IgdGhlIGN1c2RfbWFuYWdlciBjb250cmFjdC4gQ29tbW9uIGVycm9ycyBhcmUgY29kZXMgdGhhdCBtYXRjaCB1cCB3aXRoIHRoZSBidWlsdC1pbgpZaWVsZEFkYXB0ZXJSZWdpc3RyeSBlcnJvciByZXBvcnRpbmcuIFlpZWxkQWRhcHRlclJlZ2lzdHJ5IHNwZWNpZmljIGVycm9ycyBzdGFydCBhdCA0MDAAAAAAAAAAAAAZWWllbGRBZGFwdGVyUmVnaXN0cnlFcnJvcgAAAAAAAAcAAAAAAAAADUludGVybmFsRXJyb3IAAAAAAAABAAAAAAAAABdBbHJlYWR5SW5pdGlhbGl6ZWRFcnJvcgAAAAADAAAAAAAAABFVbmF1dGhvcml6ZWRFcnJvcgAAAAAAAAQAAAAAAAAAE05lZ2F0aXZlQW1vdW50RXJyb3IAAAAACAAAAAAAAAAMQmFsYW5jZUVycm9yAAAACgAAAAAAAAANT3ZlcmZsb3dFcnJvcgAAAAAAAAwAAAAAAAAAE0ludmFsaWRZaWVsZEFkYXB0ZXIAAAAETA==" ]),
       options
     )
   }

@@ -76,7 +76,7 @@ export class YieldControllerService implements IYieldControllerService {
         }
         if (rpc.Api.isSimulationRestore(withdrawOp.simulation)) {
           await withdrawOp.restoreFootprint(withdrawOp.simulation.restorePreamble);
-          return await this.burnCUSD(amount); // Recursive call after restore
+          return await this.burnCUSD(amount);
         }
         if (rpc.Api.isSimulationSuccess(withdrawOp.simulation)) {
           const response = await withdrawOp.signAndSend({ signTransaction: this.signTransaction });
@@ -88,9 +88,9 @@ export class YieldControllerService implements IYieldControllerService {
     }
 
     async getYield(): Promise<string | undefined> {      
-      const yieldController = getYieldControllerClient(this.network);
-      const lendingYield = await yieldController.get_yield();
-      const result = lendingYield.result.valueOf().toString();
-      return result;
+        const yieldController = getYieldControllerClient(this.network);
+        const lendingYield = await yieldController.get_yield();
+        const result = lendingYield.result.valueOf().toString();
+        return result;
     }
 }

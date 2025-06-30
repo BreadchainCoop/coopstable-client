@@ -24,8 +24,11 @@ async function fetchAccount(account: string, network: NetworkString) {
   const config = getNetworkConfig(network);
   const server = new Horizon.Server(config.horizonUrl);
   const res = await server.loadAccount(account);
-
   const sequenceNumber = res.sequence;
+  
+
+
+
   const balances = res.balances.reduce<BalanceValues>(
     (acc, balance) => {
       if (balance.asset_type === "native") {

@@ -41,7 +41,7 @@ export function useGetYield() {
   return useQuery({
     queryKey: QUERY_KEYS.YIELD,
     queryFn: context.yieldController.getYield,
-    refetchInterval: 1000,
+    refetchInterval: 3000,
     refetchOnWindowFocus: false,
   });
 }
@@ -79,6 +79,19 @@ export function useGetNextDistributionTime() {
   return useQuery({
     queryKey: QUERY_KEYS.NEXT_DISTRIBUTION_TIME,
     queryFn: context.yieldDistributor.getNextDistributionTime,
+    refetchInterval: 3000,
+    refetchOnWindowFocus: false,
+  });
+}
+
+export function useGetCUSDTotalSupply() {
+  const context = useContext(ContractContext);
+  if (!context)
+    throw new Error("useGetCusdTotalSupply must be used within a ContractContext");
+  
+  return useQuery({
+    queryKey: QUERY_KEYS.CUSD_TOTAL_SUPPLY,
+    queryFn: context.cusd.totalSupply,
     refetchInterval: 3000,
     refetchOnWindowFocus: false,
   });

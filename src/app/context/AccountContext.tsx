@@ -34,8 +34,8 @@ export function AccountProvider({
   accountService,
   children,
 }: {
-  accountService: AccountService;
-  children: ReactNode;
+  readonly accountService: AccountService;
+  readonly children: ReactNode;
 }) {
   return (
     <BalanceContext.Provider value={accountService}>
@@ -55,6 +55,13 @@ function useAccount(account: string, network: NetworkString) {
   });
 }
 
+function buildError<T>(error: Error, data: T | null): BalanceResultError<T> {
+  return ({ 
+    status: 'error',
+    error,
+    data,
+  })
+}
 
 export function useNativeBalance(
   account: string,
@@ -65,7 +72,6 @@ export function useNativeBalance(
     throw new Error("useNativeBalance must be used within a BalanceContext");
 
   const balances = useAccount(account, network);
-
   switch (balances.status) {
     case "pending":
       return {
@@ -80,11 +86,7 @@ export function useNativeBalance(
         data: balances.data.balances.NATIVE,
       };
     case "error":
-      return {
-        status: balances.status,
-        error: balances.error,
-        data: null,
-      };
+      return buildError<string>(balances.error, null);
     default:
       throw new Error("unhandled case in switch");
   }
@@ -114,11 +116,7 @@ export function useUSDCBalance(
         data: balances.data.balances.USDC,
       };
     case "error":
-      return {
-        status: balances.status,
-        error: balances.error,
-        data: null,
-      };
+      return buildError<string>(balances.error, null);
     default:
       throw new Error("unhandled case in switch");
   }
@@ -148,11 +146,7 @@ export function useCUSDBalance(
         data: balances.data.balances.CUSD,
       };
     case "error":
-      return {
-        status: balances.status,
-        error: balances.error,
-        data: null,
-      };
+      return buildError<string>(balances.error, null);
     default:
       throw new Error("unhandled case in switch");
   }
@@ -182,11 +176,7 @@ export function useSequenceNumber(
         data: balances.data.sequenceNumber,
       };
     case "error":
-      return {
-        status: balances.status,
-        error: balances.error,
-        data: null,
-      };
+      return buildError<string>(balances.error, null);
     default:
       throw new Error("unhandled case in switch");
   }
@@ -216,11 +206,7 @@ export function useUserBalance(
         data: balances.data.balances[token.toUpperCase() as keyof typeof balances.data.balances],
       };
     case "error":
-      return {
-        status: balances.status,
-        error: balances.error,
-        data: null,
-      };
+      return buildError<string>(balances.error, null);
     default:
       throw new Error("unhandled case in switch");
   }

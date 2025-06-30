@@ -14,6 +14,7 @@ export const QUERY_KEYS = {
   DISTRIBUTION_PERIOD: ['distribution_period'],
   NEXT_DISTRIBUTION_TIME: ['next_distribution_time'],
   IS_DISTRIBUTION_AVAILABLE: ['is_distribution_available'],
+  CUSD_TOTAL_SUPPLY: ['cusd_total_supply'],
 }
 
 export const SWAP_MODES = {
