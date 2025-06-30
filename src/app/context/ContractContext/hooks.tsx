@@ -91,7 +91,7 @@ export function useGetCUSDTotalSupply() {
   
   return useQuery({
     queryKey: QUERY_KEYS.CUSD_TOTAL_SUPPLY,
-    queryFn: context.cusd.totalSupply,
+    queryFn: context.cusdManager.getTotalSupply,
     refetchInterval: 3000,
     refetchOnWindowFocus: false,
   });

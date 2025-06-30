@@ -47,7 +47,7 @@ export function StatsPanel() {
       <div className="space-y-3 lg:space-y-0 lg:space-x-3 lg:flex lg:justify-between"> 
         <StatItem
           label="Total minted cUSD"
-          value="100.78"
+          value={formatXLMSimple(cusdData ?? 0, TOKEN_CODES.CUSD, 7)}
           icon={<CUSDIcon />}
         />
         <StatItem
@@ -58,7 +58,6 @@ export function StatsPanel() {
         <StatItem
           label="Total projects funded"
           value="0"
-        //   icon={<></>}
         />
       </div>
     </div>
