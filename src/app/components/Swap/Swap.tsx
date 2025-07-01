@@ -10,7 +10,7 @@ import { InitTransaction } from "./InitTransaction";
 import { CUSDIcon, USDCIcon } from "../Icons";
 
 export function Swap() {
-  const { user, connectWallet } = useUser();
+  const { user, connectWallet, signTransaction } = useUser();
 
   return (
     <SwapProvider>
@@ -34,7 +34,7 @@ export function Swap() {
             Sign In
           </Button>
         )}
-        {user.status === "connected" && <InitTransaction user={user} />}
+        {user.status === "connected" && <InitTransaction user={user} signTransaction={signTransaction} />}
       </form>
     </SwapProvider>
   );
@@ -189,7 +189,7 @@ function BalanceDisplay({ token, user }: {  readonly token: TokenCode, readonly 
     case "error":
       return <span className="text-theme-grey-5 pt-1 text-xs">Balance: 0.00 {token}</span>;
     case "success":
-      return <span className="text-theme-grey-5 pt-1 text-xs">Balance: {formatBalance(balance.data as string, token).withSymbol}</span>;
+      return <span className="text-theme-grey-5 pt-1 text-xs">Balance: {formatBalance(balance.data?.balance as string, token).withSymbol}</span>;
     default:
       return <span className="text-theme-grey-5 pt-1 text-xs">Balance: 0.00 {token}</span>;;
   }

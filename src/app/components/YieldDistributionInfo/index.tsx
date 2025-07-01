@@ -2,15 +2,16 @@
 import { cn, pageWrapClasses, formatXLMWithSymbol } from "@/app/utils";
 import { CUSDIcon } from "@/app/components/Icons";
 import { DistributionInfoCircleWithPopOver } from "./DistributionInfoCircleWithPopOver";
-import { useFormattedAPY, useGetDistributionRound, useYieldData } from "@/app/context/ContractContext/hooks";
+import { useGetTotalAPY, useGetDistributionRound, useYieldData } from "@/app/context/ContractContext/hooks";
 
 export default function YieldDistributionInfo() {
     const {
+        totalYield,
         cohortYield,
         treasuryYield,
         totalMembers,
     } = useYieldData();
-    const { annual } = useFormattedAPY();
+    const { data: annual } = useGetTotalAPY();
     const { data: distributionRound } = useGetDistributionRound();
     return (
         <section className={cn(pageWrapClasses, 'px-[unset] py-[1.5rem]')}>
@@ -23,7 +24,7 @@ export default function YieldDistributionInfo() {
                         <div className="w-6 h-6 flex lg:w-8 lg:h-8 items-center justify-center">
                             <CUSDIcon />
                         </div>
-                        <span className="text-[2rem] font-bold text-lg text-black">{formatXLMWithSymbol(cohortYield, {symbol: 'cUSD', decimals: 7}).withSymbol}</span> 
+                        <span className="text-[2rem] font-bold text-lg text-black">{formatXLMWithSymbol(totalYield, {symbol: 'cUSD', decimals: 7}).withSymbol}</span> 
                     </div>
                     <div className="flex justify-center items-center gap-2 ">
                         <span className="text-[14px] leading-[1.2]">Yield breakdown</span>
@@ -31,7 +32,7 @@ export default function YieldDistributionInfo() {
                     </div>
                 </div>
                 <div className="bg-theme-grey-1 border-1 border-opacity-50 border-theme-grey-7 flex flex-col w-full py-4 px-8 space-y-2.5"> 
-                    <LabelValueHorizonal label={"APY"} value={annual} />    
+                    <LabelValueHorizonal label={"APY"} value={(annual ?? 0).toString().concat(" %")} />    
                     <LabelValueHorizonal label={"Cohort size"} value={totalMembers} />    
                     <LabelValueHorizonal label={"Est. yield per project"} value={`$${formatXLMWithSymbol(cohortYield, { decimals: 2, showSymbol: false }).formatted}`} />      
                     <LabelValueHorizonal label={"Distribution round"} value={distributionRound ?? 0} />    

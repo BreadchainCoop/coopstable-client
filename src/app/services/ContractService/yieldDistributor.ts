@@ -18,6 +18,7 @@ export class YieldDistributorService implements IYieldDistributorService {
       this.getTreasuryShare = this.getTreasuryShare.bind(this);
       this.timeBeforeNextDistribution = this.timeBeforeNextDistribution.bind(this);
       this.getDistributionRound = this.getDistributionRound.bind(this);
+      this.getTotalDistributed = this.getTotalDistributed.bind(this);
     }
 
     async isDistributionAvailable(): Promise<boolean> {
@@ -60,6 +61,12 @@ export class YieldDistributorService implements IYieldDistributorService {
       const yieldDistributor = getYieldDistributorClient(this.config.network, this.walletAddress);
       const treasuryShare = await yieldDistributor.get_treasury_share();
       return treasuryShare.result.valueOf();
+    }
+
+    async getTotalDistributed(): Promise<string | undefined> {
+      const yieldDistributor = getYieldDistributorClient(this.config.network, this.walletAddress);
+      const totalDistributed = await yieldDistributor.get_total_distributed();
+      return totalDistributed.result.valueOf().toString();
     }
   }
   

@@ -12,10 +12,10 @@ import Link from "next/link";
 export function AccountConnected({
   user,
   disconnectWallet,
-}: {
+}: Readonly<{
   user: UserContextStateConnected;
   disconnectWallet: () => void;
-}) {
+}>) {
 
   return (
     <>
@@ -32,16 +32,16 @@ export function AccountConnected({
 function AccountButton({
   disconnectWallet,
   user,
-}: { 
+}: Readonly<{ 
     disconnectWallet: () => void, 
     user: UserContextStateConnected 
-  }) {
+  }>) {
   return <button onClick={(e) =>{
       e.preventDefault();
       disconnectWallet();
     }} className="cursor-pointer flex items-center gap-2 border-1 border-theme-grey-4 bg-white p-2">
     <Image src="/avatar.jpg" alt="user avatar" width={32} height={32} />
-    <span className="text-[16px] lg:text-xl font-theme-3 tracking-wide text-black">
+    <span className="py-0.5 text-[16px] lg:text-xl font-theme-3 tracking-wide text-black">
       {truncateAddress(user.account)}
     </span>
   </button>
@@ -50,10 +50,10 @@ function AccountButton({
 function AccountForDropDown({
   user,
   isOpen,
-}: { 
+}: Readonly<{ 
     user: UserContextStateConnected
     isOpen: boolean
-  }) {
+  }>) {
   return <div className={`cursor-pointer flex items-center gap-2 border-1 border-theme-grey-4 bg-white p-2 ${isOpen ? "hidden" : ""}`}>
     <Image src="/avatar.jpg" alt="user avatar" width={32} height={32} />
     <span className="text-[16px] lg:text-xl font-theme-3 tracking-wide text-black">
@@ -65,10 +65,10 @@ function AccountForDropDown({
 export function AccountDropDown({
   disconnect,
   user,
-}: {
+}: Readonly<{
   user: UserContextStateConnected;
   disconnect: () => void;
-}) {
+}>) {
   const [isOpen, setIsOpen] = useState(false);
   
   const xlmBalance = useNativeBalance(user.account, user.network);
@@ -133,7 +133,7 @@ export function AccountDropDown({
               <span className="text-black opacity-50 text-sm">USDC balance</span>
               <span className="text-black font-medium">
                 {usdcBalance.status === "success" 
-                  ? formatBalance(usdcBalance.data as string || "0", "USDC").withSymbol
+                  ? formatBalance(usdcBalance.data?.balance as string || "0", "USDC").withSymbol
                   : "0 USDC"
                 }
               </span>
@@ -142,7 +142,7 @@ export function AccountDropDown({
               <span className="text-black opacity-50 text-sm">cUSD generated</span>
               <span className="text-black font-medium">
                 {cusdBalance.status === "success" 
-                  ? formatBalance(cusdBalance.data as string || "0", "cUSD").withSymbol
+                  ? formatBalance(cusdBalance.data?.balance as string || "0", "cUSD").withSymbol
                   : "0 cUSD"
                 }
               </span>
@@ -166,8 +166,9 @@ export function AccountDropDown({
 
             <DropdownMenu.Item asChild>
               <Link 
-                href="#submit" 
+                href="https://form.typeform.com/to/sHp99h2H" 
                 className="flex items-center gap-2 text-theme-black opacity-50 font-medium text-lg hover:text-black transition-colors"
+                target="_blank"
               >
                 <span>SUBMIT PROJECT</span>
                 <div className="size-5"> 

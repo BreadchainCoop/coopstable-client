@@ -17,7 +17,15 @@
       private networkPassphrase: string,
       private stellarRpc: rpc.Server,
       private signTransaction: SignTransaction 
-    ) {}
+    ) {
+      
+
+      this.sign = this.sign.bind(this);
+      this.restore = this.restore.bind(this);
+      this.sendTransaction = this.sendTransaction.bind(this);
+      this.simulateOperation = this.simulateOperation.bind(this);
+      this.invokeSorobanOperation = this.invokeSorobanOperation.bind(this);
+    }
   
     
     async mutateXdr<T>(transaction: AssembledTransaction<T>) { 
@@ -27,7 +35,7 @@
         throw new Error(simulation.error);
       } 
       if (rpc.Api.isSimulationRestore(simulation)) {
-        await this.restore(simulation); // request the user to pay for the restore
+        await this.restore(simulation);
         await this.invokeSorobanOperation(operationXdr, simulation);
       }
       await this.invokeSorobanOperation(operationXdr, simulation);  
@@ -103,7 +111,7 @@
       }
   
       if (sendTxResponse.status !== 'PENDING') {
-        throw new Error(`Failed to submit transaction: ${sendTxResponse.errorResult}`);
+        throw new Error(`Failed to submit transaction: ${sendTxResponse.errorResult?.result}`);
       }
 
 
@@ -129,20 +137,20 @@
     }
 
     async sign(xdr: string): Promise<string> {
-        try {
-          let { signedTxXdr } = await this.signTransaction(xdr, {
-            address: this.walletAddress,
-            networkPassphrase: this.networkPassphrase,
-          });
-          return signedTxXdr;
-        } catch (e: any) {
-          if (e === 'User declined access') {
-            throw new Error('Transaction rejected by wallet.');
-          } else if (typeof e === 'string') {
-            throw new Error(e);
-          }
-          throw e;
+      try {
+        let { signedTxXdr } = await this.signTransaction(xdr, {
+          address: this.walletAddress,
+          networkPassphrase: this.networkPassphrase,
+        });
+        return signedTxXdr;
+      } catch (e: any) {
+        if (e === 'User declined access') {
+          throw new Error('Transaction rejected by wallet.');
+        } else if (typeof e === 'string') {
+          throw new Error(e);
         }
+        throw e;
+      }
     } 
   }
   

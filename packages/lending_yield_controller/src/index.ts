@@ -315,6 +315,46 @@ export interface Client {
     simulate?: boolean;
   }) => Promise<AssembledTransaction<null>>
 
+  /**
+   * Construct and simulate a get_total_apy transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
+   */
+  get_total_apy: ({asset}: {asset: string}, options?: {
+    /**
+     * The fee to pay for the transaction. Default: BASE_FEE
+     */
+    fee?: number;
+
+    /**
+     * The maximum amount of time to wait for the transaction to complete. Default: DEFAULT_TIMEOUT
+     */
+    timeoutInSeconds?: number;
+
+    /**
+     * Whether to automatically simulate the transaction when constructing the AssembledTransaction. Default: true
+     */
+    simulate?: boolean;
+  }) => Promise<AssembledTransaction<u32>>
+
+  /**
+   * Construct and simulate a get_weighted_total_apy transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
+   */
+  get_weighted_total_apy: (options?: {
+    /**
+     * The fee to pay for the transaction. Default: BASE_FEE
+     */
+    fee?: number;
+
+    /**
+     * The maximum amount of time to wait for the transaction to complete. Default: DEFAULT_TIMEOUT
+     */
+    timeoutInSeconds?: number;
+
+    /**
+     * Whether to automatically simulate the transaction when constructing the AssembledTransaction. Default: true
+     */
+    simulate?: boolean;
+  }) => Promise<AssembledTransaction<u32>>
+
 }
 export class Client extends ContractClient {
   static async deploy<T = Client>(
@@ -350,6 +390,8 @@ export class Client extends ContractClient {
         "AAAAAAAAAAAAAAAUZ2V0X2FkYXB0ZXJfcmVnaXN0cnkAAAAAAAAAAQAAABM=",
         "AAAAAAAAAAAAAAAQZ2V0X2N1c2RfbWFuYWdlcgAAAAAAAAABAAAAEw==",
         "AAAAAAAAAAAAAAAJc2V0X2FkbWluAAAAAAAAAQAAAAAAAAAJbmV3X2FkbWluAAAAAAAAEwAAAAA=",
+        "AAAAAAAAAAAAAAANZ2V0X3RvdGFsX2FweQAAAAAAAAEAAAAAAAAABWFzc2V0AAAAAAAAEwAAAAEAAAAE",
+        "AAAAAAAAAAAAAAAWZ2V0X3dlaWdodGVkX3RvdGFsX2FweQAAAAAAAAAAAAEAAAAE",
         "AAAABAAAALhFcnJvciBjb2RlcyBmb3IgdGhlIGN1c2RfbWFuYWdlciBjb250cmFjdC4gQ29tbW9uIGVycm9ycyBhcmUgY29kZXMgdGhhdCBtYXRjaCB1cCB3aXRoIHRoZSBidWlsdC1pbgpMZW5kaW5nWWllbGRDb250cm9sbGVyRXJyb3IgZXJyb3IgcmVwb3J0aW5nLiBDVVNETWFuYWdlciBzcGVjaWZpYyBlcnJvcnMgc3RhcnQgYXQgMTAwAAAAAAAAABtMZW5kaW5nWWllbGRDb250cm9sbGVyRXJyb3IAAAAACAAAAAAAAAANSW50ZXJuYWxFcnJvcgAAAAAAAAEAAAAAAAAAF0FscmVhZHlJbml0aWFsaXplZEVycm9yAAAAAAMAAAAAAAAAEVVuYXV0aG9yaXplZEVycm9yAAAAAAAABAAAAAAAAAATTmVnYXRpdmVBbW91bnRFcnJvcgAAAAAIAAAAAAAAAAxCYWxhbmNlRXJyb3IAAAAKAAAAAAAAAA1PdmVyZmxvd0Vycm9yAAAAAAAADAAAAAAAAAAQVW5zdXBwb3J0ZWRBc3NldAAAA+gAAAAAAAAAEFlpZWxkVW5hdmFpbGFibGUAAAPp",
         "AAAAAgAAAAAAAAAAAAAAEFN1cHBvcnRlZEFkYXB0ZXIAAAACAAAAAAAAAAAAAAAMQmxlbmRDYXBpdGFsAAAAAQAAAAAAAAAGQ3VzdG9tAAAAAAABAAAAEQ==",
         "AAAAAgAAAAAAAAAAAAAAElN1cHBvcnRlZFlpZWxkVHlwZQAAAAAAAwAAAAAAAAAAAAAAB0xlbmRpbmcAAAAAAAAAAAAAAAAJTGlxdWlkaXR5AAAAAAAAAQAAAAAAAAAGQ3VzdG9tAAAAAAABAAAAEQ==" ]),
@@ -369,6 +411,8 @@ export class Client extends ContractClient {
         get_yield_distributor: this.txFromJSON<string>,
         get_adapter_registry: this.txFromJSON<string>,
         get_cusd_manager: this.txFromJSON<string>,
-        set_admin: this.txFromJSON<null>
+        set_admin: this.txFromJSON<null>,
+        get_total_apy: this.txFromJSON<u32>,
+        get_weighted_total_apy: this.txFromJSON<u32>
   }
 }

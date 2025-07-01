@@ -9,6 +9,7 @@ export interface IYieldControllerService {
     mintCUSD: (amount: number) => Promise<string | undefined>;  
     burnCUSD: (amount: number) => Promise<string | undefined>; 
     getYield: () => Promise<string | undefined>;
+    getTotalAPY: () => Promise<number | undefined>;
 }
 
 export interface ICusdService {
@@ -27,6 +28,7 @@ export interface IYieldDistributorService {
     getTreasuryShare: () => Promise<number | undefined>;
     timeBeforeNextDistribution: () => Promise<number | undefined>;
     getDistributionRound: () => Promise<number | undefined>;
+    getTotalDistributed: () => Promise<string | undefined>;
 }
 
 export enum SupportedProtocols {

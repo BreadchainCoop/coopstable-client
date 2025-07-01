@@ -279,6 +279,46 @@ export interface Client {
   }) => Promise<AssembledTransaction<string>>
 
   /**
+   * Construct and simulate a get_total_deposited transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
+   */
+  get_total_deposited: ({asset}: {asset: string}, options?: {
+    /**
+     * The fee to pay for the transaction. Default: BASE_FEE
+     */
+    fee?: number;
+
+    /**
+     * The maximum amount of time to wait for the transaction to complete. Default: DEFAULT_TIMEOUT
+     */
+    timeoutInSeconds?: number;
+
+    /**
+     * Whether to automatically simulate the transaction when constructing the AssembledTransaction. Default: true
+     */
+    simulate?: boolean;
+  }) => Promise<AssembledTransaction<i128>>
+
+  /**
+   * Construct and simulate a get_apy transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
+   */
+  get_apy: ({asset}: {asset: string}, options?: {
+    /**
+     * The fee to pay for the transaction. Default: BASE_FEE
+     */
+    fee?: number;
+
+    /**
+     * The maximum amount of time to wait for the transaction to complete. Default: DEFAULT_TIMEOUT
+     */
+    timeoutInSeconds?: number;
+
+    /**
+     * Whether to automatically simulate the transaction when constructing the AssembledTransaction. Default: true
+     */
+    simulate?: boolean;
+  }) => Promise<AssembledTransaction<u32>>
+
+  /**
    * Construct and simulate a init transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
    */
   init: ({initial_asset}: {initial_asset: string}, options?: {
@@ -490,6 +530,8 @@ export class Client extends ContractClient {
         "AAAAAAAAAAAAAAAUY2xhaW1fZW1pc3Npb25zX2F1dGgAAAACAAAAAAAAAAJ0bwAAAAAAEwAAAAAAAAAFYXNzZXQAAAAAAAATAAAAAQAAA+gAAAPtAAAAAwAAABMAAAARAAAD6gAAAAA=",
         "AAAAAAAAAAAAAAANZ2V0X2VtaXNzaW9ucwAAAAAAAAEAAAAAAAAABWFzc2V0AAAAAAAAEwAAAAEAAAAL",
         "AAAAAAAAAAAAAAAOcHJvdG9jb2xfdG9rZW4AAAAAAAAAAAABAAAAEw==",
+        "AAAAAAAAAAAAAAATZ2V0X3RvdGFsX2RlcG9zaXRlZAAAAAABAAAAAAAAAAVhc3NldAAAAAAAABMAAAABAAAACw==",
+        "AAAAAAAAAAAAAAAHZ2V0X2FweQAAAAABAAAAAAAAAAVhc3NldAAAAAAAABMAAAABAAAABA==",
         "AAAAAwAAAAAAAAAAAAAAC1JlcXVlc3RUeXBlAAAAAAoAAAAAAAAABlN1cHBseQAAAAAAAAAAAAAAAAAIV2l0aGRyYXcAAAABAAAAAAAAABBTdXBwbHlDb2xsYXRlcmFsAAAAAgAAAAAAAAASV2l0aGRyYXdDb2xsYXRlcmFsAAAAAAADAAAAAAAAAAZCb3Jyb3cAAAAAAAQAAAAAAAAABVJlcGF5AAAAAAAABQAAAAAAAAAaRmlsbFVzZXJMaXF1aWRhdGlvbkF1Y3Rpb24AAAAAAAYAAAAAAAAAEkZpbGxCYWREZWJ0QXVjdGlvbgAAAAAABwAAAAAAAAATRmlsbEludGVyZXN0QXVjdGlvbgAAAAAIAAAAAAAAABhEZWxldGVMaXF1aWRhdGlvbkF1Y3Rpb24AAAAJ",
         "AAAAAQAAAAAAAAAAAAAAB1JlcXVlc3QAAAAAAwAAAAAAAAAHYWRkcmVzcwAAAAATAAAAAAAAAAZhbW91bnQAAAAAAAsAAAAAAAAADHJlcXVlc3RfdHlwZQAAAAQ=",
         "AAAAAAAAAAAAAAAEaW5pdAAAAAEAAAAAAAAADWluaXRpYWxfYXNzZXQAAAAAAAATAAAAAQAAA+0AAAAA",
@@ -518,6 +560,8 @@ export class Client extends ContractClient {
         claim_emissions_auth: this.txFromJSON<Option<readonly [string, string, Array<any>]>>,
         get_emissions: this.txFromJSON<i128>,
         protocol_token: this.txFromJSON<string>,
+        get_total_deposited: this.txFromJSON<i128>,
+        get_apy: this.txFromJSON<u32>,
         init: this.txFromJSON<void>,
         submit: this.txFromJSON<Positions>,
         submit_with_allowance: this.txFromJSON<Positions>,

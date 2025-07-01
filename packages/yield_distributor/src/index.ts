@@ -58,7 +58,7 @@ export interface Distribution {
   members: Array<string>;
 }
 
-export type DataKey = {tag: "Admin", values: void} | {tag: "Owner", values: void} | {tag: "YieldController", values: void} | {tag: "Treasury", values: void} | {tag: "Member", values: readonly [string]} | {tag: "Members", values: void} | {tag: "Distributions", values: void} | {tag: "Distribution", values: readonly [u64]} | {tag: "DistributionConfig", values: void} | {tag: "Epoch", values: readonly [u64]} | {tag: "EpochStartTimestamp", values: readonly [u64]};
+export type DataKey = {tag: "Admin", values: void} | {tag: "Owner", values: void} | {tag: "YieldController", values: void} | {tag: "Treasury", values: void} | {tag: "Member", values: readonly [string]} | {tag: "Members", values: void} | {tag: "Distributions", values: void} | {tag: "Distribution", values: readonly [u64]} | {tag: "DistributionConfig", values: void} | {tag: "Epoch", values: readonly [u64]} | {tag: "EpochStartTimestamp", values: readonly [u64]} | {tag: "TotalDistributed", values: void};
 
 /**
  * Error codes for the cusd_manager contract. Common errors are codes that match up with the built-in
@@ -436,6 +436,26 @@ export interface Client {
     simulate?: boolean;
   }) => Promise<AssembledTransaction<string>>
 
+  /**
+   * Construct and simulate a get_total_distributed transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
+   */
+  get_total_distributed: (options?: {
+    /**
+     * The fee to pay for the transaction. Default: BASE_FEE
+     */
+    fee?: number;
+
+    /**
+     * The maximum amount of time to wait for the transaction to complete. Default: DEFAULT_TIMEOUT
+     */
+    timeoutInSeconds?: number;
+
+    /**
+     * Whether to automatically simulate the transaction when constructing the AssembledTransaction. Default: true
+     */
+    simulate?: boolean;
+  }) => Promise<AssembledTransaction<i128>>
+
 }
 export class Client extends ContractClient {
   static async deploy<T = Client>(
@@ -475,10 +495,11 @@ export class Client extends ContractClient {
         "AAAAAAAAAAAAAAAYZ2V0X2Rpc3RyaWJ1dGlvbl9oaXN0b3J5AAAAAAAAAAEAAAPqAAAH0AAAAAxEaXN0cmlidXRpb24=",
         "AAAAAAAAAAAAAAAJc2V0X2FkbWluAAAAAAAAAQAAAAAAAAAJbmV3X2FkbWluAAAAAAAAEwAAAAA=",
         "AAAAAAAAAAAAAAAUZ2V0X3lpZWxkX2NvbnRyb2xsZXIAAAAAAAAAAQAAABM=",
+        "AAAAAAAAAAAAAAAVZ2V0X3RvdGFsX2Rpc3RyaWJ1dGVkAAAAAAAAAAAAAAEAAAAL",
         "AAAAAQAAAAAAAAAAAAAAEkRpc3RyaWJ1dGlvbkNvbmZpZwAAAAAAAgAAAAAAAAATZGlzdHJpYnV0aW9uX3BlcmlvZAAAAAAGAAAAAAAAABJ0cmVhc3VyeV9zaGFyZV9icHMAAAAAAAQ=",
         "AAAAAQAAAAAAAAAAAAAABk1lbWJlcgAAAAAAAwAAAAAAAAAGYWN0aXZlAAAAAAABAAAAAAAAAAdhZGRyZXNzAAAAABMAAAAAAAAACWpvaW5lZF9hdAAAAAAAAAY=",
         "AAAAAQAAAAAAAAAAAAAADERpc3RyaWJ1dGlvbgAAAAgAAAAAAAAAGmRpc3RyaWJ1dGlvbl9lbmRfdGltZXN0YW1wAAAAAAAGAAAAAAAAABNkaXN0cmlidXRpb25fbWVtYmVyAAAAAAsAAAAAAAAAHGRpc3RyaWJ1dGlvbl9zdGFydF90aW1lc3RhbXAAAAAGAAAAAAAAABJkaXN0cmlidXRpb25fdG90YWwAAAAAAAsAAAAAAAAAFWRpc3RyaWJ1dGlvbl90cmVhc3VyeQAAAAAAAAsAAAAAAAAABWVwb2NoAAAAAAAABgAAAAAAAAAMaXNfcHJvY2Vzc2VkAAAAAQAAAAAAAAAHbWVtYmVycwAAAAPqAAAAEw==",
-        "AAAAAgAAAAAAAAAAAAAAB0RhdGFLZXkAAAAACwAAAAAAAAAAAAAABUFkbWluAAAAAAAAAAAAAAAAAAAFT3duZXIAAAAAAAAAAAAAAAAAAA9ZaWVsZENvbnRyb2xsZXIAAAAAAAAAAAAAAAAIVHJlYXN1cnkAAAABAAAAAAAAAAZNZW1iZXIAAAAAAAEAAAATAAAAAAAAAAAAAAAHTWVtYmVycwAAAAAAAAAAAAAAAA1EaXN0cmlidXRpb25zAAAAAAAAAQAAAAAAAAAMRGlzdHJpYnV0aW9uAAAAAQAAAAYAAAAAAAAAAAAAABJEaXN0cmlidXRpb25Db25maWcAAAAAAAEAAAAAAAAABUVwb2NoAAAAAAAAAQAAAAYAAAABAAAAAAAAABNFcG9jaFN0YXJ0VGltZXN0YW1wAAAAAAEAAAAG",
+        "AAAAAgAAAAAAAAAAAAAAB0RhdGFLZXkAAAAADAAAAAAAAAAAAAAABUFkbWluAAAAAAAAAAAAAAAAAAAFT3duZXIAAAAAAAAAAAAAAAAAAA9ZaWVsZENvbnRyb2xsZXIAAAAAAAAAAAAAAAAIVHJlYXN1cnkAAAABAAAAAAAAAAZNZW1iZXIAAAAAAAEAAAATAAAAAAAAAAAAAAAHTWVtYmVycwAAAAAAAAAAAAAAAA1EaXN0cmlidXRpb25zAAAAAAAAAQAAAAAAAAAMRGlzdHJpYnV0aW9uAAAAAQAAAAYAAAAAAAAAAAAAABJEaXN0cmlidXRpb25Db25maWcAAAAAAAEAAAAAAAAABUVwb2NoAAAAAAAAAQAAAAYAAAABAAAAAAAAABNFcG9jaFN0YXJ0VGltZXN0YW1wAAAAAAEAAAAGAAAAAAAAAAAAAAAQVG90YWxEaXN0cmlidXRlZA==",
         "AAAABAAAALdFcnJvciBjb2RlcyBmb3IgdGhlIGN1c2RfbWFuYWdlciBjb250cmFjdC4gQ29tbW9uIGVycm9ycyBhcmUgY29kZXMgdGhhdCBtYXRjaCB1cCB3aXRoIHRoZSBidWlsdC1pbgpZaWVsZERpc3RyaWJ1dG9yRXJyb3IgZXJyb3IgcmVwb3J0aW5nLiBZaWVsZERpc3RyaWJ1dG9yIHNwZWNpZmljIGVycm9ycyBzdGFydCBhdCA0MDAAAAAAAAAAABVZaWVsZERpc3RyaWJ1dG9yRXJyb3IAAAAAAAAIAAAAAAAAAA1JbnRlcm5hbEVycm9yAAAAAAAAAQAAAAAAAAAXQWxyZWFkeUluaXRpYWxpemVkRXJyb3IAAAAAAwAAAAAAAAARVW5hdXRob3JpemVkRXJyb3IAAAAAAAAEAAAAAAAAABNOZWdhdGl2ZUFtb3VudEVycm9yAAAAAAgAAAAAAAAADEJhbGFuY2VFcnJvcgAAAAoAAAAAAAAADU92ZXJmbG93RXJyb3IAAAAAAAAMAAAAAAAAABNNZW1iZXJBbHJlYWR5RXhpc3RzAAAABLAAAAAAAAAAEk1lbWJlckRvZXNOb3RFeGlzdAAAAAAEsQ==" ]),
       options
     )
@@ -501,6 +522,7 @@ export class Client extends ContractClient {
         get_distribution_info: this.txFromJSON<Distribution>,
         get_distribution_history: this.txFromJSON<Array<Distribution>>,
         set_admin: this.txFromJSON<null>,
-        get_yield_controller: this.txFromJSON<string>
+        get_yield_controller: this.txFromJSON<string>,
+        get_total_distributed: this.txFromJSON<i128>
   }
 }

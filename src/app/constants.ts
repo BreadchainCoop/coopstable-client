@@ -19,6 +19,8 @@ export const QUERY_KEYS = {
   TREASURY_SHARE: ['treasury_share'],
   YIELD_DATA: ['yield_data'],
   DISTRIBUTION_ROUND: ['distribution_round'],
+  TOTAL_DISTRIBUTED: ['total_distributed'],
+  TOTAL_APY: ['total_apy'],
 }
 
 export const SWAP_MODES = {

@@ -1,10 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createContext, useContext, type ReactNode } from "react";
-import { AccountService } from "../services/accountService";
+import { AccountService, InclusionFee } from "../services/accountService";
 import { NetworkString } from "../services/UserService/types";
 import { QUERY_KEYS } from "../constants";
+import { SignTransaction } from "@stellar/stellar-sdk/contract";
+import { Asset } from "@stellar/stellar-sdk";
 
-const BalanceContext = createContext<AccountService | undefined>(undefined);
+const BalanceContext = createContext<AccountService | undefined>(undefined); 
 
 type BalanceResult<T> =
   | BalanceResultSuccess<T>
@@ -29,13 +31,15 @@ type BalanceResultError<T> = {
   error: Error;
 };
 
+
 export function AccountProvider({
   accountService,
   children,
 }: {
-  readonly accountService: AccountService;
   readonly children: ReactNode;
+  readonly accountService: AccountService;
 }) {
+
   return (
     <BalanceContext.Provider value={accountService}>
       {children}
@@ -43,7 +47,7 @@ export function AccountProvider({
   );
 }
 
-function useAccount(account: string, network: NetworkString) {
+export function useAccount(account: string, network: NetworkString) {
   const context = useContext(BalanceContext);
   if (!context)
     throw new Error("useNativeBalance must be used within a BalanceContext");
@@ -60,6 +64,17 @@ function buildError<T>(error: Error, data: T | null): BalanceResultError<T> {
     error,
     data,
   })
+}
+
+export function useAddTrustlines(){
+  const context = useContext(BalanceContext);
+  if (!context)
+    throw new Error("useAddTrustline must be used within a BalanceContext");
+  const queryClient = useQueryClient();
+  return useMutation<boolean, Error, { walletAddress: string,  network: NetworkString,  assets: Asset[], inclusionFee: InclusionFee, signTransaction: SignTransaction }>({
+    mutationFn: context.createTrustlines, 
+    onSuccess: (data) => queryClient.invalidateQueries({ queryKey: QUERY_KEYS.BALANCES })
+  });
 }
 
 export function useNativeBalance(
@@ -82,7 +97,7 @@ export function useNativeBalance(
       return {
         status: balances.status,
         error: balances.error,
-        data: balances.data.balances.NATIVE,
+        data: balances.data.balances.NATIVE.balance,
       };
     case "error":
       return buildError<string>(balances.error, null);
@@ -112,7 +127,7 @@ export function useUSDCBalance(
       return {
         status: balances.status,
         error: balances.error,
-        data: balances.data.balances.USDC,
+        data: balances.data.balances.USDC ? balances.data.balances.USDC.balance : null,
       };
     case "error":
       return buildError<string>(balances.error, null);
@@ -142,7 +157,7 @@ export function useCUSDBalance(
       return {
         status: balances.status,
         error: balances.error,
-        data: balances.data.balances.CUSD,
+        data: balances.data.balances.CUSD ? balances.data.balances.CUSD.balance : null,
       };
     case "error":
       return buildError<string>(balances.error, null);

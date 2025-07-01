@@ -19,7 +19,7 @@ export function Footer() {
       
       {/* Social Links */}
       <div className="lg:hidden flex justify-center items-top gap-4">
-          <SocialLink href="https://github.com" icon={<GithubIcon />} label="GitHub" />
+          <SocialLink href="https://github.com/BreadchainCoop/coopstable-client" icon={<GithubIcon />} label="GitHub" />
           <SocialLink href="https://twitter.com" icon={<XIcon />} label="Twitter" />
       </div>
       <div className="lg:hidden border-t border-[#B1AEAB] mt-12 pt-8">
@@ -62,7 +62,7 @@ export function Footer() {
       </div>
 
       <div className="hidden lg:flex gap-4 pb-0.5"> 
-          <SocialLink href="https://github.com" icon={<GithubIcon />} label="GitHub" />
+          <SocialLink href="https://github.com/BreadchainCoop/coopstable-client" icon={<GithubIcon />} label="GitHub" />
           <SocialLink href="https://twitter.com" icon={<XIcon />} label="Twitter" />
       </div>
 

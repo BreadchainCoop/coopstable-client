@@ -1,4 +1,5 @@
 import * as StellarSdk from "@stellar/stellar-sdk";
+import { TOKEN_CODES } from "./constants";
 export type NetworkConfig = {
   network: Network;
   networkPassphrase: string;
@@ -13,10 +14,13 @@ export type NetworkConfig = {
   };
   cusd: {
     contractId: string;
+    issuer: string;
+    code: string;
   };
   usdc: {
     contractId: string;
     issuer: string;
+    code: string;
   };
   blend: {
     contractId: string;
@@ -46,20 +50,23 @@ export const chainConfig: ChainConfig = {
     sorobanUrl: "https://soroban-testnet.stellar.org",
     horizonUrl: "https://horizon-testnet.stellar.org",
     yieldController: {
-      contractId: "CCVRXJ257N7TMAUNLZ54XN3WNK6QC47YDDENWOY7LGXGCAUUDXL3LKU5",
+      contractId: "CCE3RQVINMEPYK7MD24HC3CJEH3Y47XHD4B3YZNFRRU4INCKGKA35HZE",
     },
     yieldDistributor: {
-      contractId: "CCGJ7GHCSOU3J6WDYRQYMAJIZKAXFUOJAA67CAW2JR6AVFWI26DOONVL",
+      contractId: "CBAU6MRHEIB7K4YKP4YHE77FJD623G4MBVHIZCNWOG26MBFJKKBGN3E7",
     },
     cusd: {
       contractId: "CDHBZE4M6EGNYX2436W2FLZGWUSWQQKCC7TORNQJ7SFRC3R5QQ2N7TF2",
+      issuer: "GC2AK3SEQPKZX3EYYY3SUMJAUWSJSYIVI3XFTYX6OAIXGDPOF4YTS7GL",
+      code: TOKEN_CODES.CUSD,
     },
     usdc: {
       contractId: "CAQCFVLOBK5GIULPNZRGATJJMIZL5BSP7X5YJVMGCPTUEPFM4AVSRCJU",
       issuer: "GATALTGTWIOT6BUDBCZM3Q4OQ4BO2COLOAZ7IYSKPLC2PMSOPPGF5V56",
+      code: TOKEN_CODES.USDC,
     },
     cusdManager: {
-      contractId: "CBM5XLCK4JYHBHOELVIVTOOKP3KIB2BR4IY4HW4GNJ5Q53DJV62IOFRQ",
+      contractId: "CBJUDM5UOBCGCP3ALRFWRIIWR3TTNTRECTRN2DP5CDIGBV5XU47WYBP5",
     },
     blend: {
       contractId: "CB22KRA3YZVCNCQI64JQ5WE7UY2VAV7WFLK6A2JN3HEX56T2EDAFO7QF",
@@ -78,11 +85,14 @@ export const chainConfig: ChainConfig = {
       contractId: "",
     },
     cusd: {
-      contractId: "CDHHR356G725HNLAAQ74WBGVT6Y6ZFZLM2TIHLDCOZTJ2SVZ7P3EANYT",
+      contractId: "CDHBZE4M6EGNYX2436W2FLZGWUSWQQKCC7TORNQJ7SFRC3R5QQ2N7TF2",
+      issuer: "GC2AK3SEQPKZX3EYYY3SUMJAUWSJSYIVI3XFTYX6OAIXGDPOF4YTS7GL",
+      code: TOKEN_CODES.CUSD,
     },
     usdc: {
-      contractId: "",
-      issuer: "",
+      contractId: "CAQCFVLOBK5GIULPNZRGATJJMIZL5BSP7X5YJVMGCPTUEPFM4AVSRCJU",
+      issuer: "GATALTGTWIOT6BUDBCZM3Q4OQ4BO2COLOAZ7IYSKPLC2PMSOPPGF5V56",
+      code: TOKEN_CODES.USDC,
     },
     cusdManager: {
       contractId: "",
@@ -104,57 +114,19 @@ export function getNetworkConfig(network: Network) {
   }
 }
 
-
-// async function createTrustlines(assets: Asset[]) {
-//   try {
-//     if (connected) {
-//       const account = await stellarRpc.getAccount(walletAddress);
-//       const tx_builder = new TransactionBuilder(account, {
-//         networkPassphrase: network.passphrase,
-//         fee: txInclusionFee.fee,
-//         timebounds: { minTime: 0, maxTime: Math.floor(Date.now() / 1000) + 2 * 60 * 1000 },
-//       });
-//       for (let asset of assets) {
-//         const trustlineOperation = Operation.changeTrust({
-//           asset: asset,
-//         });
-//         tx_builder.addOperation(trustlineOperation);
-//       }
-//       const transaction = tx_builder.build();
-//       const signedTx = await sign(transaction.toXDR());
-//       const tx = new Transaction(signedTx, network.passphrase);
-//       setTxType(TxType.PREREQ);
-//       const result = await sendTransaction(tx);
-//       if (result) {
-//         cleanWalletCache();
-//       }
-//     }
-//   } catch (e: any) {
-//     console.error('Failed to create trustline: ', e);
-//     setFailureMessage(e?.message);
-//     setTxStatus(TxStatus.FAIL);
-//   }
-// }
-
-// export function requiresTrustline(
-//   account: Horizon.AccountResponse | undefined,
-//   asset: Asset | undefined
-// ): boolean {
-//   // no trustline required for unloaded account or asset
-//   if (!account || !asset) return false;
-//   /** @TODO this condition can prolly be improved */
-//   return !account.balances.some((balance) => {
-//     if (balance.asset_type == 'native') {
-//       return asset.isNative();
-//     }
-//     // @ts-ignore
-//     return balance.asset_code === asset.getCode() && balance.asset_issuer === asset.getIssuer();
-//   });
-// }
-// consider the following Makefile, its based on real code so all contracts here work and the deploy-protocol works. I need to now improve the deploy-cusd-token workflow so that it does the following everytime its run: 
-
-// deploy the cusd:owner asset (as you showed above)
-
-// deploy the cusd_token smart_contract and associate it to the cusd:owner
-
- 
+export function getProtocolAssets(network: Network) {
+  switch (network) {
+    case "TESTNET":
+      return [
+        new StellarSdk.Asset(TOKEN_CODES.USDC, chainConfig.TESTNET.usdc.issuer),
+        new StellarSdk.Asset(TOKEN_CODES.CUSD.toUpperCase(), chainConfig.TESTNET.cusd.issuer),
+      ];
+    case "PUBLIC":
+      return [
+        new StellarSdk.Asset(TOKEN_CODES.USDC, chainConfig.PUBLIC.usdc.issuer),
+        new StellarSdk.Asset(TOKEN_CODES.CUSD.toUpperCase(), chainConfig.PUBLIC.cusd.issuer),
+      ]
+    default:
+      throw new Error("Invalid network");
+  }
+}

@@ -23,7 +23,7 @@ export function Account() {
   );
 }
 
-export function AccountNotConnected({ connect }: { connect: () => void }) {
+export function AccountNotConnected({ connect }: Readonly<{ connect: () => void }>) {
   return <Button onClick={connect}>Sign In</Button>;
 }
 

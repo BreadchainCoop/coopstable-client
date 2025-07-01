@@ -23,6 +23,7 @@ export class YieldControllerService implements IYieldControllerService {
       this.mintCUSD = this.mintCUSD.bind(this);
       this.burnCUSD = this.burnCUSD.bind(this);
       this.getYield = this.getYield.bind(this);
+      this.getTotalAPY = this.getTotalAPY.bind(this);
     }
     
     async mintCUSD(amount: number): Promise<string | undefined> {
@@ -92,5 +93,11 @@ export class YieldControllerService implements IYieldControllerService {
         const lendingYield = await yieldController.get_yield();
         const result = lendingYield.result.valueOf().toString();
         return result;
+    }
+
+    async getTotalAPY(): Promise<number | undefined> {
+      const yieldController = getYieldControllerClient(this.network);
+      const apy = await yieldController.get_weighted_total_apy();
+      return Number(apy.result.valueOf()) / 10000;
     }
 }
