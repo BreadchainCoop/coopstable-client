@@ -3,11 +3,12 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/app/components/Button";
 import Image from "next/image";
 import { UserContextStateConnected } from "@/app/context/UserContext/types";
-import { truncateAddress, formatBalance } from "@/app/utils";
+import { truncateAddress, formatBalance, formatXLMWithSymbol } from "@/app/utils";
 import { TOKEN_CODES } from "@/app/constants";
 import { useNativeBalance, useUserBalance } from "@/app/context/AccountContext";
 import { CopyIcon, ExternalLinkIcon } from "../Icons";
 import Link from "next/link";
+import { useGetTotalDistributed } from "@/app/context/ContractContext/hooks";
 
 export function AccountConnected({
   user,
@@ -72,8 +73,8 @@ export function AccountDropDown({
   const [isOpen, setIsOpen] = useState(false);
   
   const xlmBalance = useNativeBalance(user.account, user.network);
-  const cusdBalance = useUserBalance(user.account, user.network, TOKEN_CODES.CUSD);
   const usdcBalance = useUserBalance(user.account, user.network, TOKEN_CODES.USDC);
+  const { data: totalDistributed } = useGetTotalDistributed();
   
   return (
     <DropdownMenu.Root open={isOpen} onOpenChange={setIsOpen}>
@@ -141,10 +142,7 @@ export function AccountDropDown({
             <div className="flex justify-between items-center">
               <span className="text-black opacity-50 text-sm">cUSD generated</span>
               <span className="text-black font-medium">
-                {cusdBalance.status === "success" 
-                  ? formatBalance(cusdBalance.data?.balance as string || "0", "cUSD").withSymbol
-                  : "0 cUSD"
-                }
+                {formatXLMWithSymbol(totalDistributed ?? 0, {symbol: 'cUSD', decimals: 7}).withSymbol}
               </span>
             </div>
           </div>

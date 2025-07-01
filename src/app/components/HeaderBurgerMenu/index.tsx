@@ -6,9 +6,9 @@ import { ExternalLinkIcon } from "../Icons";
 
 export function HeaderBurgerMenu({
   connect,
-}: {
+}: Readonly<{
   connect: () => void;
-}) {
+}>) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
