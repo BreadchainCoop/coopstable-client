@@ -72,7 +72,7 @@ async function fetchAccount(account: string, network: NetworkString) {
             ),
           };
         }
-        if (balance.asset_code === TOKEN_CODES.CUSD) {
+        if (balance.asset_code === TOKEN_CODES.CUSD.toUpperCase()) {
           acc.CUSD = {
             asset: accountAsset,
             balance: balance.balance,

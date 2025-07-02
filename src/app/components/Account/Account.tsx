@@ -5,7 +5,6 @@ import { Button } from "../Button";
 
 export function Account() {
   const { user, connectWallet, disconnectWallet } = useUser();
-  
   return (
     <div>
       {user.status === "loading" && <Button disabled>loading...</Button>}

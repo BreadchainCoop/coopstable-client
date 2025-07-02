@@ -1,6 +1,5 @@
 export type ContractService = {
     yieldController: IYieldControllerService;
-    cusd: ICusdService;
     yieldDistributor: IYieldDistributorService;
     cusdManager: ICusdManagerService;
 }

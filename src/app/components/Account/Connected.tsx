@@ -1,7 +1,7 @@
 import { useState } from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { Button } from "@/app/components/Button";
 import Image from "next/image";
+import { Button } from "@/app/components/Button";
 import { UserContextStateConnected } from "@/app/context/UserContext/types";
 import { truncateAddress, formatBalance, formatXLMWithSymbol } from "@/app/utils";
 import { TOKEN_CODES } from "@/app/constants";
@@ -37,7 +37,8 @@ function AccountButton({
     disconnectWallet: () => void, 
     user: UserContextStateConnected 
   }>) {
-  return <button onClick={(e) =>{
+
+  return <button onClick={(e) => {
       e.preventDefault();
       disconnectWallet();
     }} className="cursor-pointer flex items-center gap-2 border-1 border-theme-grey-4 bg-white p-2">

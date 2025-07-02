@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSwap } from "./SwapContext";
 import { useMintCUSD, useBurnCUSD } from "@/app/context/ContractContext/hooks";
 import { useAddTrustlines, useUserBalance, useAccount  } from "@/app/context/AccountContext";
@@ -22,9 +22,9 @@ export function InitTransaction({ user, signTransaction }: { readonly user: User
     setTxLink,
   } = useTransaction();
   const token = swapState.mode === SWAP_MODES.MINT ? TOKEN_CODES.USDC : TOKEN_CODES.CUSD;
-  const userBalance = useUserBalance(user.account, user.network, token);
-  
   const balances = useAccount(user.account, user.network);
+  const userBalance = useUserBalance(user.account, user.network, token);
+  const [assetsRequiringTrustline, setAssetsRequiringTrustline] = useState<Asset[]>([]);
   const { mutateAsync: addTrustlines, isPending: isPendingAddTrustlines } = useAddTrustlines();
   const { mutateAsync: mintCUSD, status: mintStatus, reset: resetMint } = useMintCUSD(setTxLink);
   const { mutateAsync: burnCUSD, status: burnStatus, reset: resetBurn } = useBurnCUSD(setTxLink);
@@ -36,18 +36,23 @@ export function InitTransaction({ user, signTransaction }: { readonly user: User
   }
 
   useEffect(() => {
-    
+    if (balances.status === "success") {
+      setAssetsRequiringTrustline(Object.keys(balances.data.balances).map((key) => {
+        const balanceValueObject = balances.data.balances[key as keyof typeof balances.data.balances];
+        if (balanceValueObject?.requiresTrustline) return balanceValueObject.asset;
+      }).filter((asset) => asset !== undefined))
+    }
     if (status === "idle") return;
     if (status === "success" && !dialog) setDialog(true);
     dispatch({ type: status });
-    
     return () => {
       if (status !== "pending") {
         clearTransactionState() 
         reset();
       } 
+      if (balances.status !== "pending") setAssetsRequiringTrustline([]);
     };
-  }, [mintStatus, burnStatus, swapState.mode, dispatch]);
+  }, [mintStatus, burnStatus, swapState.mode, dispatch, balances.status]);
 
   const handleMint = async () => {
     if (userBalance.status !== "success") return;  
@@ -72,18 +77,11 @@ export function InitTransaction({ user, signTransaction }: { readonly user: User
     });
   };
 
-  if (userBalance.status === "success" && userBalance.data?.requiresTrustline) {
-    if(!balances.isSuccess) return;  
-    const assets = Object.keys(balances.data.balances).map((key) => {
-      const balanceValueObject = balances.data.balances[key as keyof typeof balances.data.balances];
-      if (balanceValueObject?.requiresTrustline) return balanceValueObject.asset;
-    }).filter((asset) => asset !== undefined);
-    if (assets.length === 0) return;
-    
+  if (assetsRequiringTrustline.length > 0) {
     return (
       <Button size="large" fullWidth disabled={isPendingAddTrustlines} isLoading={isPendingAddTrustlines} onClick={async (e) => {
         e.preventDefault();
-        await handleAddTrustlines(assets);
+        await handleAddTrustlines(assetsRequiringTrustline);
       }}>
         Add Trustline
       </Button>

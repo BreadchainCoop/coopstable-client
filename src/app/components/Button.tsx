@@ -2,7 +2,7 @@ import { ComponentProps } from "react";
 import { cn } from "../utils";
 
 const sizeClasses = {
-  regular: "py-[0.6rem]",
+  regular: "py-3",
   large: "py-4",
 };
 
@@ -30,7 +30,7 @@ export function Button({
   return (
     <button
       className={cn(
-        "font-theme-2 px-8 py-4 text-[16px] lg:text-xl font-bold tracking-wide uppercase hover:cursor-pointer disabled:opacity-60",
+        "font-theme-2 px-8 py-3 text-[16px] lg:text-xl font-bold tracking-wide uppercase hover:cursor-pointer disabled:opacity-60",
         fullWidth && "w-full",
         sizeClasses[size],
         variantClasses[variant],
