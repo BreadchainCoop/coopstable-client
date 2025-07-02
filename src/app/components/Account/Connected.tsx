@@ -36,14 +36,14 @@ function AccountButton({
 }: Readonly<{ 
     disconnectWallet: () => void, 
     user: UserContextStateConnected 
-  }>) {
+}>) {
 
   return <button onClick={(e) => {
       e.preventDefault();
       disconnectWallet();
-    }} className="cursor-pointer flex items-center gap-2 border-1 border-theme-grey-4 bg-white p-2">
-    <Image src="/avatar.jpg" alt="user avatar" width={30} height={30} />
-    <span className="px-8 py-3 text-[16px] lg:text-xl font-theme-3 tracking-wide text-black">
+    }} className="cursor-pointer flex items-center gap-2 border-[1px] border-theme-grey-4 bg-white p-[9.25px]">
+    <Image src="/avatar.jpg" alt="user avatar" width={32} height={32} />
+    <span className="text-[16px] leading-[1.2] font-theme-3 tracking-wide text-black">
       {truncateAddress(user.account)}
     </span>
   </button>
@@ -56,9 +56,9 @@ function AccountForDropDown({
     user: UserContextStateConnected
     isOpen: boolean
   }>) {
-  return <div className={`cursor-pointer flex items-center gap-2 border-1 border-theme-grey-4 bg-white p-2 ${isOpen ? "hidden" : ""}`}>
+  return <div className={`cursor-pointer flex items-center gap-2 border-[1px] border-theme-grey-4 bg-white p-[9.25px] ${isOpen ? "hidden" : ""}`}>
     <Image src="/avatar.jpg" alt="user avatar" width={32} height={32} />
-    <span className="px-8 py-3 text-[16px] lg:text-xl font-theme-3 tracking-wide text-black">
+    <span className="text-[16px] leading-[1.2] font-theme-3 tracking-wide text-black">
       {truncateAddress(user.account)}
     </span>
   </div>
