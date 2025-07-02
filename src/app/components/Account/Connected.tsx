@@ -42,8 +42,8 @@ function AccountButton({
       e.preventDefault();
       disconnectWallet();
     }} className="cursor-pointer flex items-center gap-2 border-1 border-theme-grey-4 bg-white p-2">
-    <Image src="/avatar.jpg" alt="user avatar" width={32} height={32} />
-    <span className="py-0.5 text-[16px] lg:text-xl font-theme-3 tracking-wide text-black">
+    <Image src="/avatar.jpg" alt="user avatar" width={30} height={30} />
+    <span className="px-8 py-3 text-[16px] lg:text-xl font-theme-3 tracking-wide text-black">
       {truncateAddress(user.account)}
     </span>
   </button>
@@ -58,7 +58,7 @@ function AccountForDropDown({
   }>) {
   return <div className={`cursor-pointer flex items-center gap-2 border-1 border-theme-grey-4 bg-white p-2 ${isOpen ? "hidden" : ""}`}>
     <Image src="/avatar.jpg" alt="user avatar" width={32} height={32} />
-    <span className="text-[16px] lg:text-xl font-theme-3 tracking-wide text-black">
+    <span className="px-8 py-3 text-[16px] lg:text-xl font-theme-3 tracking-wide text-black">
       {truncateAddress(user.account)}
     </span>
   </div>
