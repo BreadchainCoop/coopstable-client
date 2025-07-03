@@ -143,7 +143,7 @@ export function AccountDropDown({
             <div className="flex justify-between items-center">
               <span className="text-black opacity-50 text-sm">cUSD generated</span>
               <span className="text-black font-medium">
-                {formatXLMWithSymbol(totalDistributed ?? 0, {symbol: 'cUSD', decimals: 7}).withSymbol}
+                {formatXLMWithSymbol(totalDistributed ?? 0, {symbol: 'cUSD', decimals: 4}).withSymbol}
               </span>
             </div>
           </div>

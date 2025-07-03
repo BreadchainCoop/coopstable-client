@@ -98,6 +98,6 @@ export class YieldControllerService implements IYieldControllerService {
     async getTotalAPY(): Promise<number | undefined> {
       const yieldController = getYieldControllerClient(this.network);
       const apy = await yieldController.get_weighted_total_apy();
-      return Number(apy.result.valueOf()) / 10000;
+      return (apy.result.valueOf() / 10000) * 100; 
     }
 }

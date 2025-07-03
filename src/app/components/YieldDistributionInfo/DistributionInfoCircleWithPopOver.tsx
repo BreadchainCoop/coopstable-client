@@ -31,11 +31,11 @@ export function DistributionInfoCircleWithPopOver({
           <div className="flex flex-col gap-2">
             <div className="flex w-full justify-between">
               <span className="text-black opacity-50 text-[16px]">Core team 10%</span>
-              <span className="font-extrabold text-[16px] text-black">{formatXLMWithSymbol(coreTeamYield, {symbol: 'cUSD', decimals: 7}).withSymbol}</span>
+              <span className="font-extrabold text-[16px] text-black">{formatXLMWithSymbol(coreTeamYield, {symbol: 'cUSD', decimals: 4}).withSymbol}</span>
             </div>
             <div className="flex w-full justify-between">
               <span className="text-black opacity-50 text-[16px]">Cohort 90%</span>
-              <span className="font-extrabold text-[16px] text-black">{formatXLMWithSymbol(cohortYield, {symbol: 'cUSD', decimals: 7}).withSymbol}</span>
+              <span className="font-extrabold text-[16px] text-black">{formatXLMWithSymbol(cohortYield, {symbol: 'cUSD', decimals: 4}).withSymbol}</span>
             </div>
           </div>
         </div>

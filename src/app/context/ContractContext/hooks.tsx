@@ -66,6 +66,7 @@ export function useGetTotalAPY() {
   return useQuery({
     queryKey: QUERY_KEYS.TOTAL_APY,
     queryFn: context.yieldController.getTotalAPY,
+    refetchInterval: 5000,
     refetchOnWindowFocus: false,
   });
 }
