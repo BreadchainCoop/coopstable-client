@@ -13,6 +13,7 @@ export default function YieldDistributionInfo() {
     } = useYieldData();
     const { data: annual } = useGetTotalAPY();
     const { data: distributionRound } = useGetDistributionRound();
+    
     return (
         <section className={cn(pageWrapClasses, 'px-[unset] py-[1.5rem]')}>
             <div className="p-4 lg:py-6 grid grid-cols-1 items-center gap-6 lg:gap-4 lg:grid-cols-2 lg:px-4 hero-bg">

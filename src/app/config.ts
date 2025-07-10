@@ -50,10 +50,10 @@ export const chainConfig: ChainConfig = {
     sorobanUrl: "https://soroban-testnet.stellar.org",
     horizonUrl: "https://horizon-testnet.stellar.org",
     yieldController: {
-      contractId: "CAEQUODVDMLFBWIIIX57YVJPEB44HZO3NSSKBWU2JTBI3HJP6RFNQNEF",
+      contractId: "CCKVEGGN3DFXHA7SAYLQAO2EHIMAVHT3UBPHQWPWQBDJNERO76JWS7UF",
     },
     yieldDistributor: {
-      contractId: "CDLEO6XBWKCNPJRSYQEX4ZUATUT54RKDLSJAKDZ2QVBL56CGHBRGWYHH",
+      contractId: "CAAB7XXE6IEGP7J6XHDYBQD4KLV355Y3VRJ2ILW4WQ362NKTRXNLYTLF",
     },
     cusd: {
       contractId: "CDHBZE4M6EGNYX2436W2FLZGWUSWQQKCC7TORNQJ7SFRC3R5QQ2N7TF2",
@@ -66,7 +66,7 @@ export const chainConfig: ChainConfig = {
       code: TOKEN_CODES.USDC,
     },
     cusdManager: {
-      contractId: "CCBLULDUMYLMY64G766KCHQESMZQDNRGDRHJRCPBOW3AYHWRG7PLFKK5",
+      contractId: "CC7KFRIDPMRO4MQ7AFNLAPFVPOVMXNMCJJ5ILKXLEDJOZCI6EJEDXJLM",
     },
     blend: {
       contractId: "CB22KRA3YZVCNCQI64JQ5WE7UY2VAV7WFLK6A2JN3HEX56T2EDAFO7QF",

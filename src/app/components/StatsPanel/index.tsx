@@ -1,5 +1,5 @@
 import { CUSDIcon } from "../Icons";
-import { useGetCUSDTotalSupply, useGetTotalDistributed, useGetYield } from "@/app/context/ContractContext/hooks";
+import { useGetCUSDTotalSupply, useGetTotalDistributed } from "@/app/context/ContractContext/hooks";
 import { TOKEN_CODES } from "@/app/constants";
 import { formatXLMSimple } from "@/app/utils/tokenFormatting";
 
