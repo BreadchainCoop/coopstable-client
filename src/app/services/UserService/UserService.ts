@@ -8,7 +8,6 @@ import {
 import { NetworkString, WalletConnectionData } from "./types";
 import { DEFAULT_NETWORK, SUPPORTED_NETWORKS } from "@/app/config";
 const WALLET_CONNECTION_KEY = "coop-stable-wallet-connection";
-const WALLET_ID_KEY = "coop-stable-wallet-id";
 
 const kit: StellarWalletsKit = new StellarWalletsKit({
   network: DEFAULT_NETWORK === SUPPORTED_NETWORKS.TESTNET ? WalletNetwork.TESTNET : WalletNetwork.PUBLIC,
