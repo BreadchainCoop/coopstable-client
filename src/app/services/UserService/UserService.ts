@@ -105,6 +105,7 @@ export async function connectWallet(
 
 export async function disconnectWallet() {
   await kit.disconnect();
+  clearConnectionInfo();
 }
 
 async function signTransaction(

@@ -1,27 +1,29 @@
 import { useUser } from "@/app/context/UserContext/UserContext";
-import { AccountConnected } from "./Connected";
+import { AccountConnected } from "./components/AccountConnected";
 import { HeaderBurgerMenu } from "../HeaderBurgerMenu";
 import { Button } from "../Button";
-import Link from "next/link";
+import { SubmitProjectLink } from "./components/SubmitProjectLink";
 
 export function Account() {
   const { user, connectWallet, disconnectWallet } = useUser();
   return (
     <>
-      {user.status === "loading" && <Button disabled>loading...</Button>}
+      {user.status === "loading" && (
+        <div className="flex items-center gap-2">
+          <SubmitProjectLink />
+          <Button disabled>loading...</Button>
+        </div>
+      )}
       {user.status === "not_connected" && (
         <div className="flex items-center gap-2">
+          <SubmitProjectLink />
           <AccountNotConnected connect={connectWallet} />
           <HeaderBurgerMenu connect={connectWallet} />
         </div>
       )}
       {user.status === "connecting" && 
         <div className="flex items-center gap-2">
-          <Link 
-            target="_blank" 
-            href="https://form.typeform.com/to/sHp99h2H" 
-            className="hidden md:inline mx-1 font-theme-2 px-6 py-3 text-[20px] lg:text-xl text-theme-black bg-theme-grey-3 font-bold uppercase hover:cursor-pointer"
-          >Submit Project</Link>
+          <SubmitProjectLink />
           <AccountConnecting /> 
         </div>
       }

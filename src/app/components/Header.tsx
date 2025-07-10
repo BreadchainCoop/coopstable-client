@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { cn, pageWrapClasses } from "../utils";
-import { Account } from "./Account/Account";
+import { Account } from "./Account";
 
 export function Header() {
   return (
