@@ -3,7 +3,6 @@ import  { MemberInfo } from "../types";
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import { getExplorerLinkForAddress } from "@/app/utils/address";
 import { Network } from "@/app/config";
-import { formatBalance } from "@/app/utils";
 
 type MemberInfoCardProps = {
     member: MemberInfo;
@@ -12,7 +11,7 @@ type MemberInfoCardProps = {
 export function MemberInfoCard({
     member,
     network
-}: MemberInfoCardProps) {
+}: Readonly<MemberInfoCardProps>) {
     return (
         <div className="bg-theme-grey-1 border-1 border-theme-grey-7 p-4">
             <div className="flex flex-col gap-2">
@@ -22,6 +21,7 @@ export function MemberInfoCard({
                     <Link 
                         href={getExplorerLinkForAddress(member.treasury, network)}  
                         className="flex items-center gap-2 text-black text-[16px] font-theme-1 font-extrabold"
+                        target="_blank"
                         >
                         <span>Project Treasury</span>
                         <div className="size-7 h-fit"> 
@@ -31,6 +31,7 @@ export function MemberInfoCard({
                     <Link 
                         href={member.website} 
                         className="flex items-center gap-2 text-black text-[16px] font-theme-1 font-extrabold"
+                        target="_blank"
                         >
                         <span>Website</span>
                         <div className="size-7 h-fit"> 
@@ -42,9 +43,9 @@ export function MemberInfoCard({
             <div className="flex flex-col font-theme-">
                 <span className="text-theme-grey-5">Share of monthly yield</span>
                 <div className="flex">
-                    <span className="font-extrabold text-theme-grey-8 text-[16px]">{formatBalance(member.shareOfYield, 'cUSD').withSymbol}</span>
+                    <span className="font-extrabold text-theme-grey-8 text-[16px]">{member.shareOfYield}</span>
                     <span className="px-2 font-extrabold">|</span>
-                    <span className="text-theme-grey-6 text-[16px]">{member.percentageOfYield}%</span>
+                    <span className="text-theme-grey-6 text-[16px]">{member.percentageOfYield} %</span>
                 </div>
             </div>
         </div>

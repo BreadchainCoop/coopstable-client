@@ -47,8 +47,8 @@ export const chainConfig: ChainConfig = {
     network: SUPPORTED_NETWORKS.TESTNET,
     networkPassphrase: StellarSdk.Networks.TESTNET,
     explorerUrl: "https://stellar.expert/explorer/testnet",
-    sorobanUrl: "https://soroban-testnet.stellar.org",
-    horizonUrl: "https://horizon-testnet.stellar.org",
+    sorobanUrl: "https://soroban-public.stellar.org",
+    horizonUrl: "https://horizon-public.stellar.org",
     yieldController: {
       contractId: "CAAKQRIPSVYCLM2JRJPAMIDUHN47VQPV7YI3RGT2C7HNJ45H7XZIK3F5",
     },
@@ -76,29 +76,29 @@ export const chainConfig: ChainConfig = {
     network: SUPPORTED_NETWORKS.PUBLIC,
     explorerUrl: "https://stellar.expert/explorer/public",
     networkPassphrase: StellarSdk.Networks.PUBLIC,
-    sorobanUrl: "https://rpc.ankr.com/stellar_soroban",
-    horizonUrl: "https://rpc.ankr.com/http/stellar_horizon",
+    sorobanUrl: "https://mainnet.sorobanrpc.com",
+    horizonUrl: "https://horizon.stellar.lobstr.co",
     yieldController: {
-      contractId: "",
+      contractId: "CB2RILXU4W7EO7TDHAQMU6CXMSMSK7WIICKOB2BDFBYBF6K5XEYN335D",
     },
     yieldDistributor: {
-      contractId: "",
+      contractId: "CDRAYSJCXZRHGHSKL6HNXSPXJFLI3W3BPHYSPRJ4XJPY2IDMIT5M6WML",
     },
     cusd: {
-      contractId: "CDHBZE4M6EGNYX2436W2FLZGWUSWQQKCC7TORNQJ7SFRC3R5QQ2N7TF2",
-      issuer: "GC2AK3SEQPKZX3EYYY3SUMJAUWSJSYIVI3XFTYX6OAIXGDPOF4YTS7GL",
+      contractId: "CA7JSNCTAGTVXJJX65YIN53XAXK72NZPD5Q62YUQXV7R7V45ELKONCJ5",
+      issuer: "GB4E4EA26SXUJSFJTMFCVGVNEKWGNQ44MLFRHHXWQHQ54RD7KQTYBNSR",
       code: TOKEN_CODES.CUSD,
     },
     usdc: {
-      contractId: "CAQCFVLOBK5GIULPNZRGATJJMIZL5BSP7X5YJVMGCPTUEPFM4AVSRCJU",
-      issuer: "GATALTGTWIOT6BUDBCZM3Q4OQ4BO2COLOAZ7IYSKPLC2PMSOPPGF5V56",
+      contractId: "CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75",
+      issuer: "GDMTVHLWJTHSUDMZVVMXXH6VJHA2ZV3HNG5LYNAZ6RTWB7GISM6PGTUV",
       code: TOKEN_CODES.USDC,
     },
     cusdManager: {
-      contractId: "",
+      contractId: "CD5QRSQR76HRVLGMDG2UZ3A2DRSQCAHEWW4JIAMSOLVTHDJQ3UMIVIGB",
     },
     blend: {
-      contractId: "",
+      contractId: "CD25MNVTZDL4Y3XBCPCJXGXATV5WUHHOWMYFF4YBEGU5FCPGMYTVG5JY",
     },
   },
 };

@@ -112,6 +112,7 @@ export function useYieldData() {
         cohortYield: "0", 
         treasuryYield: "0",
         totalMembers: "0",
+        memberYieldPercentage: "0",
       };
     }
     const totalYieldBig = BigInt(totalYield);
@@ -120,16 +121,19 @@ export function useYieldData() {
     const BASIS_POINTS = BigInt(10000);
     const treasuryYield = (totalYieldBig * treasuryShareBig) / BASIS_POINTS;
     const remainingYield = totalYieldBig - treasuryYield;
+    const memberYieldPercentageBig = totalYieldBig && totalMembersBig > BigInt(0) ? ((remainingYield * BASIS_POINTS) / totalYieldBig) / totalMembersBig : BigInt(0);
+    const memberYieldPercentage = memberYieldPercentageBig > BigInt(0) ? (Number(memberYieldPercentageBig) / 10000) * 100 : 0;
     
     const cohortYield = totalMembersBig > BigInt(0) 
       ? remainingYield / totalMembersBig 
       : BigInt(0);
-    
+
     return {
       totalYield: totalYield.toString(),
       cohortYield: cohortYield.toString(),
       treasuryYield: treasuryYield.toString(),
       totalMembers: totalMembersBig.toString(),
+      memberYieldPercentage: memberYieldPercentage.toString(),
     };
   }, [totalYield, totalMembers, treasuryShare]);
 }
