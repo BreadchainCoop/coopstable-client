@@ -47,8 +47,8 @@ export const chainConfig: ChainConfig = {
     network: SUPPORTED_NETWORKS.TESTNET,
     networkPassphrase: StellarSdk.Networks.TESTNET,
     explorerUrl: "https://stellar.expert/explorer/testnet",
-    sorobanUrl: "https://soroban-public.stellar.org",
-    horizonUrl: "https://horizon-public.stellar.org",
+    sorobanUrl: "https://soroban-testnet.stellar.org",
+    horizonUrl: "https://horizon-testnet.stellar.org",
     yieldController: {
       contractId: "CAAKQRIPSVYCLM2JRJPAMIDUHN47VQPV7YI3RGT2C7HNJ45H7XZIK3F5",
     },
@@ -91,7 +91,7 @@ export const chainConfig: ChainConfig = {
     },
     usdc: {
       contractId: "CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75",
-      issuer: "GDMTVHLWJTHSUDMZVVMXXH6VJHA2ZV3HNG5LYNAZ6RTWB7GISM6PGTUV",
+      issuer: "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
       code: TOKEN_CODES.USDC,
     },
     cusdManager: {
