@@ -35,24 +35,25 @@ export function InitTransaction({ user, signTransaction }: { readonly user: User
     status = burnStatus;
   }
 
-  useEffect(() => {
-    if (balances.status === "success") {
-      setAssetsRequiringTrustline(Object.keys(balances.data.balances).map((key) => {
-        const balanceValueObject = balances.data.balances[key as keyof typeof balances.data.balances];
-        if (balanceValueObject?.requiresTrustline) return balanceValueObject.asset;
-      }).filter((asset) => asset !== undefined))
-    }
-    if (status === "idle") return;
-    if (status === "success" && !dialog) setDialog(true);
-    dispatch({ type: status });
-    return () => {
-      if (status !== "pending") {
-        clearTransactionState() 
-        reset();
-      } 
-      if (balances.status !== "pending") setAssetsRequiringTrustline([]);
-    };
-  }, [mintStatus, burnStatus, swapState.mode, dispatch, balances.status]);
+useEffect(() => {
+  if (balances.status === "success") {
+    setAssetsRequiringTrustline(Object.keys(balances.data.balances).map((key) => {
+      const balanceValueObject = balances.data.balances[key as keyof typeof balances.data.balances];
+      if (balanceValueObject?.requiresTrustline) return balanceValueObject.asset;
+    }).filter((asset) => asset !== undefined))
+  }
+  
+  if (status === "idle") return;
+  if (status === "success" && !dialog) setDialog(true);
+  dispatch({ type: status });
+  
+  return () => {
+    if (status !== "pending") {
+      clearTransactionState() 
+      reset();
+    } 
+  };
+}, [mintStatus, burnStatus, swapState.mode, dispatch, balances.status, balances.data]);
 
   const handleMint = async () => {
     if (userBalance.status !== "success") return;  
@@ -71,7 +72,7 @@ export function InitTransaction({ user, signTransaction }: { readonly user: User
       assets,
       inclusionFee: {
         type: 'Medium',
-        fee: '2000',
+        fee: '1200',
       },
       signTransaction: signTransaction
     });

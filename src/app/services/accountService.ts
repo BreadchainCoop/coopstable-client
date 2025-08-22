@@ -134,22 +134,24 @@ async function createTrustlines({
   });
   const account = await stellarRpc.getAccount(walletAddress);
   const tx_builder = new TransactionBuilder(account, {
-    networkPassphrase: "Test SDF Network ; September 2015",
-    fee: inclusionFee.fee,
+    networkPassphrase: config.networkPassphrase,
+    fee: inclusionFee.fee.toString(),
     timebounds: { 
       minTime: 0, 
       maxTime: Math.floor(Date.now() / 1000) + 2 * 60 * 1000 
     },
   });
   for (let asset of assets) {
+    console.log('Trustline asset', asset);
     const trustlineOperation = Operation.changeTrust({
       asset: asset,
+      limit: '1200',
     });
     tx_builder.addOperation(trustlineOperation);
   }
   const transaction = tx_builder.build();
   const signedTx = await signTransaction(transaction.toXDR());
-  const tx = new Transaction(signedTx.signedTxXdr, "Test SDF Network ; September 2015");
+  const tx = new Transaction(signedTx.signedTxXdr, config.networkPassphrase);
   return await sendTransaction(tx, stellarRpc);
 }
 
@@ -159,13 +161,12 @@ async function sendTransaction(transaction: Transaction, stellarRpc: rpc.Server)
 
   while (sendTxResponse.status !== 'PENDING' && Date.now() - currTime < 5000) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
+    console.log('I am here', sendTxResponse.status);
     sendTxResponse = await stellarRpc.sendTransaction(transaction);
   }
-
   if (sendTxResponse.status !== 'PENDING') {
     throw new Error(`Failed to submit transaction: ${sendTxResponse.errorResult?.result}`);
   }
-
 
   currTime = Date.now();
   let getTxResponse = await stellarRpc.getTransaction(sendTxResponse.hash);

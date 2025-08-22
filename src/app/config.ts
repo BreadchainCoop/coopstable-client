@@ -50,10 +50,10 @@ export const chainConfig: ChainConfig = {
     sorobanUrl: "https://soroban-testnet.stellar.org",
     horizonUrl: "https://horizon-testnet.stellar.org",
     yieldController: {
-      contractId: "CAAKQRIPSVYCLM2JRJPAMIDUHN47VQPV7YI3RGT2C7HNJ45H7XZIK3F5",
+      contractId: "CCW3AML7B45MN3FL23GBBPA4KFYJQYORCJTCRT4JCNS5UHF3JHWMTDHO",
     },
     yieldDistributor: {
-      contractId: "CDUZHDM7EBTK7MSHAFJH57UXCBUXEJ6AAL555Y2P7ZQDJKAH4POGD3VW",
+      contractId: "CDPL3MGPLPM6AVTEAUM5TX3OSCCQ6H5M4GLE5ZMS6H4IHX7VW7B2KGMG",
     },
     cusd: {
       contractId: "CDHBZE4M6EGNYX2436W2FLZGWUSWQQKCC7TORNQJ7SFRC3R5QQ2N7TF2",
@@ -66,7 +66,7 @@ export const chainConfig: ChainConfig = {
       code: TOKEN_CODES.USDC,
     },
     cusdManager: {
-      contractId: "CBZ6IBKIFPIODZ34RSGMSNORRAATQ4V2WCVRX6VU4YIBFP7SGJ5TWCQT",
+      contractId: "CANIT62WENJ2XDQCHRVRA46BSRIX6PMHROI2KH3KPYSS5D3F7ONWAH7T",
     },
     blend: {
       contractId: "CB22KRA3YZVCNCQI64JQ5WE7UY2VAV7WFLK6A2JN3HEX56T2EDAFO7QF",
@@ -77,7 +77,7 @@ export const chainConfig: ChainConfig = {
     explorerUrl: "https://stellar.expert/explorer/public",
     networkPassphrase: StellarSdk.Networks.PUBLIC,
     sorobanUrl: "https://mainnet.sorobanrpc.com",
-    horizonUrl: "https://horizon.stellar.lobstr.co",
+    horizonUrl: "https://horizon.stellar.org",
     yieldController: {
       contractId: "CB2RILXU4W7EO7TDHAQMU6CXMSMSK7WIICKOB2BDFBYBF6K5XEYN335D",
     },

@@ -1,0 +1,23 @@
+ACCOUNTS=[ "GB4E4EA26SXUJSFJTMFCVGVNEKWGNQ44MLFRHHXWQHQ54RD7KQTYBNSR" ]
+
+[DOCUMENTATION]
+ORG_NAME="CoopStable"
+ORG_DBA="CoopStable"
+ORG_URL="https://www.coopstable.app/" 
+ORG_LOGO="https://www.coopstable.app/logo.png"
+ORG_PHYSICAL_ADDRESS="MIDAO"
+ORG_OFFICIAL_EMAIL="Coopstable25@hotmail.com"
+ORG_GITHUB="https://github.com/BreadchainCoop/coopstable-client"
+ORG_TWITTER="https://x.com/CoopStable"
+ORG_DESCRIPTION="A yield sharing stablecoin for the Stellar ecosystem"
+
+[[PRINCIPALS]]
+name="Bread Cooperative"
+email="contact@breadchain.xyz"
+
+[[CURRENCIES]]
+code="CUSD"
+issuer="GB4E4EA26SXUJSFJTMFCVGVNEKWGNQ44MLFRHHXWQHQ54RD7KQTYBNSR"
+name="Coopstable cUSD Token"
+desc="Coopstable is a fully collateralized stablecoin pegged to yield bearing USDC."
+image="https://www.coopstable.app/logo.png"
