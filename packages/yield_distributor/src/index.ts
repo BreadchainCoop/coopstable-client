@@ -397,6 +397,26 @@ export interface Client {
   }) => Promise<AssembledTransaction<Array<Distribution>>>
 
   /**
+   * Construct and simulate a get_current_epoch transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
+   */
+  get_current_epoch: (options?: {
+    /**
+     * The fee to pay for the transaction. Default: BASE_FEE
+     */
+    fee?: number;
+
+    /**
+     * The maximum amount of time to wait for the transaction to complete. Default: DEFAULT_TIMEOUT
+     */
+    timeoutInSeconds?: number;
+
+    /**
+     * Whether to automatically simulate the transaction when constructing the AssembledTransaction. Default: true
+     */
+    simulate?: boolean;
+  }) => Promise<AssembledTransaction<u64>>
+
+  /**
    * Construct and simulate a set_admin transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
    */
   set_admin: ({new_admin}: {new_admin: string}, options?: {
@@ -456,6 +476,26 @@ export interface Client {
     simulate?: boolean;
   }) => Promise<AssembledTransaction<i128>>
 
+  /**
+   * Construct and simulate a upgrade transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
+   */
+  upgrade: ({new_wasm_hash}: {new_wasm_hash: Buffer}, options?: {
+    /**
+     * The fee to pay for the transaction. Default: BASE_FEE
+     */
+    fee?: number;
+
+    /**
+     * The maximum amount of time to wait for the transaction to complete. Default: DEFAULT_TIMEOUT
+     */
+    timeoutInSeconds?: number;
+
+    /**
+     * Whether to automatically simulate the transaction when constructing the AssembledTransaction. Default: true
+     */
+    simulate?: boolean;
+  }) => Promise<AssembledTransaction<null>>
+
 }
 export class Client extends ContractClient {
   static async deploy<T = Client>(
@@ -493,9 +533,11 @@ export class Client extends ContractClient {
         "AAAAAAAAAAAAAAAQZGlzdHJpYnV0ZV95aWVsZAAAAAIAAAAAAAAABXRva2VuAAAAAAAAEwAAAAAAAAAGYW1vdW50AAAAAAALAAAAAQAAAAs=",
         "AAAAAAAAAAAAAAAVZ2V0X2Rpc3RyaWJ1dGlvbl9pbmZvAAAAAAAAAAAAAAEAAAfQAAAADERpc3RyaWJ1dGlvbg==",
         "AAAAAAAAAAAAAAAYZ2V0X2Rpc3RyaWJ1dGlvbl9oaXN0b3J5AAAAAAAAAAEAAAPqAAAH0AAAAAxEaXN0cmlidXRpb24=",
+        "AAAAAAAAAAAAAAARZ2V0X2N1cnJlbnRfZXBvY2gAAAAAAAAAAAAAAQAAAAY=",
         "AAAAAAAAAAAAAAAJc2V0X2FkbWluAAAAAAAAAQAAAAAAAAAJbmV3X2FkbWluAAAAAAAAEwAAAAA=",
         "AAAAAAAAAAAAAAAUZ2V0X3lpZWxkX2NvbnRyb2xsZXIAAAAAAAAAAQAAABM=",
         "AAAAAAAAAAAAAAAVZ2V0X3RvdGFsX2Rpc3RyaWJ1dGVkAAAAAAAAAAAAAAEAAAAL",
+        "AAAAAAAAAAAAAAAHdXBncmFkZQAAAAABAAAAAAAAAA1uZXdfd2FzbV9oYXNoAAAAAAAD7gAAACAAAAAA",
         "AAAAAQAAAAAAAAAAAAAAEkRpc3RyaWJ1dGlvbkNvbmZpZwAAAAAAAgAAAAAAAAATZGlzdHJpYnV0aW9uX3BlcmlvZAAAAAAGAAAAAAAAABJ0cmVhc3VyeV9zaGFyZV9icHMAAAAAAAQ=",
         "AAAAAQAAAAAAAAAAAAAABk1lbWJlcgAAAAAAAwAAAAAAAAAGYWN0aXZlAAAAAAABAAAAAAAAAAdhZGRyZXNzAAAAABMAAAAAAAAACWpvaW5lZF9hdAAAAAAAAAY=",
         "AAAAAQAAAAAAAAAAAAAADERpc3RyaWJ1dGlvbgAAAAgAAAAAAAAAGmRpc3RyaWJ1dGlvbl9lbmRfdGltZXN0YW1wAAAAAAAGAAAAAAAAABNkaXN0cmlidXRpb25fbWVtYmVyAAAAAAsAAAAAAAAAHGRpc3RyaWJ1dGlvbl9zdGFydF90aW1lc3RhbXAAAAAGAAAAAAAAABJkaXN0cmlidXRpb25fdG90YWwAAAAAAAsAAAAAAAAAFWRpc3RyaWJ1dGlvbl90cmVhc3VyeQAAAAAAAAsAAAAAAAAABWVwb2NoAAAAAAAABgAAAAAAAAAMaXNfcHJvY2Vzc2VkAAAAAQAAAAAAAAAHbWVtYmVycwAAAAPqAAAAEw==",
@@ -521,8 +563,10 @@ export class Client extends ContractClient {
         distribute_yield: this.txFromJSON<i128>,
         get_distribution_info: this.txFromJSON<Distribution>,
         get_distribution_history: this.txFromJSON<Array<Distribution>>,
+        get_current_epoch: this.txFromJSON<u64>,
         set_admin: this.txFromJSON<null>,
         get_yield_controller: this.txFromJSON<string>,
-        get_total_distributed: this.txFromJSON<i128>
+        get_total_distributed: this.txFromJSON<i128>,
+        upgrade: this.txFromJSON<null>
   }
 }

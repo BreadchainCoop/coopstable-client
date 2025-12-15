@@ -209,6 +209,26 @@ export interface Client {
     simulate?: boolean;
   }) => Promise<AssembledTransaction<i128>>
 
+  /**
+   * Construct and simulate a upgrade transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
+   */
+  upgrade: ({new_wasm_hash}: {new_wasm_hash: Buffer}, options?: {
+    /**
+     * The fee to pay for the transaction. Default: BASE_FEE
+     */
+    fee?: number;
+
+    /**
+     * The maximum amount of time to wait for the transaction to complete. Default: DEFAULT_TIMEOUT
+     */
+    timeoutInSeconds?: number;
+
+    /**
+     * Whether to automatically simulate the transaction when constructing the AssembledTransaction. Default: true
+     */
+    simulate?: boolean;
+  }) => Promise<AssembledTransaction<null>>
+
 }
 export class Client extends ContractClient {
   static async deploy<T = Client>(
@@ -238,6 +258,7 @@ export class Client extends ContractClient {
         "AAAAAAAAAAAAAAAJYnVybl9jdXNkAAAAAAAAAgAAAAAAAAAEZnJvbQAAABMAAAAAAAAABmFtb3VudAAAAAAACwAAAAA=",
         "AAAAAAAAAAAAAAAPc2V0X2N1c2RfaXNzdWVyAAAAAAEAAAAAAAAACm5ld19pc3N1ZXIAAAAAABMAAAAA",
         "AAAAAAAAAAAAAAARY3VzZF90b3RhbF9zdXBwbHkAAAAAAAAAAAAAAQAAAAs=",
+        "AAAAAAAAAAAAAAAHdXBncmFkZQAAAAABAAAAAAAAAA1uZXdfd2FzbV9oYXNoAAAAAAAD7gAAACAAAAAA",
         "AAAAAgAAAAAAAAAAAAAAB0RhdGFLZXkAAAAABgAAAAAAAAAAAAAABU93bmVyAAAAAAAAAAAAAAAAAAAFQWRtaW4AAAAAAAAAAAAAAAAAAAdNYW5hZ2VyAAAAAAAAAAAAAAAABEN1c2QAAAAAAAAAAAAAAA9ZaWVsZENvbnRyb2xsZXIAAAAAAAAAAAAAAAAKQ3VzZFN1cHBseQAA",
         "AAAABAAAAK1FcnJvciBjb2RlcyBmb3IgdGhlIGN1c2RfbWFuYWdlciBjb250cmFjdC4gQ29tbW9uIGVycm9ycyBhcmUgY29kZXMgdGhhdCBtYXRjaCB1cCB3aXRoIHRoZSBidWlsdC1pbgpDVVNETWFuYWdlckVycm9yIGVycm9yIHJlcG9ydGluZy4gQ1VTRE1hbmFnZXIgc3BlY2lmaWMgZXJyb3JzIHN0YXJ0IGF0IDEwMAAAAAAAAAAAAAAQQ1VTRE1hbmFnZXJFcnJvcgAAAAYAAAAAAAAADUludGVybmFsRXJyb3IAAAAAAAABAAAAAAAAABdBbHJlYWR5SW5pdGlhbGl6ZWRFcnJvcgAAAAADAAAAAAAAABFVbmF1dGhvcml6ZWRFcnJvcgAAAAAAAAQAAAAAAAAAE05lZ2F0aXZlQW1vdW50RXJyb3IAAAAACAAAAAAAAAAMQmFsYW5jZUVycm9yAAAACgAAAAAAAAANT3ZlcmZsb3dFcnJvcgAAAAAAAAw=" ]),
       options
@@ -251,6 +272,7 @@ export class Client extends ContractClient {
         set_yield_controller: this.txFromJSON<null>,
         burn_cusd: this.txFromJSON<null>,
         set_cusd_issuer: this.txFromJSON<null>,
-        cusd_total_supply: this.txFromJSON<i128>
+        cusd_total_supply: this.txFromJSON<i128>,
+        upgrade: this.txFromJSON<null>
   }
 }

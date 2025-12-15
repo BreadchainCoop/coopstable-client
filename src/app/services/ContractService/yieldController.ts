@@ -1,6 +1,6 @@
-import { rpc } from '@stellar/stellar-sdk';
 import { DEFAULT_NETWORK, Network, NetworkConfig, getNetworkConfig } from '@/app/config';
-import { getYieldControllerClient } from '@/app/contracts'; 
+import { getYieldControllerClient } from '@/app/contracts';
+import { rpc } from '@/packages/lending_yield_controller/src/index'; 
 import { IYieldControllerService, SupportedProtocols } from './types';
 import { SignTransaction } from '@stellar/stellar-sdk/contract';
 import { toBigInt } from '@/app/utils/tokenFormatting';
@@ -40,15 +40,16 @@ export class YieldControllerService implements IYieldControllerService {
         simulate: true
       });
       
-      if (depositOp.simulation) {
-        if(rpc.Api.isSimulationError(depositOp.simulation)) {
-          throw new Error(depositOp.simulation.error);
+      const simulation = depositOp.simulation;
+      if (simulation) {
+        if(rpc.Api.isSimulationError(simulation)) {
+          throw new Error(simulation.error);
         }
-        if (rpc.Api.isSimulationRestore(depositOp.simulation)) {
-          await depositOp.restoreFootprint(depositOp.simulation.restorePreamble);
+        if (rpc.Api.isSimulationRestore(simulation)) {
+          await depositOp.restoreFootprint(simulation.restorePreamble);
           return await this.mintCUSD(amount); // Recursive call after restore
         }
-        if (rpc.Api.isSimulationSuccess(depositOp.simulation)) {
+        if (rpc.Api.isSimulationSuccess(simulation)) {
           const response = await depositOp.signAndSend({ signTransaction: this.signTransaction });
           return response.sendTransactionResponse?.hash;
         }
@@ -71,15 +72,16 @@ export class YieldControllerService implements IYieldControllerService {
         simulate: true
       });
       
-      if (withdrawOp.simulation) {
-        if(rpc.Api.isSimulationError(withdrawOp.simulation)) {
-          throw new Error(withdrawOp.simulation.error);
+      const simulation = withdrawOp.simulation;
+      if (simulation) {
+        if(rpc.Api.isSimulationError(simulation)) {
+          throw new Error(simulation.error);
         }
-        if (rpc.Api.isSimulationRestore(withdrawOp.simulation)) {
-          await withdrawOp.restoreFootprint(withdrawOp.simulation.restorePreamble);
+        if (rpc.Api.isSimulationRestore(simulation)) {
+          await withdrawOp.restoreFootprint(simulation.restorePreamble);
           return await this.burnCUSD(amount);
         }
-        if (rpc.Api.isSimulationSuccess(withdrawOp.simulation)) {
+        if (rpc.Api.isSimulationSuccess(simulation)) {
           const response = await withdrawOp.signAndSend({ signTransaction: this.signTransaction });
           return response.sendTransactionResponse?.hash;
         }
@@ -90,14 +92,20 @@ export class YieldControllerService implements IYieldControllerService {
 
     async getYield(): Promise<string | undefined> {      
         const yieldController = getYieldControllerClient(this.network);
-        const lendingYield = await yieldController.get_yield();
+        const lendingYield = await yieldController.get_yield({
+          protocol: SupportedProtocols.BlendProtocol,
+          asset: this.config.usdc.contractId,
+        });
         const result = lendingYield.result.valueOf().toString();
         return result;
     }
 
     async getTotalAPY(): Promise<number | undefined> {
       const yieldController = getYieldControllerClient(this.network);
-      const apy = await yieldController.get_weighted_total_apy();
+      const apy = await yieldController.get_apy({
+        protocol: SupportedProtocols.BlendProtocol,
+        asset: this.config.usdc.contractId,
+      });
       return (apy.result.valueOf() / 10000) * 100; 
     }
 }
