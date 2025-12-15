@@ -20,7 +20,7 @@ function MemberDistributions() {
             {
                 MEMBER_INFO.map(m => ({ 
                     ...m, 
-                    percentageOfYield: parseFloat((memberYieldPercentage ?? 0).toString()).toFixed(2),
+                    percentageOfYield: Number.parseFloat((memberYieldPercentage ?? 0).toString()).toFixed(2),
                     shareOfYield: formatXLMWithSymbol(cohortYield, { symbol: TOKEN_CODES.CUSD, decimals: 4, showSymbol: true }).withSymbol,
                 })).map((member) => <MemberInfoCard key={member.treasury} member={member} network={network} />)  
             }   

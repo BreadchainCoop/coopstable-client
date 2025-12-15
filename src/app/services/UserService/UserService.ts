@@ -9,11 +9,18 @@ import { NetworkString, WalletConnectionData } from "./types";
 import { DEFAULT_NETWORK, SUPPORTED_NETWORKS } from "@/app/config";
 const WALLET_CONNECTION_KEY = "coop-stable-wallet-connection";
 
-const kit: StellarWalletsKit = new StellarWalletsKit({
-  network: DEFAULT_NETWORK === SUPPORTED_NETWORKS.TESTNET ? WalletNetwork.TESTNET : WalletNetwork.PUBLIC,
-  selectedWalletId: FREIGHTER_ID,
-  modules: allowAllModules(),
-});
+let kit: StellarWalletsKit | null = null;
+
+function getKit(): StellarWalletsKit {
+  if (!kit) {
+    kit = new StellarWalletsKit({
+      network: DEFAULT_NETWORK === SUPPORTED_NETWORKS.TESTNET ? WalletNetwork.TESTNET : WalletNetwork.PUBLIC,
+      selectedWalletId: FREIGHTER_ID,
+      modules: allowAllModules(),
+    });
+  }
+  return kit;
+}
 
 function isConnectionValid(data: WalletConnectionData): boolean {
   const EXPIRY_TIME = 24 * 60 * 60 * 1000;
@@ -66,10 +73,10 @@ export async function restoreConnection(
     const savedInfo = getSavedConnectionInfo();
     if (!savedInfo) return false;
 
-    kit.setWallet(savedInfo.walletId);
-    
-    const { address } = await kit.getAddress();
-    const { network } = await kit.getNetwork();
+    getKit().setWallet(savedInfo.walletId);
+
+    const { address } = await getKit().getAddress();
+    const { network } = await getKit().getNetwork();
     
     if (network !== "TESTNET" && network !== "PUBLIC") {
       throw new Error("Invalid network string");
@@ -87,11 +94,11 @@ export async function restoreConnection(
 export async function connectWallet(
   onConnected: (account: string, network: NetworkString) => void,
 ) {
-  await kit.openModal({
+  await getKit().openModal({
     onWalletSelected: async (option: ISupportedWallet) => {
-      kit.setWallet(option.id);
-      const account = (await kit.getAddress()).address;
-      const network = (await kit.getNetwork()).network;
+      getKit().setWallet(option.id);
+      const account = (await getKit().getAddress()).address;
+      const network = (await getKit().getNetwork()).network;
       if (network !== "TESTNET" && network !== "PUBLIC")
         throw new Error("invalid network string");
       
@@ -103,7 +110,7 @@ export async function connectWallet(
 }
 
 export async function disconnectWallet() {
-  await kit.disconnect();
+  await getKit().disconnect();
   clearConnectionInfo();
 }
 
@@ -120,7 +127,7 @@ async function signTransaction(
   signedTxXdr: string;
   signerAddress?: string;
 }> {
-  return kit.signTransaction(xdr, opts);
+  return getKit().signTransaction(xdr, opts);
 }
 
 export const userService = {
