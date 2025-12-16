@@ -40,7 +40,7 @@ export const SUPPORTED_NETWORKS = {
 } as const;
 
 export type Network = typeof SUPPORTED_NETWORKS[keyof typeof SUPPORTED_NETWORKS];
-export const DEFAULT_NETWORK = process.env.NEXT_PUBLIC_DEFAULT_NETWORK as Network;
+export const DEFAULT_NETWORK = (process.env.NEXT_PUBLIC_DEFAULT_NETWORK || "TESTNET") as Network;
 
 export const chainConfig: ChainConfig = {
   TESTNET: {
