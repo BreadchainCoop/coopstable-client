@@ -1,15 +1,22 @@
-import { cleanup, render } from "@testing-library/react";
+import { cleanup, render, fireEvent, getByRole, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { ContractProvider } from "@/app/context/ContractContext/ContractContext";
-import { BalanceProvider } from "@/app/context/AccountContext";
+import { AccountProvider } from "@/app/context/AccountContext";
 import { UserProvider } from "@/app/context/UserContext/UserContext";
 import { NetworkString } from "@/app/services/UserService/types";
 import { TransactionProvider } from "@/app/context/TransactionContext/TransactionContext";
 import { Header } from "@/app/components/Header";
 import { Swap } from "@/app/components/Swap/Swap";
+import { Asset } from "@stellar/stellar-sdk";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
 
 export type SetupConfig = {
   usdcBalance: number;
@@ -20,6 +27,7 @@ export type SetupConfig = {
 
 export function setup(config?: SetupConfig) {
   cleanup();
+  queryClient.clear();
 
   render(
     <QueryClientProvider client={queryClient}>
@@ -39,62 +47,37 @@ export function setup(config?: SetupConfig) {
           },
         }}
       >
-        <BalanceProvider
-          balanceService={{
-            fetchNativeBalance: async () => {
-              return config ? config.xlmBalance.toString() : "1234";
+        <AccountProvider
+          accountService={{
+            fetchAccount: async () => {
+              return {
+                sequenceNumber: "123",
+                balances: {
+                  NATIVE: { balance: config?.xlmBalance.toString() ?? "1234", asset: Asset.native(), requiresTrustline: false },
+                  USDC: { balance: config?.usdcBalance.toString() ?? "1000", asset: new Asset("USDC", "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5"), requiresTrustline: false },
+                  CUSD: { balance: config?.cusdBalance.toString() ?? "1000", asset: new Asset("CUSD", "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5"), requiresTrustline: false },
+                },
+              };
             },
+            createTrustlines: async () => true,
           }}
         >
-          <ContractProvider
-            contractService={{
-              cusd: {
-                fetchBalance: async () =>
-                  // account: string,
-                  // network: NetworkString,
-                  {
-                    return config ? config.cusdBalance : null;
-                  },
-                fetchAllowance: async () =>
-                  // owner: string,
-                  // spender: string,
-                  // network: NetworkString,
-                  {
-                    return null;
-                  },
-                mint: async () =>
-                  // account: string,
-                  // amount: bigint,
-                  // network: NetworkString,
-                  {
-                    if (config?.txFails) throw new Error("mint failed!");
-                    return null;
-                  },
-                burn: async () =>
-                  // account: string,
-                  // amount: bigint,
-                  // network: NetworkString,
-                  {
-                    if (config?.txFails) throw new Error("burn failed!");
-                    return null;
-                  },
-              },
-              usdc: {
-                fetchBalance: async () =>
-                  // user: UserContextStateConnected
-                  {
-                    return config ? config.usdcBalance : null;
-                  },
-              },
-            }}
-          >
+          <ContractProvider>
             <TransactionProvider>
               <Header />
               <Swap />
             </TransactionProvider>
           </ContractProvider>
-        </BalanceProvider>
+        </AccountProvider>
       </UserProvider>
     </QueryClientProvider>,
+  );
+}
+
+export async function signin() {
+  await fireEvent.click(
+    await getByRole(await screen.findByTestId("header"), "button", {
+      name: "Sign In",
+    }),
   );
 }
