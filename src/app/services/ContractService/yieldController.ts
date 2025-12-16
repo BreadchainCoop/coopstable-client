@@ -47,7 +47,8 @@ export class YieldControllerService implements IYieldControllerService {
         }
         if (rpc.Api.isSimulationRestore(simulation)) {
           await depositOp.restoreFootprint(simulation.restorePreamble);
-          return await this.mintCUSD(amount); // Recursive call after restore
+          
+          return await this.mintCUSD(amount);
         }
         if (rpc.Api.isSimulationSuccess(simulation)) {
           const response = await depositOp.signAndSend({ signTransaction: this.signTransaction });

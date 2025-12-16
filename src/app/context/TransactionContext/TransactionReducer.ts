@@ -47,6 +47,7 @@ export function transactionReducer(
         return {
           ...state,
           status: "error",
+          errorMessage: event.errorMessage,
         };
       }
       return state;

@@ -1,13 +1,13 @@
 import {
   createContext,
   ReactNode,
+  useCallback,
   useContext,
   useMemo,
   useReducer,
   useState,
 } from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { AnimatePresence } from "framer-motion";
 import { DialogContent, DialogOverlay } from "@/app/components/Dialog/Dialog";
 import { TransactionDialog } from "@/app/components/Dialog/TransactionDialog";
 import { transactionReducer } from "./TransactionReducer";
@@ -49,26 +49,29 @@ function TransactionProviderWithUser({
   const [dialog, setDialog] = useState(false);
   const [explorerLink, setExplorerLink] = useState<string | undefined>(undefined); 
 
-  function newTransaction(type: TransactionType, value: string) {
+  const newTransaction = useCallback((type: TransactionType, value: string) => {
+    setExplorerLink(undefined);
     dispatch({ type: "idle", payload: { type, value } });
     setDialog(true);
-  }
+  }, []);
 
-  function existingTransaction(status: TransactionStatus, type: TransactionType, value: string) {
+  const existingTransaction = useCallback((status: TransactionStatus, type: TransactionType, value: string) => {
     dispatch({ type: status, payload: { type, value } });
     setDialog(true);
-  }
+  }, []);
 
-  function clearTransactionState() {
+  const clearTransactionState = useCallback(() => {
     dispatch({ type: "reset" });
     setDialog(false);
-  }
+    setExplorerLink(undefined);
+  }, []);
 
-  function setTxLink(txHash: string | undefined) {
+  const setTxLink = useCallback((txHash: string | undefined) => {
     if (txHash === undefined) return;
-    return setExplorerLink(`${config.explorerUrl}/tx/${txHash}`);
-  }
-  const deps = useMemo(() => ({
+    setExplorerLink(`${config.explorerUrl}/tx/${txHash}`);
+  }, [config.explorerUrl]);
+
+  const contextValue = useMemo(() => ({
     state,
     newTransaction,
     dispatch,
@@ -77,24 +80,22 @@ function TransactionProviderWithUser({
     setDialog,
     clearTransactionState,
     setTxLink,
-  }), [user.account, user.network]);
+  }), [state, newTransaction, existingTransaction, dialog, clearTransactionState, setTxLink]);
   return (
     <TransactionContext.Provider
-      value={deps}
+      value={contextValue}
     >
-      {state.status !== null && (
-        <DialogPrimitive.Root open={dialog} onOpenChange={() => { setDialog(false); }} >
-          <DialogPrimitive.Portal forceMount>
-            <AnimatePresence mode="wait">
-              {dialog && (
-                <>
-                  <DialogOverlay />
-                  <DialogContent title={state.type}>
-                    <TransactionDialog state={state} explorerLink={explorerLink} />
-                  </DialogContent>
-                </>
-              )}
-            </AnimatePresence>
+      {dialog && state.status !== null && (
+        <DialogPrimitive.Root open onOpenChange={(open) => {
+            if (!open && (state.status === "success" || state.status === "error")) {
+              clearTransactionState();
+            }
+          }} >
+          <DialogPrimitive.Portal>
+            <DialogOverlay />
+            <DialogContent title={state.type}>
+              <TransactionDialog state={state} explorerLink={explorerLink} onClose={clearTransactionState} />
+            </DialogContent>
           </DialogPrimitive.Portal>
         </DialogPrimitive.Root>
       )}
@@ -128,6 +129,7 @@ export type TransactionEvent =
     }
   | {
       type: "error";
+      errorMessage?: string;
     }
   | {
       type: "reset";

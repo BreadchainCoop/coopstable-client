@@ -1,5 +1,5 @@
 import { sanitizeInputValue } from "@/app/utils";
-import { createContext, ReactNode, useContext, useMemo, useState } from "react";
+import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from "react";
 import { SWAP_MODES } from "@/app/constants";
 
 export type SwapMode = typeof SWAP_MODES[keyof typeof SWAP_MODES];
@@ -24,19 +24,21 @@ export function SwapProvider({ children }: { readonly children: ReactNode }) {
     inputValue: "",
   });
 
-  function inputValueChange(value: string) {
-    setState((state) => ({
-      ...state,
-      inputValue: sanitizeInputValue(value),
-    }));
-  }
-
-  function modeChange(mode: SwapMode) {
+  const inputValueChange = useCallback((value: string) => {
+      setState((state) => ({
+        ...state,
+        inputValue: sanitizeInputValue(value),
+      }));
+    },
+    [setState],
+  );
+  
+  const modeChange = useCallback((mode: SwapMode) => {
     setState((state) => ({
       ...state,
       mode,
     }));
-  }
+  }, [setState]);
   
   const values = useMemo(() => ({ state, inputValueChange, modeChange }), [
     state,

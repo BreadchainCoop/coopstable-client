@@ -177,11 +177,10 @@ function UserBalanceDisplay({ token }: { readonly token: TokenCode }) {
   if (user.status === "connected") {
     return <BalanceDisplay token={token} user={user} />;
   }
-  return <BalanceDisplay user={null} token={token} />;
+  return <span className="text-theme-grey-5 pt-1 text-xs">Balance: 0.00 {token}</span>;
 }
 
-function BalanceDisplay({ token, user }: {  readonly token: TokenCode, readonly user: UserContextStateConnected | null }) {
-  if (!user) return <span className="text-theme-grey-5 pt-1 text-xs">Balance: 0.00 {token}</span>;
+function BalanceDisplay({ token, user }: {  readonly token: TokenCode, readonly user: UserContextStateConnected }) {
   const balance = useUserBalance(user.account, user.network, token);
   switch (balance.status) {
     case "pending":

@@ -1,19 +1,14 @@
 import { cn } from "@/app/utils";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { motion } from "framer-motion";
 import { ForwardedRef, forwardRef } from "react";
 
 const DialogOverlay = forwardRef((props, ref: ForwardedRef<HTMLDivElement>) => {
   return (
-    <DialogPrimitive.Overlay ref={ref} className="overlay" asChild {...props}>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.9 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.2 }}
-        className="fixed top-0 z-40 h-screen w-screen bg-[#F0F0F0] opacity-90 transition-opacity dark:opacity-70"
-      />
-    </DialogPrimitive.Overlay>
+    <DialogPrimitive.Overlay
+      ref={ref}
+      className="fixed inset-0 z-40 bg-[#F0F0F0] opacity-90 animate-in fade-in duration-200 dark:opacity-70"
+      {...props}
+    />
   );
 });
 
@@ -25,22 +20,15 @@ const DialogContent = forwardRef(
     ref: ForwardedRef<HTMLDivElement>,
   ) => {
     return (
-      <DialogPrimitive.Content forceMount className="content" ref={ref} asChild>
-        <motion.div
-          variants={{
-            closed: { opacity: 0 },
-            open: { opacity: 1 },
-          }}
-          initial="closed"
-          animate="open"
-          exit="closed"
-          className={cn(
-            "bg-theme-grey-1 border-theme-grey-4 xs:max-w-[330px] fixed top-[50%] left-[50%] z-50 grid w-[330px] max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 border p-6 shadow-lg sm:w-full sm:max-w-[600px]",
-          )}
-        >
-          <DialogClose>x</DialogClose>
-          {children}
-        </motion.div>
+      <DialogPrimitive.Content
+        ref={ref}
+        className={cn(
+          "bg-theme-grey-1 border-theme-grey-4 xs:max-w-[330px] fixed top-[50%] left-[50%] z-50 grid w-[330px] max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 border p-6 shadow-lg sm:w-full sm:max-w-[600px]",
+          "animate-in fade-in zoom-in-95 duration-200",
+        )}
+      >
+        <DialogClose>x</DialogClose>
+        {children}
       </DialogPrimitive.Content>
     );
   },

@@ -23,6 +23,7 @@ export type TransactionStateError = {
   status: Extract<"error", TransactionStatus>;
   type: TransactionType;
   value: string;
+  errorMessage?: string;
 };
 
 export type TransactionState =

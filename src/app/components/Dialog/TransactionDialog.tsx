@@ -1,8 +1,5 @@
 import { ReactNode } from "react";
-import {
-  DialogDescription,
-  Close as DialogPrimitiveClose,
-} from "@radix-ui/react-dialog";
+import { DialogDescription } from "@radix-ui/react-dialog";
 
 import { Spinner } from "../Spinner";
 import { SWAP_MODES } from "@/app/constants";
@@ -23,6 +20,7 @@ import Link from "next/link";
 export function TransactionDialog({
   state,
   explorerLink,
+  onClose,
 }: {
   explorerLink: string | undefined;
   state:
@@ -30,6 +28,7 @@ export function TransactionDialog({
     | TransactionStateLoading
     | TransactionStateSuccess
     | TransactionStateError;
+  onClose: () => void;
 }) {
   return (
     <div className="grid gap-8 py-4">
@@ -44,11 +43,11 @@ export function TransactionDialog({
           { explorerLink && <ExplorerLink link={explorerLink} />}
         </>
       )}
-      <DialogPrimitiveClose asChild>
-        <Button variant="secondary" size="large">
+      {(state.status === "success" || state.status === "error") && (
+        <Button variant="secondary" size="large" onClick={onClose}>
           Close
         </Button>
-      </DialogPrimitiveClose>
+      )}
     </div>
   );
 }
@@ -91,7 +90,7 @@ export function TransactionStatus({ state }: { state: TransactionState }) {
             <ErrorIcon />
           </div>
           <DialogDescription>
-            Something went wrong. Please try again.
+            {state.errorMessage || "Something went wrong. Please try again."}
           </DialogDescription>
         </div>
       );

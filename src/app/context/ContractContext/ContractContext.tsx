@@ -8,12 +8,16 @@ export const ContractContext = createContext<ContractService | undefined>(undefi
 
 export function ContractProvider({ children }: { readonly children: ReactNode }) {
   const { user, signTransaction } = useUser();
+  const isConnected = user.status === "connected";
+  const account = isConnected ? user.account : undefined;
+  const network = isConnected ? user.network : undefined;
+
   const contractService = useMemo(() => {
-    if (user.status === "connected") {
+    if (isConnected && account && network) {
       return {
-        yieldDistributor: yieldDistributor(user.network, user.account),
-        yieldController: yieldController(user.network, user.account, signTransaction),
-        cusdManager: cusdManager(user.network),
+        yieldDistributor: yieldDistributor(network, account),
+        yieldController: yieldController(network, account, signTransaction),
+        cusdManager: cusdManager(network),
       };
     } else {
       return {
@@ -22,12 +26,7 @@ export function ContractProvider({ children }: { readonly children: ReactNode })
         cusdManager: cusdManager(DEFAULT_NETWORK),
       };
     }
-  }, [
-    user.status, 
-    user.status === "connected" ? user.account : null, 
-    user.status === "connected" ? user.network : null, 
-    signTransaction
-  ]);
+  }, [isConnected, account, network, signTransaction]);
 
   return (
     <ContractContext.Provider value={contractService}>

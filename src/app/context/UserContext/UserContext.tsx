@@ -1,5 +1,6 @@
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -68,7 +69,7 @@ export function UserProvider({
     restore();
   }, [userService]);
 
-  async function connectWallet() {
+  const connectWallet = useCallback(async () => {
     setState({ status: "connecting" });
     try {
       await userService.connectWallet((account, network) => {
@@ -82,18 +83,18 @@ export function UserProvider({
       console.error("Failed to connect wallet:", error);
       setState({ status: "error" });
     }
-  }
+  }, [userService]);
 
-  async function disconnectWallet() {
+  const disconnectWallet = useCallback(async () => {
     try {
       await userService.disconnectWallet();
       setState({ status: "not_connected" });
     } catch (error) {
-      console.error("Failed to disconnect wallet:", error);
+      throw new Error("Failed to disconnect wallet");
     }
-  }
+  }, [userService]);
 
-  async function signTransaction(
+  const signTransaction = useCallback(async (
     xdr: string,
     opts?: {
       networkPassphrase?: string;
@@ -105,13 +106,14 @@ export function UserProvider({
   ): Promise<{
     signedTxXdr: string;
     signerAddress?: string;
-  }> {
+  }> => {
     return userService.signTransaction(xdr, opts);
-  }
-  const deps = useMemo(() => ({ user: state, connectWallet, disconnectWallet, signTransaction }), [state]);
+  }, [userService]);
+
+  const contextValue = useMemo(() => ({ user: state, connectWallet, disconnectWallet, signTransaction }), [state, connectWallet, disconnectWallet, signTransaction]);
   return (
     <UserContext.Provider
-      value={deps}
+      value={contextValue}
     >
       {children}
     </UserContext.Provider>
