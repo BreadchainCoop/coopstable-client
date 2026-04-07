@@ -324,3 +324,90 @@ export function safeFormatNumber(value: any, fallback: string = '0.00'): string 
     return fallback;
   }
 }
+
+/**
+ * Discriminated union for subscript zero formatting results.
+ * - 'zero': value is zero, display as "0"
+ * - 'normal': value doesn't need subscript notation, display formatted string
+ * - 'subscript': value has 3+ leading zeros, display with subscript notation
+ */
+export type SubscriptFormat =
+  | { type: 'subscript'; wholePart: string; zeroCount: number; significant: string }
+  | { type: 'normal'; formatted: string }
+  | { type: 'zero' };
+
+/**
+ * Format a decimal string for subscript zero notation.
+ * - Values with 3+ leading zeros after decimal → subscript format
+ * - Other values → smart format with trailing zero trimming
+ * - Zero values → zero format
+ *
+ * @param decimalString - Decimal value as string (e.g., "0.00000345")
+ * @param options - Formatting options
+ * @returns SubscriptFormat discriminated union
+ */
+export function formatSubscriptZeros(
+  decimalString: string,
+  options: { significantDigits?: number } = {}
+): SubscriptFormat {
+  const { significantDigits = 4 } = options;
+
+  const num = parseFloat(decimalString);
+  if (isNaN(num) || num === 0) {
+    return { type: 'zero' };
+  }
+
+  // Handle values >= 1: smart format with trailing zero trimming
+  if (num >= 1) {
+    const fixed = num.toFixed(4);
+    const trimmed = fixed.replace(/\.?0+$/, '');
+    const withSeps = addSeparators(trimmed);
+    return { type: 'normal', formatted: withSeps };
+  }
+
+  // Count leading zeros after the decimal point
+  const decimalPart = decimalString.includes('.')
+    ? decimalString.split('.')[1]
+    : '';
+
+  let leadingZeros = 0;
+  for (const char of decimalPart) {
+    if (char === '0') {
+      leadingZeros++;
+    } else {
+      break;
+    }
+  }
+
+  // If fewer than 3 leading zeros, use normal formatting
+  if (leadingZeros < 3) {
+    const fixed = num.toFixed(4);
+    const trimmed = fixed.replace(/\.?0+$/, '');
+    return { type: 'normal', formatted: trimmed };
+  }
+
+  // Subscript mode: extract significant digits after the leading zeros
+  const afterZeros = decimalPart.slice(leadingZeros);
+  const sigDigits = afterZeros.slice(0, significantDigits).replace(/0+$/, '');
+
+  return {
+    type: 'subscript',
+    wholePart: '0',
+    zeroCount: leadingZeros,
+    significant: sigDigits || '0',
+  };
+}
+
+/**
+ * Convenience wrapper: convert stroops to decimal, then format with subscript zeros.
+ * @param stroops - Amount in stroops
+ * @param options - Formatting options
+ * @returns SubscriptFormat discriminated union
+ */
+export function formatCUSDFromStroops(
+  stroops: string | number | bigint,
+  options: { significantDigits?: number } = {}
+): SubscriptFormat {
+  const decimalString = stroopsToDecimal(stroops);
+  return formatSubscriptZeros(decimalString, options);
+}
