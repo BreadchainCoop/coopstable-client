@@ -1,11 +1,11 @@
 'use client';
-import { cn, formatXLMWithSymbol, pageWrapClasses } from "@/app/utils";
+import { cn, pageWrapClasses } from "@/app/utils";
+import { FormattedCUSD } from "@/app/components/FormattedCUSD";
 import { DistributionProgressBar } from "./components/DistributionProgressBar";
 import { MEMBER_INFO } from "./constants";
 import { MemberInfoCard } from "./components/MemberInfoCard";
 import { DEFAULT_NETWORK } from "@/app/config";
 import { useYieldData } from "@/app/context/ContractContext/hooks";
-import { TOKEN_CODES } from "@/app/constants";
 
 function MemberDistributions() {
     const network = DEFAULT_NETWORK;
@@ -21,7 +21,7 @@ function MemberDistributions() {
                 MEMBER_INFO.map(m => ({ 
                     ...m, 
                     percentageOfYield: Number.parseFloat((memberYieldPercentage ?? 0).toString()).toFixed(2),
-                    shareOfYield: formatXLMWithSymbol(cohortYield, { symbol: TOKEN_CODES.CUSD, decimals: 4, showSymbol: true }).withSymbol,
+                    shareOfYield: <FormattedCUSD stroops={cohortYield} />,
                 })).map((member) => <MemberInfoCard key={member.treasury} member={member} network={network} />)  
             }   
             </div>
