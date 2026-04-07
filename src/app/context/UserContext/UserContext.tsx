@@ -72,16 +72,21 @@ export function UserProvider({
   const connectWallet = useCallback(async () => {
     setState({ status: "connecting" });
     try {
-      await userService.connectWallet((account, network) => {
-        setState({
-          status: "connected",
-          account,
-          network,
-        });
-      });
+      await userService.connectWallet(
+        (account, network) => {
+          setState({
+            status: "connected",
+            account,
+            network,
+          });
+        },
+        () => {
+          setState({ status: "not_connected" });
+        },
+      );
     } catch (error) {
       console.error("Failed to connect wallet:", error);
-      setState({ status: "error" });
+      setState({ status: "not_connected" });
     }
   }, [userService]);
 
