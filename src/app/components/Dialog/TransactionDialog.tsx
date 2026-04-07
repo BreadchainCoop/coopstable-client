@@ -16,6 +16,8 @@ import { CUSDIcon, SuccessIcon, USDCIcon, ErrorIcon, ExternalLinkIcon } from "..
 import { DialogTitle } from "./Dialog";
 import { Button } from "../Button";
 import Link from "next/link";
+import { FormattedCUSD } from "@/app/components/FormattedCUSD";
+import { decimalToStroops } from "@/app/utils/tokenFormatting";
 
 export function TransactionDialog({
   state,
@@ -112,7 +114,7 @@ export function TransactionSummary({
         {mode === SWAP_MODES.MINT ? (
           <USDCLabel>{txValue}</USDCLabel>
         ) : (
-          <CUSDLabel>{txValue}</CUSDLabel>
+          <CUSDLabel value={txValue} />
         )}
       </div>
       <div className="sm:-rotate-90 sm:transform">
@@ -120,7 +122,7 @@ export function TransactionSummary({
       </div>
       <div className="flex grow justify-center">
         {mode === SWAP_MODES.MINT ? (
-          <CUSDLabel>{txValue}</CUSDLabel>
+          <CUSDLabel value={txValue} />
         ) : (
           <USDCLabel>{txValue}</USDCLabel>
         )}
@@ -129,14 +131,15 @@ export function TransactionSummary({
   );
 }
 
-function CUSDLabel({ children }: { children: ReactNode }) {
+function CUSDLabel({ value }: { value: string }) {
   return (
-    <div className="flex gap-1.5">
+    <div className="flex gap-1.5 items-center">
       <div className="size-6">
         <CUSDIcon />
       </div>
-      <span className="font-bold text-[#333]">{children}</span>
-      cUSD
+      <span className="font-bold text-[#333]">
+        <FormattedCUSD stroops={decimalToStroops(value)} />
+      </span>
     </div>
   );
 }
