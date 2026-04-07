@@ -93,6 +93,7 @@ export async function restoreConnection(
 
 export async function connectWallet(
   onConnected: (account: string, network: NetworkString) => void,
+  onClosed?: () => void,
 ) {
   await getKit().openModal({
     onWalletSelected: async (option: ISupportedWallet) => {
@@ -101,11 +102,12 @@ export async function connectWallet(
       const network = (await getKit().getNetwork()).network;
       if (network !== "TESTNET" && network !== "PUBLIC")
         throw new Error("invalid network string");
-      
+
       saveConnectionInfo(option.id);
-      
+
       onConnected(account, network);
     },
+    onClosed: () => onClosed?.(),
   });
 }
 

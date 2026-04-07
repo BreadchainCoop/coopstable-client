@@ -8,6 +8,7 @@ export interface WalletConnectionData {
 export type UserService = {
   connectWallet: (
     onConnected: (account: string, network: "PUBLIC" | "TESTNET") => void,
+    onClosed?: () => void,
   ) => Promise<void>;
   disconnectWallet: () => Promise<void>;
   signTransaction: signTransaction;
