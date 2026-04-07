@@ -1,5 +1,5 @@
 "use client";
-import { cn, pageWrapClasses, formatXLMWithSymbol } from "@/app/utils";
+import { cn, pageWrapClasses } from "@/app/utils";
 import { CUSDIcon } from "@/app/components/Icons";
 import { FormattedCUSD } from "@/app/components/FormattedCUSD";
 import { DistributionInfoCircleWithPopOver } from "./DistributionInfoCircleWithPopOver";
@@ -36,7 +36,7 @@ export default function YieldDistributionInfo() {
                 <div className="bg-theme-grey-1 border-1 border-opacity-50 border-theme-grey-7 flex flex-col w-full py-4 px-8 space-y-2.5"> 
                     <LabelValueHorizonal label={"APY"} value={parseFloat((annual ?? 0).toString()).toFixed(2).concat(" %")} />     
                     <LabelValueHorizonal label={"Cohort size"} value={totalMembers} />    
-                    <LabelValueHorizonal label={"Est. yield per project"} value={`$${formatXLMWithSymbol(cohortYield, { decimals: 2, showSymbol: false }).formatted}`} />      
+                    <LabelValueHorizonal label={"Est. yield per project"} value={<FormattedCUSD stroops={cohortYield} symbol="$" symbolPosition="prefix" />} />      
                     <LabelValueHorizonal label={"Distribution round"} value={distributionRound ?? 0} />    
                 </div>
             </div>
@@ -44,7 +44,7 @@ export default function YieldDistributionInfo() {
     )
 }
 
-export function LabelValueHorizonal({ label, value }: Readonly<{ label: string, value: string | number}> ) {
+export function LabelValueHorizonal({ label, value }: Readonly<{ label: string, value: React.ReactNode}> ) {
     return (
         <div className="flex w-full justify-between">
             <span className="text-theme-grey-6 text-[16px]">{label}</span>

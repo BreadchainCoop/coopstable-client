@@ -16,8 +16,7 @@ import { CUSDIcon, SuccessIcon, USDCIcon, ErrorIcon, ExternalLinkIcon } from "..
 import { DialogTitle } from "./Dialog";
 import { Button } from "../Button";
 import Link from "next/link";
-import { FormattedCUSD } from "@/app/components/FormattedCUSD";
-import { decimalToStroops } from "@/app/utils/tokenFormatting";
+import { formatCUSDFromStroops, decimalToStroops } from "@/app/utils/tokenFormatting";
 
 export function TransactionDialog({
   state,
@@ -132,14 +131,20 @@ export function TransactionSummary({
 }
 
 function CUSDLabel({ value }: { value: string }) {
+  const result = formatCUSDFromStroops(decimalToStroops(value));
   return (
     <div className="flex gap-1.5 items-center">
       <div className="size-6">
         <CUSDIcon />
       </div>
       <span className="font-bold text-[#333]">
-        <FormattedCUSD stroops={decimalToStroops(value)} />
+        {result.type === "zero" && "0"}
+        {result.type === "normal" && result.formatted}
+        {result.type === "subscript" && (
+          <>{result.wholePart}.0<span className="text-[0.7em]" style={{ verticalAlign: "sub" }}>{result.zeroCount}</span>{result.significant}</>
+        )}
       </span>
+      {" "}cUSD
     </div>
   );
 }

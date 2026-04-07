@@ -3,6 +3,7 @@ import { formatCUSDFromStroops } from "@/app/utils/tokenFormatting";
 interface FormattedCUSDProps {
   readonly stroops: string | number | bigint;
   readonly symbol?: string;
+  readonly symbolPosition?: 'prefix' | 'suffix';
   readonly significantDigits?: number;
   readonly className?: string;
 }
@@ -10,30 +11,33 @@ interface FormattedCUSDProps {
 export function FormattedCUSD({
   stroops,
   symbol = "cUSD",
+  symbolPosition = "suffix",
   significantDigits = 4,
   className,
 }: FormattedCUSDProps) {
   const result = formatCUSDFromStroops(stroops, { significantDigits });
+  const pre = symbolPosition === "prefix" ? symbol : "";
+  const suf = symbolPosition === "suffix" ? ` ${symbol}` : "";
 
   switch (result.type) {
     case "zero":
-      return <span className={className}>0 {symbol}</span>;
+      return <span className={className}>{pre}0{suf}</span>;
 
     case "normal":
       return (
         <span className={className}>
-          {result.formatted} {symbol}
+          {pre}{result.formatted}{suf}
         </span>
       );
 
     case "subscript":
       return (
         <span className={className}>
-          {result.wholePart}.0
+          {pre}{result.wholePart}.0
           <span className="text-[0.7em]" style={{ verticalAlign: "sub" }}>
             {result.zeroCount}
           </span>
-          {result.significant} {symbol}
+          {result.significant}{suf}
         </span>
       );
   }
