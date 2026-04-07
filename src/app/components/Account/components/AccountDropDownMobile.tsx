@@ -2,7 +2,8 @@ import { TOKEN_CODES } from "@/app/constants";
 import { useNativeBalance, useUserBalance } from "@/app/context/AccountContext";
 import { useGetTotalDistributed } from "@/app/context/ContractContext/hooks";
 import { UserContextStateConnected } from "@/app/context/UserContext/types";
-import { truncateAddress, formatBalance, formatXLMWithSymbol } from "@/app/utils";
+import { truncateAddress, formatBalance } from "@/app/utils";
+import { FormattedCUSD } from "@/app/components/FormattedCUSD";
 import { CopyIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { DropdownMenu } from "radix-ui";
@@ -89,7 +90,7 @@ export function AccountDropDownMobile({
               <div className="flex justify-between items-center">
                 <span className="text-black opacity-50 font-theme-1 text-[16px] font-medium">cUSD generated</span>
                 <span className="text-black font-theme-1 text-[16px] font-semibold">
-                  {formatXLMWithSymbol(totalDistributed ?? 0, {symbol: 'cUSD', decimals: 4}).withSymbol}
+                  <FormattedCUSD stroops={totalDistributed ?? 0} />
                 </span>
               </div>
             </div>
