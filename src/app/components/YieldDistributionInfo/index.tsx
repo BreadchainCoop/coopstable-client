@@ -1,6 +1,7 @@
 "use client";
 import { cn, pageWrapClasses, formatXLMWithSymbol } from "@/app/utils";
 import { CUSDIcon } from "@/app/components/Icons";
+import { FormattedCUSD } from "@/app/components/FormattedCUSD";
 import { DistributionInfoCircleWithPopOver } from "./DistributionInfoCircleWithPopOver";
 import { useGetTotalAPY, useGetDistributionRound, useYieldData } from "@/app/context/ContractContext/hooks";
 
@@ -25,7 +26,7 @@ export default function YieldDistributionInfo() {
                         <div className="w-6 h-6 flex lg:w-8 lg:h-8 items-center justify-center">
                             <CUSDIcon />
                         </div>
-                        <span className="text-[2rem] font-bold text-lg text-black">{formatXLMWithSymbol(totalYield, {symbol: 'cUSD', decimals: 4}).withSymbol}</span> 
+                        <span className="text-[2rem] font-bold text-lg text-black"><FormattedCUSD stroops={totalYield} /></span>
                     </div>
                     <div className="flex justify-center items-center gap-2 ">
                         <span className="text-[14px] leading-[1.2]">Yield breakdown</span>
