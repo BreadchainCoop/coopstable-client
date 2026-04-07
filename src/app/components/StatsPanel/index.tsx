@@ -1,11 +1,10 @@
 import { CUSDIcon } from "../Icons";
 import { useGetCUSDTotalSupply, useGetTotalDistributed } from "@/app/context/ContractContext/hooks";
-import { TOKEN_CODES } from "@/app/constants";
-import { formatXLMSimple } from "@/app/utils/tokenFormatting";
+import { FormattedCUSD } from "@/app/components/FormattedCUSD";
 
 interface StatItemProps {
   readonly label: string;
-  readonly value: string;
+  readonly value: React.ReactNode;
   readonly icon?: React.ReactNode;
 }
 
@@ -46,12 +45,12 @@ export function StatsPanel() {
       <div className="space-y-3 lg:space-y-0 lg:space-x-3 lg:flex lg:justify-between"> 
         <StatItem
           label="Total minted cUSD"
-          value={formatXLMSimple(cusdData ?? 0, TOKEN_CODES.CUSD, 7)}
+          value={<FormattedCUSD stroops={cusdData ?? 0} />}
           icon={<CUSDIcon />}
         />
         <StatItem
           label="Total yield generated overtime"
-          value={formatXLMSimple(totalDistributed ?? 0, TOKEN_CODES.CUSD, 7)}
+          value={<FormattedCUSD stroops={totalDistributed ?? 0} />}
           icon={<CUSDIcon />}
         />
         <StatItem
